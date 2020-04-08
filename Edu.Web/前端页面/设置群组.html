@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>设置群组</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">  
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+   <el-form label-width="110px">
+            <el-form-item label="群组名称：">
+                <el-input placeholder="30字以内"></el-input>
+            </el-form-item>
+            <el-form-item label="群组说明：">
+                <el-input type="textarea" placeholder="100字以内"></el-input>
+            </el-form-item>
+            <el-form-item label="群组成员：">
+                <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼海棠</span>
+                <i class="iconfont icon-addPerson"></i>
+                <!-- 点击加号时出现这个搜索框， -->
+                <el-input class="min-input" style="display: none;"></el-input>
+            </el-form-item>
+        </el-form>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+   <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+
+  </script>
+
+</body>
+</html>

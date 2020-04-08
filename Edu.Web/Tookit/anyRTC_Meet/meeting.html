@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>anyRTC 会议</title>
+    <link rel="stylesheet" href="./css/meeting.css">
+
+</head>
+<body>
+<div class="body">
+    <div class="mainBox" id="mainVideo">
+        <p>我的视频窗口</p>
+        <video id="myVideo" src="" muted="muted" autoplay="autoplay"></video>
+    </div>
+    <div>
+        <p>其他参会人员视频窗口</p>
+        <div class="submainBox" id="submainVideo"></div>
+    </div>
+</div>
+<script src="./js/jquery.min.js"></script>
+<script src="https://www.anyrtc.io/websdk/RTMeet/2.4.0/adapter.js"></script>
+<script src="./js/xmlhttp.js"></script>
+<script src="./js/anyrtc.js"></script>
+<script src="./js/RTMeetKit.js"></script>
+<script>
+    // 注：
+    // 网站一定要安装SSL证书，因为webRTC需要在https协议基础上
+    // 另：localhost 本地环境可以测试
+    //开发者信息
+    var DEV_ID = "";
+    var APP_ID = "";
+    var APP_KEY = "";
+    var APP_TOKEN = "";
+    var DOMAIN = "";
+    //会议设置
+    var mQuality = 2;
+    var meetQuality = "";
+    //自定义用户信息,譬如：自己平台下的用户信息
+    var jUserData = {
+        devType: 3,//devType 0/1/2/3/4/5 android/ios/windows/web/tv/h5  自定义
+        userId: randomUserId(),
+        nickName: randomUserName(),
+        headUrl: "",
+    };
+
+    var RoomId = "";
+    (function (w) {
+        if (window.location.hash != "") {
+            RoomId = window.location.hash.substr(1);    
+        } else {
+            alert('请输入会议号')
+            window.location.href = './index.html';
+        }
+    })(window)
+
+	  var Meet = new (RTMeetKit || window.RTMeetKit)();
+    //初始化RTC引擎
+    Meet.initEngineWithAnyRTCInfo(DEV_ID, APP_ID, APP_KEY, APP_TOKEN, DOMAIN);
+    //会议的视频质量0（流畅）:320240/128 1（标清）:352288/256 2（高清）:640480/512 3（超高清）:web中使用分辨率(1280720/1024),app中使用分辨率(960540/768) 4（超级会议仅在pc中web和终端中使用）:19201080分辨率（H264编解码：码率2048，VP9编解码：码率1024（VP9编解码仅在chrome,firefox中使用）
+    switch (mQuality) {
+        case 0:
+          meetQuality = "RTCMeet_Videos_Flow";
+          break;
+        case 1:
+          meetQuality = "RTCMeet_Videos_Low";
+          break;
+        case 2:
+          meetQuality = "RTCMeet_Videos_SD";
+          break;
+        case 3:
+          meetQuality = "RTCMeet_Videos_HD";
+          break;
+        case 4:
+          meetQuality = "RTCMeet_Videos_HHD";
+          break;
+        default:
+          meetQuality = "RTCMeet_Videos_Flow";
+          break;
+    }
+    //设置会议分辨率
+    Meet.setVideoMode(meetQuality);
+    //打开本地摄像头
+    Meet.setLocalVideoCapturer();
+    //打开本地摄像头结果
+    Meet.on('onSetLocalVideoCapturerResult', (nCode, videoRender, stream) => {
+        if (nCode === 0) {
+            //添加本地视频窗口
+            //或者将videoRender直接添加到页面
+            document.getElementById('myVideo').src = URL.createObjectURL(stream);
+            //连接RTC,j仅在摄像头打开之后才可连接RTC,如果不是主持人模式，第二参数设置为false(默认就好)
+            Meet.joinRTC(RoomId, false, jUserData["userId"], JSON.stringify(jUserData));
+        } else if (nCode == 7) {
+          if (videoRender === "DevicesNotFoundError" || videoRender === "NotFoundError") {
+            alert("打开摄像头错误：：请检查你的摄像头和音频权限");
+          } else if (videoRender === "NotReadableError" || videoRender === "TrackStartError") {
+            alert("打开摄像头错误：：本地摄像头被占用");
+          } else if (videoRender === "OverconstrainedError" || videoRender === "ConstraintNotSatisfiedErrror") {
+            alert("打开摄像头错误：：本地摄像头不满足当前会议设置的分辨率");
+          } else if (videoRender === "NotAllowedError" || videoRender === "PermissionDeniedError") {
+            alert("打开摄像头错误：：未允许浏览器打开您的摄像头");
+          }
+        }
+    });
+
+    Meet.on('onRTCJoinMeetOK', () => {
+        //这里是一个消息示例，通知其他人员
+        /**
+         *    发送消息
+         *    @params strUserName           业务平台的用户昵称       （Max 256字节）
+         *    @params strUserHeaderUrl      业务平台的用户头像       （Max 512字节）
+         *    @params strContent            业务平台自定义消息内容   （Max 1024字节）
+         *    mTYpe                         0 普通消息
+         *    mContent                      消息内容
+         *    返回值 bollean
+         **/
+        Meet.sendUserMessage(jUserData["nickName"], jUserData["headUrl"], JSON.stringify({
+            mType: 4,
+            userid: jUserData["userId"],
+            name: jUserData["nickName"]
+        }));
+    });
+    //
+    Meet.on("onRTCJoinMeetFailed", nCode => {
+        switch (nCode) {
+          case 701:
+            alert('当前会议人数已满！');
+            break;
+          default:
+            alert("连接RTC异常，请稍后重试！");
+            break;
+        }
+        // window.location.href = './index.html';
+    });
+    // 远程人员加入
+    Meet.on("onRTCOpenVideoRender", (strPeerId, strPubId, dRander, strUserData) => {
+        var newVideo = document.createElement("video");
+        //video的Id
+        var id = "other-" + strPubId;//strPubId是标识视频窗口的唯一ID
+        //设置video的属性
+        newVideo.setAttribute("autoplay", "autoplay");
+        newVideo.setAttribute("id", id);
+
+        //添加div和video子节点
+        $('#submainVideo').append(newVideo);
+    });
+    // 远程人员离开
+    Meet.on("onRTCCloseVideoRender", (strPeerId, strPubId) => {
+        //删除视频窗口&&删除参会人员列表
+        var delVideo = "other-" + strPubId;
+        $("#"+delVideo).remove();
+    });
+    // 收到远程人员视频流
+    Meet.on("onRTCRemoteStream", (oStream, strPeerId, strPubId) => {
+        //设置远程视频窗口视频流
+        Meet.setRTCVideoRender(oStream, document.getElementById("other-" + strPubId));
+    });
+    // 监听视频窗口码率
+    Meet.on("onRTCPeerVideoBytes", (strPubId, videoBytes) => {
+        console.log("onRTCPeerVideoBytes", videoBytes);
+    });
+    // 监听视频窗口音量
+    Meet.on("onRTCPeerAudioDetect", (strPubId, nAudioLevel) => {
+      console.log("onRTCPeerAudioDetect", nAudioLevel);
+    });
+    // 监听视频窗口网络状态
+    Meet.on("onRTCNetworkStatus", (strPubId, nNetBytes, nPktLost) => {
+      console.log("onRTCNetworkStatus", nNetBytes, nPktLost);
+    });
+    /*
+     * 收到消息回调
+     * strMessage 为自定义数据，推荐使用JSON字符串形式，可以充分利用RTC消息的实时优势
+     */
+    Meet.on("onRTCUserMessage", (strUserId, strUserName, strUserHeaderUrl, strMessage) => {
+        let msgData;
+        if (typeof strMessage === "string") {
+          msgData = JSON.parse(strMessage);
+        } else if (typeof strMessage === "object") {
+          msgData = strMessage;
+        }
+
+        switch (msgData.mType) {//mType可以自定义,以下为示例
+          case 0: //普通消息
+            break;
+          case 1: //开关音视频
+            break;
+          case 2: //踢人
+            break;
+          case 3: //文档系统是否可操作
+            break;
+          case 4: //进会提醒
+            break;
+        }
+    });
+    //收到某个视频窗口的音视频状态
+    Meet.on('onRTCAVStatus', (strPubId, bAudioEnable, bVideoEnable) => {
+        
+    });
+    /**
+     *  监听SDK返回的错误
+     *  @params strMethodName       发生错误的方法名
+     *  @params res                 错误的返回的json对象
+     **/
+    Meet.on('onSDKError', (strMethodName, res) => {
+        console.error(strMethodName, res.msg);
+    });
+
+    function randomUserName (len) {
+      !len && (len = 6);
+      var str = "abcdefghijklmnopqrstuvwxyz", name = "用户_";
+      for (var i=0;i<len;i++) {
+        var strArr = str.split("");
+        name += strArr[parseInt(Math.random()*strArr.length)];
+      }
+      return name
+    }
+
+    function randomUserId (len) {
+      !len && (len = 6);
+      var str = "123456789", id = "";
+      for (var i=0;i<len;i++) {
+        var strArr = str.split("");
+        id += strArr[parseInt(Math.random()*strArr.length)];
+      }
+      return 'guest_'+id;
+    }
+
+    window.onbeforeunload = function () { //窗口关闭事件,要考虑到滚动条的宽度，一般是20px
+      var event = e || window.event;
+      event.returnValue = "【退出系统将XXX!】";//点击关闭的时候给提示
+    }
+    // 退出会议
+    window.onunload = function () {
+      if (Meet) {
+        Meet.leaveRTC();
+      }
+    }
+</script>
+</body>
+</html>

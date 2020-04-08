@@ -1,0 +1,11 @@
+﻿
+@*初始化用户列表*@
+
+
+<h6 class="tab-h6">最近联系人 <i class="iconfont icon-up" onclick="Collaspse(this)"></i></h6>
+@Html.Action("RecentlyChatUser", "Main", new { })
+
+<h6 class="tab-h6">常用联系人 <i class="iconfont icon-up" onclick="Collaspse(this)"></i></h6>
+<ul id="divUserListTop" style="height: 50%">
+    @Html.Action("TopChatUser", "Main", new { })
+</ul>

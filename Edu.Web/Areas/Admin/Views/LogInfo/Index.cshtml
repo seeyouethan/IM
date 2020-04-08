@@ -1,0 +1,76 @@
+﻿@model IEnumerable<LogInfo>
+ 
+<a class="btn btn-sm btn-primary " href="javascript:search();">
+    <span>
+        <i class="icon-search"></i>
+        搜索
+    </span>
+</a>
+
+
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th >名称</th>
+            <th>类型</th>
+            <th style="width:10%;">所在表（类）</th>
+            <th style="width:20%;">操作url</th>
+            <th>创建时间</th>
+            <th>操作者</th>
+            <th>IP</th>
+            <th style="width:35%;">备注</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="10" style="text-align: center; font-size: 16px; color: red;">暂无数据</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+
+                <tr>
+                    <td> @Html.DisplayFor(modelItem => item.ID)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@(Html.Raw(Html.EnumDescriptionText<Edu.Models.ActionClick>(item.OpType)))
+                    <td>
+                        @item.TableName
+                    </td>
+                    <td> @Html.DisplayFor(modelItem => item.Url)</td>
+                    <td> @Html.DisplayFor(modelItem => item.CreateDate)</td>
+                    <td> @Html.DisplayFor(modelItem => item.UserID)</td>
+                    <td> @Html.DisplayFor(modelItem => item.IP)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Remark)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_Pager")
+
+@Html.Partial("_Datepicker")
+@Html.Partial("_Dialog")
+<script type="text/javascript">
+
+    function search() {
+        var param = {
+            startT: "@ViewBag.startT",
+            endT: "@ViewBag.endT",
+            sn: "@ViewBag.sn",
+            OpType: "@ViewBag.OpType",
+            Date: new Date().getTime()
+        };
+        $("#dvFm").load("@Url.Action("LoadSearch")", param, function (result) {
+            $("#myModal").modal('show');
+            $("#myModalLabel").text("搜索");
+            $('#fm').validation();
+            $("#hideType").val("0");
+        });
+    }
+</script>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>消息通知</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">  
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+<div>
+   <div class="notify-panel">
+      <!-- 待处理消息 -->
+      <div class="notifyp-top">
+         <ul>
+           <li>今天</li>
+           <li class="notifypt-item">
+              <a href="javascript:;" class="notifypti-l float-l"><img src="images/defaultHeadImg.png" class="head-mimg" /></a>
+              <div class="notifypti-r clearfix">
+                 <div class="float-l">
+                    <p><a href="javascript:;" class="link-blue mr20">李宛儿</a>申请加入群<a href="javascript:;" class="link-blue ml20">OKCS工作小组</a></p>
+                    <p class="color-9 mt10">这里是李宛儿入群申请理由...</p>
+                 </div>
+                 <div class="float-r">
+                    <el-button class="btns btns-b">同意</el-button>
+                    <el-button class="btns btns-g">拒绝</el-button>
+                 </div>
+              </div>
+           </li>
+           <li>10月26日</li>
+           <li class="notifypt-item">
+              <a href="javascript:;" class="notifypti-l float-l"><img src="images/defaultHeadImg.png" class="head-mimg" /></a>
+              <div class="notifypti-r clearfix">
+                 <div class="float-l">
+                    <p><a href="javascript:;" class="link-blue mr20">李宛儿</a>申请加入群<a href="javascript:;" class="link-blue ml20">OKCS工作小组</a></p>
+                    <p class="color-9 mt10">这里是李宛儿入群申请理由...</p>
+                 </div>
+                 <div class="float-r">
+                    <el-button class="btns btns-b">同意</el-button>
+                    <el-button class="btns btns-g">拒绝</el-button>
+                 </div>
+              </div>
+           </li>
+         </ul>
+      </div>
+      <p class="line-txt"><span>以上为待处理信息</span></p>
+      <!-- 已处理消息 -->
+      <div class="notifyp-bot mt25">
+         <ul>
+           <!-- 已拒绝 -->
+           <li class="notifypt-item">
+              <a href="javascript:;" class="notifypti-l float-l"><img src="images/defaultHeadImg.png" class="head-mimg" /></a>
+              <div class="notifypti-r clearfix">
+                 <div class="float-l">
+                    <p><a href="javascript:;" class="link-blue mr20">李宛儿</a>申请加入群<a href="javascript:;" class="link-blue ml20">OKCS工作小组</a></p>
+                    <p class="color-9 mt10">这里是李宛儿入群申请理由...</p>
+                 </div>
+                 <div class="float-r">
+                    <span class="color-d7 mr20">已拒绝</span>
+                    <span class="color-9">10月26日</span>
+                 </div>
+              </div>
+           </li>
+           <!-- 已同意 -->
+           <li class="notifypt-item">
+              <a href="javascript:;" class="notifypti-l float-l"><img src="images/defaultHeadImg.png" class="head-mimg" /></a>
+              <div class="notifypti-r clearfix">
+                 <div class="float-l">
+                    <p><a href="javascript:;" class="link-blue mr20">李宛儿</a>申请加入群<a href="javascript:;" class="link-blue ml20">OKCS工作小组</a></p>
+                    <p class="color-9 mt10">这里是李宛儿入群申请理由...</p>
+                 </div>
+                 <div class="float-r">
+                    <span class="color-28 mr20">已同意</span>
+                    <span class="color-9" >10月26日</span>
+                 </div>
+              </div>
+           </li>
+           <!-- 您被拒绝加入群 -->
+           <li class="notifypt-item">
+              <div class="notifypti-r clearfix">
+                 <div class="float-l">
+                    <p><a href="javascript:;" class="link-blue mr20">您</a><span class="color-d7">被拒绝</span>加入群<a href="javascript:;" class="link-blue ml20">OKCS工作小组</a></p>
+                    <p class="color-9 mt10">这里是李宛儿入群申请理由...</p>
+                 </div>
+                 <div class="float-r">
+                    <span class="color-9">10月26日</span>
+                 </div>
+              </div>
+           </li>
+           <li class="notifypt-item">
+              <div class="notifypti-r clearfix">
+                 <div class="float-l">
+                    <p><a href="javascript:;" class="link-blue mr20">您</a><span class="color-28">已成功</span>加入群<a href="javascript:;" class="link-blue ml20">OKCS工作小组</a></p>
+                    <p class="color-9 mt10">这里是李宛儿入群申请理由...</p>
+                 </div>
+                 <div class="float-r">
+                    <span class="color-9">10月26日</span>
+                 </div>
+              </div>
+           </li>
+         </ul>
+      </div>
+   </div>
+</div>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+   <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+
+  </script>
+
+</body>
+</html>

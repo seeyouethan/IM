@@ -1,0 +1,100 @@
+﻿@*最近几次的聊天记录*@
+@using Edu.Tools
+@model IEnumerable<Edu.Models.Models.Msg.Msg>
+@{
+    if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            var class1 = "out";
+            var class3 = "yuyin_txt yy_txt_r";
+            var class4 = "yuyin_img yuyin_img_r";
+            if (item.fromuid != LoginUserService.ssoUserID)
+            {
+                class1 = "in"; 
+                class3 = "yuyin_txt yy_txt_l";
+                class4 = "yuyin_img yuyin_img_l";
+            }
+            var imgurl = ConfigHelper.GetConfigString("sso_host_name") + "pic/" + item.fromuid;
+    <li id="@item.id1" data-msgid="@item.id0">
+        <div class="chat-time"><span>@item.msgtime</span></div>
+        <div class="@class1">
+            <div class="media clearfix">
+                <div class="inline-block">
+                    <img class="head-ssimg" src="@(imgurl)" />
+                </div>
+                <div class="media-body">
+                    <p class="color-9" title="@item.fromrealname">@item.fromrealname</p>
+                    @{
+                        if (item.msgtype == 0)
+                        {
+                            <p class="mb-txt">@Html.Raw(item.msg)</p>
+                        }
+                        else if (item.msgtype == 1)
+                        {
+                            <p class="mb-txt mb-filetxt">
+                                <img class="imgA" src="@item.msg">
+                            </p>
+                        }
+                        else if (item.msgtype == 2)
+                        {
+
+                            <p class="mb-txt mb-filetxt">
+                                <a class="layui-layim-file" href="@item.msg" target="_blank"><i class="layui-icon"></i><cite>@item.filename</cite></a>
+                            </p>
+                        }
+                        else if (item.msgtype == 3)
+                        {
+                            var k = 0;
+                            int index = item.msg.IndexOf("[$PICTURE$]");
+                            while (index > -1)
+                            {
+                                var imgele = "<img class=\"imgA\" src=\"" + item.imglist[k] + "\">";
+                                item.msg = item.msg.Remove(index, 11).Insert(index, imgele);
+                                index = item.msg.IndexOf("[$PICTURE$]");
+                                k++;
+                            }
+                            <p class="mb-txt mb-filetxt">@Html.Raw(item.msg)</p>
+                        }
+                        else if (item.msgtype == 4)
+                        {
+                            var width = item.duration;
+                            <div id="@item.id0" class="yuyin fl" style="width:@(width)px" audioSize="@(width)">
+                                <span class="@class3">@(width)''</span>
+                                <audio class="myaudio" preload="auto" hidden="true">
+                                    <source src="@item.msg" type="audio/mpeg">
+                                </audio>
+                                <span class="@class4"></span>
+                            </div>
+                        }
+                        else if (item.msgtype == 5)
+                        {
+
+                            var mapid = "map" + item.id0;
+                            <div class="map-item">
+                                <div class="mapi-top" map-data="@item.filename" id="@mapid">
+                                </div>
+                                <p class="mapi-mid">位置</p>
+                                <p class="mapi-bot" title="@item.msg">@item.msg</p>
+                            </div>
+                        }
+                        else if (item.msgtype == 7)
+                        {
+                            <p class="mb-txt"><video controls='controls' style='width:100%;' src='@item.msg'></video></p>
+                        }
+                    }
+                </div>
+
+                <i class="iconfont icon-collection user-fav" title="收藏"></i>
+            </div>
+        </div>
+    </li>
+        }
+    }
+}
+
+<script>
+    $(function () {
+        EmojiParse($('.mb-txt'));
+    });
+</script>

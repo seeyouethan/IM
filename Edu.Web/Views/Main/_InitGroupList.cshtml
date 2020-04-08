@@ -1,0 +1,13 @@
+﻿@*初始化用户列表*@
+
+
+<h6 class="tab-h6">工作群 <i class="iconfont icon-up" onclick="Collaspse(this)"></i></h6>
+<ul id="ulWorkChatGroupList">
+    @*@Html.Action("WorkChatGroupView", "Main", new { })*@
+</ul>
+
+<h6 class="tab-h6">自建群 <i class="iconfont icon-up" onclick="Collaspse(this)"></i></h6>
+
+<ul id="ulGroupList">
+    @Html.Action("SelfChatGroup", "Main", new {})
+</ul>

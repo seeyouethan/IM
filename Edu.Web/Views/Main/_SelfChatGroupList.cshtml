@@ -1,0 +1,55 @@
+﻿@*我的群组列表*@
+@model IEnumerable<Edu.Models.Models.GroupViewNew>
+
+@{
+    if (Model != null && Model.Any())
+    {
+        var count = 0;
+        var countClass = "";
+        foreach (var item in Model)
+        {
+            countClass = "after-circle";
+            count = item.UnreadMsgCount;
+            if (count > 99)
+            {
+                count = 99;
+            }
+            if (count == 0)
+            {
+                countClass = "after-circle displaynone";
+            }
+            <li class="tab-li" data-id="@item.ID">
+                <div>
+                    <a href="javascript:void(0);" class="mr10 float-l posr" onclick="GroupChat(this)" data-id="@item.ID">
+                        <img src="@item.Logo" class="head-ssimg" />
+                        <i class="@countClass">@count</i>
+                    </a>
+                    <div class="tab-li-div">
+                        <p onclick="GroupChatByClickName(this)" title="@item.Name">@item.Name</p>
+                        <span class="close-btn close-btn01">
+                            <i class="iconfont icon-more"></i>
+                            </span>
+                        <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                        <div class="tip-del" gid="@item.ID">
+                           
+                            @{
+                                if (item.CreateUserID == LoginUserService.ssoUserID)
+                                {
+                                    <span class="block setting" onclick="editmenuclick(this)">管理群组</span>
+                                    <span class="block exiting" onclick="dissolutiongroup(this)">解散群组</span>
+                                }
+                                else
+                                {
+                                    <span class="block exiting" onclick="exitmenuclick(this)">退出群组</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    }
+    else
+    {
+    }
+}

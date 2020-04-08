@@ -1,0 +1,198 @@
+﻿@{
+    ViewBag.Title = "IM全屏视频测试页面";
+}
+
+
+<h1>您好:@(Edu.Service.LoginUserService.userName)</h1>
+@model String
+<script src="~/Tookit/WebRTC/out/simplewebrtc-with-adapter.bundle.js"></script>
+<p class="vc-top color-9">视频</p>
+<div class="vc-visitb posr" id="remotes">
+    <i class="iconfont icon-video"></i>
+    <span class="vc-bot">等待对方接收邀请...</span>
+</div>
+<div class="posr">
+    <p class="video-btn clearfix">
+        <a href="javascript:void(0);" id="muteBtn" class="float-r video-btn2">静音</a>
+        <a href="javascript:CloseChatVideo();" class="float-r video-btn0">挂断</a>
+        <a href="javascript:void(0);" id="kk1" class="float-r video-btn2">全屏</a>
+    </p>
+    <div class="text item" id="videoContainer" style="padding: 0;">
+        <i class="iconfont icon-video"></i>
+        <span class="vc-bot">正在连接视频...</span>
+        <video id="localVideo" style="width: 249px; height: 200px"></video>
+    </div>
+    <p class="video-btn clearfix">
+        <a href="javascript:void(0);" id="kk2" class="float-r video-btn2">全屏</a>
+        <a href="javascript:void(0);" id="kk3" class="float-r video-btn2">静音自己</a>
+    </p>
+
+    <div id="localVolume" style="width: 249px; height: 10px;"></div>
+    @*<i class="iconfont icon-fullScreen cp"></i>*@
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var room = "mywebrtc";
+        var webrtc = new SimpleWebRTC({
+            localVideoEl: 'localVideo',
+            remoteVideosEl: 'remotes',
+            autoRequestMedia: true,
+            debug: false,
+            detectSpeakingEvents: true,
+            autoRemoveVideos: false,
+        });
+        webrtc.on('readyToCall', function() {
+            if (room !== "") {
+                $("#videoContainer").children("i").remove();
+                $("#videoContainer").children("span").remove();
+                webrtc.joinRoom(room);
+            } else {
+                webrtc.leaveRoom();
+                webrtc.stopLocalVideo();
+            }
+        });
+
+        webrtc.on('channelMessage', function(peer, label, data) {
+            if (data.type == 'volume') {
+                showVolume(document.getElementById('volume_' + peer.id), data.volume);
+            }
+        });
+        webrtc.on('videoAdded', function(video, peer) {
+            $("#remotes").empty();
+            //console.log('video added', peer);
+            var remotes = document.getElementById('remotes');
+            if (remotes) {
+                var d = document.createElement('div');
+                d.className = 'videoContainer';
+                d.id = 'container_' + webrtc.getDomId(peer);
+                d.appendChild(video);
+                var vol = document.createElement('div');
+                vol.id = 'volume_' + peer.id;
+                vol.className = 'volume_bar';
+                video.style.width = "249px";
+                video.style.height = "200px";
+                d.appendChild(vol);
+                remotes.appendChild(d);
+            }
+        });
+        webrtc.on('videoRemoved', function(video, peer) {
+            //console.log('video removed ', peer);
+            var remotes = document.getElementById('remotes');
+            var el = document.getElementById('container_' + webrtc.getDomId(peer));
+            if (remotes && el) {
+                remotes.removeChild(el);
+            }
+            /*关闭摄像头 关闭面板*/
+            CloseChatVideo();
+        });
+        webrtc.on('volumeChange', function(volume, treshold) {
+            showVolume(document.getElementById('localVolume'), volume);
+        });
+
+        function showVolume(el, volume) {
+            if (!el) return;
+            if (volume < -45) {
+                //el.style.height = '0px';
+                el.style.width = '0px';
+            } else if (volume > -20) {
+                //el.style.height = '100%';
+                el.style.width = '100%';
+            } else {
+                //el.style.height = '' + Math.floor((volume + 100) * 100 / 25 - 220) + '%';
+                el.style.width = '' + Math.floor((volume + 100) * 100 / 25 - 220) + '%';
+            }
+        }
+
+        window.CloseChatVideo = function() {
+            webrtc.leaveRoom();
+            webrtc.stopLocalVideo();
+            $("#videoChatDiv").empty();
+            $("#videoBtn").removeClass("cur");
+            $("#div0").removeClass('show-video');
+            room = "";
+            /*如果有询问窗口 也将询问窗口关闭*/
+            var ele = window.parent.document.getElementById("okcsim");
+            if (ele != null) {
+                var iframeele = ele.children[0];
+                iframeele.contentWindow.CloseVideoChatByFrom("@ViewBag.fromuid", "@ViewBag.touid");
+            }
+        }
+
+        //进入全屏
+        function fullScreen(ele) {
+            if (ele.requestFullscreen) {
+                ele.requestFullscreen();
+            } else if (ele.mozRequestFullScreen) {
+                ele.mozRequestFullScreen();
+            } else if (ele.webkitRequestFullScreen) {
+                ele.webkitRequestFullScreen();
+            }
+        }
+        //退出全屏
+        function exitFullscreen() {
+            var de = document;
+            if (de.exitFullscreen) {
+                de.exitFullscreen();
+            } else if (de.mozCancelFullScreen) {
+                de.mozCancelFullScreen();
+            } else if (de.webkitCancelFullScreen) {
+                de.webkitCancelFullScreen();
+            }
+        }
+        function muteAudio() {
+            ele.volume = 0;//表示静音
+        }
+        /*全屏按钮-*/
+        $("#kk1").on('click', function () {
+            var ele = document.getElementById("remotes");
+            fullScreen(ele);
+            // allowFullScreen记得在iframe上添加上这个参数
+            // exitFullscreen();
+        });
+
+        $("#kk2").on('click', function () {
+            var ele = document.getElementById("localVideo");
+            fullScreen(ele);
+            // allowFullScreen记得在iframe上添加上这个参数
+            // exitFullscreen();
+        });
+        $("#kk3").on('click', function () {
+            var ele = document.getElementById("localVideo");
+            muteAudio(ele);
+            // allowFullScreen记得在iframe上添加上这个参数
+            // exitFullscreen();
+        });
+        /*开启/关闭静音*/
+        var isMute = false;
+        $("#muteBtn").on('click', function () {
+            if (!isMute) {
+                webrtc.mute();
+                isMute = true;
+            } else {
+                webrtc.unmute();
+                isMute = false;
+            }
+
+        });
+        /*开启共享屏幕*/
+        /*分享屏幕会报一个NavigatorUserMediaError的错误  是需要https协议的*/
+        $("#sScreen").on('click', function () {
+            webrtc.leaveRoom();
+            webrtc.stopLocalVideo();
+            if (webrtc.getLocalScreen()) {
+                webrtc.stopScreenShare();
+                //console.log("01-------分享屏幕失败！");
+            }
+            webrtc.shareScreen(function (err) {
+                if (err) {
+                    //console.log("02-------分享屏幕失败！");
+                    console.log(err);
+                } else {
+                    //console.log("分享屏幕成功！");
+                }
+            });
+            webrtc.joinRoom(room);
+        });
+    })
+</script>

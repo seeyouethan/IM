@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Menu>
+<style type="text/css">
+    #dvSearch .modal-dialog {
+        width: 400px;
+    }
+</style>
+ 
+    <a class="btn btn-sm btn-primary" href="javascript:AddOp();">
+        <i class="icon-plus"></i>
+        添加
+    </a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>FuncID</th>
+                <th>父功能ID</th>
+                <th>功能名称</th>
+                <th>功能描述</th>
+                <th>菜单or模块</th>
+                <th>功能层级</th>
+                <th>排序</th>
+                <th>Target</th>
+                <th>目标地址</th>
+                <th>系统标识</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || Model.Count() == 0)
+                    {
+                    <tr>
+                        <td colspan="10" style="text-align: center; font-size: 16px; color: red;">暂无数据</td>
+                    </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                    <tr>
+                        <td>@item.FuncID</td>
+                        <td>@item.ParentID</td>
+                        <td>@item.FuncName</td>
+                        <td>@item.FuncDes</td>
+                        <td>@item.FuncType</td>
+                        <td>@item.FuncLevel</td>
+                        <td>@item.OrderNo</td>
+                        <td>@item.Target</td>
+                        <td>@item.TargetUrl</td>
+                        <td>@item.SysLogo</td>
+                        <td>
+
+                            <a href="javascript:ModyOp('@item.ID')" title="修改">
+                                <i class="icon-pencil"></i>
+
+                            </a>
+                            <a href="javascript:DeleteOp('@item.ID')" title="Delete">
+                                <i class="icon-remove"></i>
+                            </a>
+                        </td>
+                    </tr>
+                        }
+                    }
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div class="modal  fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">功能管理</h4>
+                </div>
+                <div class="clear"></div>
+                <div id="dvFm" class="modal-body">
+                </div>
+                <div class="clear"></div>
+                <div class="modal-footer">
+                    <button id="btnSave" type="button" class="btn btn-primary">保 存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        function AddOp() {
+
+            $("#dvFm").load("/Admin/FunMenu/GetOp", { date: new Date().getTime() }, function (result) {
+
+                $("#myModal").modal('show');
+                $("#myModalLabel").text("增加");
+                $('#fm').validation();
+
+            });
+        }
+        function ModyOp(rid) {
+            $("#dvFm").load("/Admin/FunMenu/GetOp", { rid: rid, date: new Date().getTime() }, function (result) {
+                $("#myModal").modal('show');
+                $("#myModalLabel").text("修改");
+                $('#fm').validation();
+
+
+
+            });
+        }
+
+        function DeleteOp(rid) {
+            if (confirm("确定删除?")) {
+                $.post("/Admin/FunMenu/DeleteOp", { rid: rid, date: new Date().getTime() }, function (result) {
+                    if (result == "True") {
+                        alert("删除成功");
+                        window.location.reload();
+                    }
+                    else {
+                        alert("删除失败");
+                    }
+                })
+            }
+        }
+
+        $(function () {
+
+            $("#btnSave").click(function () {
+                if ($("#fm").valid() == false) {
+                    return;
+                }
+                $("#fm").submit();
+
+            })
+        })
+    </script>

@@ -1,0 +1,22 @@
+﻿@*创建/编辑群组成员后的 群组成员列表的分部视图*@
+@using Edu.Tools
+@model List<KNet.AAMS.Foundation.Model.DeptUser>
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <span class="mr18 us">
+            <span class="posr">
+                <img src="@(ConfigHelper.GetConfigString("sso_host_name") + "pic/" + item.UserId)" class="head-simg vam" />
+                <a href="javascript:;" class="del-redT" data-id="@item.UserId">
+                    <i class="iconfont icon-delte  ml10"></i>
+                </a>
+            </span>
+            <span class="dvm">@item.RealName</span>
+        </span>
+    }
+    if (Model.Count > 12)
+    {
+        <i class="iconfont icon-down link03"></i>
+    }
+}

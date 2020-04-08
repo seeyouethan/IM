@@ -1,0 +1,62 @@
+html{height: 100%;}
+body{color:#333; font:14px Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "Microsoft YaHei";position: relative;min-height:100%;background-color:#f3f4f8}
+.el-main{padding:0;}
+.container-panel{position: absolute;top:0px;left:0px;bottom:0;right:0;transition:all .3s;background:#f3f4f8;height:100%;overflow-y:auto;}
+/*切换背景色*/
+.main-con{padding:20px 20px 30px;background-color: #fff;min-height: calc(100% - 177px);position:relative}
+.main-con-nobg{background-color:transparent;padding:0;}/*最小高度无背景颜色-知识订阅*/
+.main-con .el-form-item{margin-bottom: 11px;}
+.main-con.list-panel{min-height: calc(100% - 177px);padding:23px 30px 20px!important}
+.tab-mh,.constru-con{min-height:100%}
+.constru-con .el-tabs{min-height:calc(100% - 177px);background-color:#fff}
+.constru-con .el-tabs__header{background-color:#f3f4f8}
+.groupdl-bot .main-con{min-height:212px;}
+/*弹窗*/
+.el-dialog{border-radius:10px;width:641px;min-width:300px}
+.el-dialog__header{padding:15px 20px;border-bottom:1px solid #ddd;}
+.el-dialog__body{padding:20px 50px}
+.group-dialog .el-dialog__body{padding:20px 30px}
+.el-dialog__footer{text-align:center}
+.el-dialog__footer .el-button{width:78px;padding:9px 0!important}/*弹窗按钮*/
+.dialog-con{max-height:500px;padding:0 20px}
+/*日历日程*/
+.list-panel{background-color: #fff;padding: 23px 30px 20px;position: relative;height: 100%;box-sizing: border-box;}
+.list-panel:before{content:"";position: absolute;width: 4px;height:20px;background-color: #41a0e9;left: 0px;top: 34px;border-radius: 7px;}
+.list-panel-top{font-size: 18px;line-height: 40px;}
+.list-panel-top .float-r{font-size: 12px;}
+.todo-list-panel{width:100%;height:321px;box-sizing: border-box;border:1px solid #ddd;border-radius:6px;padding:25px 15px 25px;margin:15px 0;}
+.todo-item{line-height: 41px;border-bottom: 1px dashed #ddd;}
+.skdcal-panel{height: calc(100% - 23px);}
+.skdcal-panel .el-row,.skdcal-panel .el-col,.skdcal-panel .el-scrollbar{height: 100%}
+.underline{position:relative;}
+.underline:after{content:"";width:auto;height: 2px;display:inline-block;background-color: #666;position: absolute;left: -6px;right: -4px;top: 6px;}
+.todo-list-panel a.icon-addPerson{display: block;margin-top:14px;font-size: 32px;}
+.todo-item .el-input{width:calc(100% - 30px);}
+.todo-item .el-input__inner{height: 30px;line-height: 30px;}
+.todo-item .icon-del{visibility:hidden;color:#999;}
+.todo-item:hover .icon-del{visibility:visible}
+.todo-item .icon-del:hover{color:#f60;}
+.todo-item-p{width:calc(100% - 30px)}
+.todo-item-p span{display: inline-block;max-width: calc(100% - 23px); white-space: nowrap;overflow: hidden;vertical-align: bottom;text-overflow: ellipsis;}
+.skd{cursor:pointer;display: inline-block;width:22px;height:20px;background: url(../images/todoImg.png) no-repeat;background-position: -2px -23px;vertical-align: middle;float: left;margin-right:8px;transition: .3s}
+.skdb-txt{position: relative;display: inline-block;width:calc(100% - 220px);}
+.skdb-txt span{display: inline-block;max-width: calc(100% - 65px);margin-right: 5px;line-height: 20px;overflow:hidden;vertical-align: top;text-overflow: ellipsis;white-space: nowrap;}
+/*紧急特急*/
+.skdb-txt-j:after,.skdb-txt-tj:after{content:"\7D27\6025";position: absolute;top:-5px;display: inline-block;border-radius: 4px;padding:1px 3px;background-color: rgb(242,143,14);color:#fff;font-size: 12px;}
+.skdb-txt-tj:after{content:"\7279\6025";background-color: rgb(234,1,1);}
+.skd-top{margin-bottom: 10px}
+.skd-panel,.skd-edit{padding:10px;}
+.skdcal-panel .el-scrollbar{border-right:1px solid #ddd;}
+.skdb-icon i{color:#c5c5c5;margin-right: 5px;cursor: pointer;transition: .3s}
+.up-down span{color:#999;cursor: pointer;}
+.skdb-icon i:hover,.up-down span.cur{color:#41a0e9;}
+.skd-bot>li{border-bottom: 1px dashed #dcdcdc;padding:10px 0;}
+.skd-top01>li{border:none;padding-left: 32px;}
+.skd-bot>li>div{padding:5px;transition: .3s;}
+.skd-bot>li>div:hover{background-color: #f5f7fa}
+.skd:hover{background-position: 0 0}
+.skdb-finished .skd{background-position: 0 -49px;}
+.skdb-finished .skdb-txt span{color:#999;text-decoration: line-through;}
+.skdli-fiished{font-size: 12px;}
+.icon-gengduo{font-size: 20px;color:#999;transition: .3s;cursor: pointer;}
+.icon-gengduo:hover{color:#f60;}

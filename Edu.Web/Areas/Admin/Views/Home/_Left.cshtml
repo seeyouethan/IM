@@ -1,0 +1,54 @@
+﻿
+@model IEnumerable<IGrouping<string, Menu>>
+<div id="sidebar" class="sidebar responsive">
+    <ul class="nav nav-list">
+        <li >
+            <a href="@Url.Action("Index","Home") ">
+                <i class="menu-icon fa fa-tachometer"></i>
+                <span class="menu-text"> 总控制台 </span>
+            </a>
+            <b class="arrow"></b>
+        </li>
+
+        @foreach (var item in Model)
+        {
+            var funMenu = new Edu.Service.UnitOfWork().DMenu.Get(p => p.FuncID == item.Key).FirstOrDefault();
+            <li class="">
+                <a href="javascript:void(0)" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-list"></i>
+                    <span class="menu-text">@funMenu.FuncName </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    @foreach (var fun in item)
+                    {
+                        <li class="">
+                            <a href="@fun.TargetUrl" target="@fun.Target" title="@fun.FuncDes">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                @fun.FuncName
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    
+                    }
+                </ul>
+            </li>
+        }
+       
+ 
+
+    </ul><!-- /.nav-list -->
+    <!-- #section:basics/sidebar.layout.minimize -->
+    <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+        <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+    </div>
+
+</div>
+ 
+
+
+
+
+
+

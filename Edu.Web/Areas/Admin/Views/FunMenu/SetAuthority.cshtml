@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "权限管理";
+}
+@section Js{
+<link href="~/Tookit/ace/assets/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+
+<script src="/Tookit/ace/assets/js/zTree/jquery.ztree.core-3.5.min.js"></script>
+<script src="/Tookit/ace/assets/js/zTree/jquery.ztree.excheck-3.5.min.js"></script>
+}
+<a class="btn btn-sm btn-primary" href="javascript:setAuthory();">
+    <i class="icon-wrench"></i>
+    设置权限
+</a>
+ 
+
+<div class="clear"></div>
+<div class="content-box">
+    <div class="content-box-header">
+        <h3>权限列表</h3>
+        <div class="clear"></div>
+    </div>
+    <div class="content-box-content">
+        <div class="zTreeDemoBackground left">
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+
+    </div>
+</div>
+
+<SCRIPT type="text/javascript">
+    function setAuthory() {
+
+
+        var CheckedValue = "";
+        var treeObj=$.fn.zTree.getZTreeObj("treeDemo"),
+           nodes=treeObj.getCheckedNodes(true);
+        for(var i=0;i<nodes.length;i++){
+            CheckedValue +=nodes[i].oid + ",";
+
+        }
+        //alert(CheckedValue);
+        $.post("/Admin/FunMenu/SetAuthory", { roleid: "@ViewBag.rid", checkvaule: CheckedValue, Date: new Date().getTime() }, function () {
+            alert("设置成功");
+            location.reload();
+        })
+    }
+
+
+    var setting = {
+        check: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+    var zNodes = @(Html.Action("LoadCategory",new { rid=ViewBag.rid}));
+    var code;
+    $(document).ready(function () {
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    });
+
+</SCRIPT>

@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "上传页面";
+}
+
+<h1>您好:@(Edu.Service.LoginUserService.userName)</h1>
+<div id="app">
+    <el-upload class="upload-demo"
+               drag
+               action="/im/Home/UploadAA/"
+               multiple>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>
+        </div>
+    </el-upload>
+</div>
+
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+            };
+        },
+        created () {
+        },
+        methods: {
+            GetDataList: function () {
+                var self = this;
+                $.post('/Home/MyData', {}, function (result) {
+                    if (result.success) {
+                        self.DataList = result.list;
+                        self.loading = false;
+                    } else {
+                        self.$message.error('请求失败' + result.m);
+                        self.loading = false;
+                        console.log(result.m);
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+

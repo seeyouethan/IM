@@ -1,0 +1,115 @@
+body {
+    padding: 0;
+    font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+    font-size: 14px;
+}
+
+#calendar {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.fc-day-grid-event .fc-time {
+    display: none !important;
+}
+.fc-day-grid-event .fc-content{
+    cursor: pointer;
+}
+/*大日历样式调整*/
+#calendar{max-width:100%;padding:0 10px;}
+.fc-unthemed th{border-color:#fff;line-height:48px;background-color:#41a0e9;color:#fff;font-weight:normal;font-size:16px;}
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number{float:none;font-size:24px;line-height:48px;}
+.fc-ltr .fc-basic-view .fc-day-top{text-align:center}
+.fc-event{border-radius:8px;}
+.fc-title{ padding-left: 8px !important;}
+.fc-event,.fc-event:hover{background-color:#c5e3fa;border:none;color:#333}
+.fc-content-skeleton tbody tr:nth-child(2n) .fc-event{background-color:#fae8c6}
+.fc-content-skeleton tbody tr:nth-child(3n) .fc-event{background-color:#bef0bf}
+.fc-content-skeleton tbody tr:nth-child(4n) .fc-event{background-color:#d7cbf2}
+.fc-content-skeleton tbody tr:nth-child(5n) .fc-event{background-color:#f1cbd8}
+.fc-content-skeleton tbody tr:nth-child(6n) .fc-event{background-color:#d0dcf5}
+.fc-state-active, .fc-state-disabled, .fc-state-down, .fc-state-hover{background-color:#41a0e9;border-color:#41a0e9;color:#fff;opacity:1;}
+.fc-left h2{color:#41a0e9;font-size:14px;font-weight:normal}
+.fc-state-default{color:#fff;background-color:#41a0e9;background-image:none;text-shadow:none;border:none;}
+
+.fc-agendaWeek-view .fc-time-grid-container {
+    display: none;
+}
+.fc-agendaDay-view .fc-day-grid,.fc-agendaDay-view .fc-divider {
+    display: none;
+}
+.fc-agendaWeek-view .fc-week,
+.fc-agendaWeek-view .fc-content-skeleton table {
+    height: 100%;
+    min-height: 500px;
+}
+.fc-agendaWeek-view .fc-content-skeleton table tr{
+    /*height:  20px;*/
+}
+/*.fc-left {
+    display: none;
+}*/
+
+.fc-agendaDay-view .fc-event-container a {
+    width: 60px !important;
+    /*margin-right: 80px !important;*/
+}
+
+.fc-agendaDay-view .fc-event-container .fc-content .fc-title {
+    width: 46px;
+    display: block;
+    text-align: left;
+    word-wrap: break-word;
+    padding-top: 10px;
+}
+
+.fc-agendaDay-view .fc-event-container .fc-content .fc-time {
+    display: none;
+}
+
+/*.fc-agendaDay-view .fc-event-container a:last-child {
+    margin-right: 100px !important;
+    top: 0 !important;
+    width: 56px !important;
+}*/
+
+.fc-button-group {
+    display: none;
+}
+.fc-today-button {
+    display: none;
+}
+.fc-event{font-size:12px;}
+.fc-content .fc-title{line-height:30px;display: inline-block;white-space: nowrap;overflow: hidden; text-overflow: ellipsis; width: 100%;vertical-align: bottom;padding-left:7px;}
+
+.fc-more-cell-selfs,.fc-more-cell{font-size:13px;color:#999;text-align:right;}
+/*.fc-more-cell-selfs>div,.fc-more-cell>div{margin-top:10px;}*/
+.fc-more-popover{width:235px;border-color:#41a0e9!important}
+.fc-more-popover .fc-event{margin-bottom:5px;}
+.fc-unthemed .fc-popover .fc-header{background-color:#fff}
+.fc-unthemed .fc-popover .fc-header{text-align:center;}
+.fc-ltr .fc-popover .fc-header .fc-title{float:none;font-size:24px;}
+.fc-more-popover .fc-event-container{padding:10px 2px;}
+.fc-ltr .fc-h-event.fc-not-end, .fc-rtl .fc-h-event.fc-not-start,.fc-ltr .fc-h-event.fc-not-start, .fc-rtl .fc-h-event.fc-not-end{border-radius:8px;}
+.fc-time-grid-event{border-radius:0;}
+.fc-time-grid-event .fc-title{padding-left:0;white-space:normal;overflow:visible;text-overflow:clip}
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number{line-height:normal}
+.fc-event-container .fc-event:nth-child(n){background-color:#c5e3fa}
+.fc-event-container .fc-event:nth-child(2n){background-color:#fae8c6}
+.fc-event-container .fc-event:nth-child(3n){background-color:#bef0bf}
+.fc-event-container .fc-event:nth-child(4n){background-color:#d7cbf2}
+.fc-event-container .fc-event:nth-child(5n){background-color:#f1cbd8}
+.fc-event-container .fc-event:nth-child(6n){background-color:#d0dcf5}
+.fc-day-grid-event{margin:2px;}
+.fc-day-grid-event{padding:1px;}
+
+
+.fc-v-event-20181019add {
+    position: relative !important;float: left;
+}
+.height40{ height: 40px;}
+.height1{height: 1px !important}
+/*.backgroundcolorwhite{ background-color: white;}*/
+.fc-agendaDay-view .fc-day.fc-today {
+    background-color: white !important;
+}
+.fc-header-toolbar{ display: none;}

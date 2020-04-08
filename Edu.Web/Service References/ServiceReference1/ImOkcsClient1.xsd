@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.Model" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.Model" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Group">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CreateUserID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PostTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Summary" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitID" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Group" nillable="true" type="tns:Group" />
+  <xs:complexType name="UserInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Activeness" type="xs:int" />
+      <xs:element minOccurs="0" name="DeptCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DeptID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DeptName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DeptRank" type="xs:int" />
+      <xs:element minOccurs="0" name="EMail" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Extended" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Logo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Mobilephone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PositionName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QQ" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RealName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Score" type="xs:int" />
+      <xs:element minOccurs="0" name="Tel" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Token" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitRank" type="xs:int" />
+      <xs:element minOccurs="0" name="UploadFileNum" type="xs:int" />
+      <xs:element minOccurs="0" name="UserID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WeChat" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserInfo" nillable="true" type="tns:UserInfo" />
+</xs:schema>

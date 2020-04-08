@@ -1,0 +1,99 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edu.Entity", "Edu.Entity\Edu.Entity.csproj", "{8DA3A63F-7A30-4CAC-8A16-35FCCB48084B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edu.Service", "Edu.Service\Edu.Service.csproj", "{C1AA5F52-AB12-417F-9B70-21947002E6E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edu.Data", "Edu.Data\Edu.Data.csproj", "{9A7B5ECE-C016-4D94-91AD-2851E334FEFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduIM.Web", "Edu.Web\EduIM.Web.csproj", "{92BA57A4-C402-42A2-8A60-204F0343EEB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edu.Models", "Edu.Models\Edu.Models.csproj", "{C3CF7EE9-E35B-43CA-A2C7-44A11D8FBE70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql", "Sql", "{128704A6-B605-47CC-BD2C-9203C0C2EF24}"
+	ProjectSection(SolutionItems) = preProject
+		sql修改记录.txt = sql修改记录.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduIM.WebAPI", "EduIM.WebAPI\EduIM.WebAPI.csproj", "{19D6E9D8-769C-4855-BA30-E4AC9BCC015D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edu.JobAssignment.Web", "Edu.JobAssignment.Web\Edu.JobAssignment.Web.csproj", "{BF1208D9-97D0-4491-8832-3A485A9F76BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edu.SignalRServer", "Edu.SignalRServer\Edu.SignalRServer.csproj", "{EE4D9DBA-EFAD-4DEC-830A-BD09BDE2CC80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DA3A63F-7A30-4CAC-8A16-35FCCB48084B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DA3A63F-7A30-4CAC-8A16-35FCCB48084B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DA3A63F-7A30-4CAC-8A16-35FCCB48084B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DA3A63F-7A30-4CAC-8A16-35FCCB48084B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1AA5F52-AB12-417F-9B70-21947002E6E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1AA5F52-AB12-417F-9B70-21947002E6E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1AA5F52-AB12-417F-9B70-21947002E6E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1AA5F52-AB12-417F-9B70-21947002E6E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A7B5ECE-C016-4D94-91AD-2851E334FEFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A7B5ECE-C016-4D94-91AD-2851E334FEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A7B5ECE-C016-4D94-91AD-2851E334FEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A7B5ECE-C016-4D94-91AD-2851E334FEFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92BA57A4-C402-42A2-8A60-204F0343EEB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92BA57A4-C402-42A2-8A60-204F0343EEB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92BA57A4-C402-42A2-8A60-204F0343EEB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92BA57A4-C402-42A2-8A60-204F0343EEB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3CF7EE9-E35B-43CA-A2C7-44A11D8FBE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3CF7EE9-E35B-43CA-A2C7-44A11D8FBE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3CF7EE9-E35B-43CA-A2C7-44A11D8FBE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3CF7EE9-E35B-43CA-A2C7-44A11D8FBE70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19D6E9D8-769C-4855-BA30-E4AC9BCC015D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D6E9D8-769C-4855-BA30-E4AC9BCC015D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D6E9D8-769C-4855-BA30-E4AC9BCC015D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D6E9D8-769C-4855-BA30-E4AC9BCC015D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1208D9-97D0-4491-8832-3A485A9F76BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1208D9-97D0-4491-8832-3A485A9F76BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1208D9-97D0-4491-8832-3A485A9F76BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1208D9-97D0-4491-8832-3A485A9F76BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE4D9DBA-EFAD-4DEC-830A-BD09BDE2CC80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE4D9DBA-EFAD-4DEC-830A-BD09BDE2CC80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE4D9DBA-EFAD-4DEC-830A-BD09BDE2CC80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE4D9DBA-EFAD-4DEC-830A-BD09BDE2CC80}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 9
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://192.168.103.229:8080/tfs/team_drms
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Edu.Data\\Edu.Data.csproj
+		SccProjectName1 = Edu.Data
+		SccLocalPath1 = Edu.Data
+		SccProjectUniqueName2 = Edu.Entity\\Edu.Entity.csproj
+		SccProjectName2 = Edu.Entity
+		SccLocalPath2 = Edu.Entity
+		SccProjectUniqueName3 = Edu.Models\\Edu.Models.csproj
+		SccProjectName3 = Edu.Models
+		SccLocalPath3 = Edu.Models
+		SccProjectUniqueName4 = Edu.Service\\Edu.Service.csproj
+		SccProjectName4 = Edu.Service
+		SccLocalPath4 = Edu.Service
+		SccProjectUniqueName5 = Edu.Web\\EduIM.Web.csproj
+		SccProjectName5 = Edu.Web
+		SccLocalPath5 = Edu.Web
+		SccProjectUniqueName6 = EduIM.WebAPI\\EduIM.WebAPI.csproj
+		SccProjectName6 = EduIM.WebAPI
+		SccLocalPath6 = EduIM.WebAPI
+		SccProjectUniqueName7 = Edu.JobAssignment.Web\\Edu.JobAssignment.Web.csproj
+		SccProjectName7 = Edu.JobAssignment.Web
+		SccLocalPath7 = Edu.JobAssignment.Web
+		SccProjectUniqueName8 = Edu.SignalRServer\\Edu.SignalRServer.csproj
+		SccProjectName8 = Edu.SignalRServer
+		SccLocalPath8 = Edu.SignalRServer
+	EndGlobalSection
+EndGlobal

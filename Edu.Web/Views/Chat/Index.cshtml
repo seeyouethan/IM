@@ -1,0 +1,369 @@
+﻿@using Edu.Tools
+<script src="~/Tookit/layer/layer.js"></script>
+<link href="~/Tookit/layer/skin/layer.css" rel="stylesheet" />
+<link href="~/Content/Web/css/chat.css" rel="stylesheet" />
+<div class="membersDiv" id="membersDiv">
+    @*这个div是标题上 下拉显示群组成员的div 默认是隐藏的*@
+</div>
+<div class="chat-panel">
+    <!-- 聊天窗口 -->
+    <div class="chat-panel-body clearfix" id="div0">
+        <span class="cphead-name" style="display: none">@ViewBag.tousername</span>
+        <!-- 左侧列表 -->
+        <ul class="col-2 float-l tab-list" id="chatpersonlist">
+
+        </ul>
+        <div id="div1" class="col-4 float-l tab-content">
+
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/chatindex.js"></script>
+<script type="text/javascript">
+    $(function () {
+        /*点击群组成员 私聊*/
+        $(document).on('click', '#membersUl li', function () {
+            var ele = $(this);
+            var uid = ele.attr("data-uid");
+            var name = ele.attr("data-name");
+            var ele0 = window.parent.parent.document.getElementById("okcsim");
+            var iframeele = ele0.children[0];
+            if (iframeele != null) {
+                iframeele.contentWindow.OpenPrivateChat && iframeele.contentWindow.OpenPrivateChat(uid, name);
+                //收起下拉列表
+                $("#membersDiv").hide(200);
+            }
+        });
+        /*切换聊天页*/
+        window.tabClick = function (ele) {
+            var index = $(ele).index();
+            var id = ele.attr("id");
+            var eleCircle = $(ele).children("i").eq(0);
+            var isgroup = ele.attr("data-group");
+            eleCircle.removeClass('ishow');
+            eleCircle.text(1);
+            var username = $(ele).children('span').eq(0).html();
+            $('.cphead-name').html(username);
+            var elePrev = parent.$('#chatWindow').prev();
+            elePrev.html(username);
+            $(ele).addClass('cur').siblings('li').removeClass('cur');
+
+            if (isgroup === "true") {
+                dropdownFunction(true, id);
+            } else {
+                dropdownFunction(false, id);
+            }
+
+            var element = $("#div1").children('iframe').eq(index);
+            element.show().siblings().hide();
+
+            var eleIframe = window.document.getElementById("ulchat" + id);
+            eleIframe.contentWindow.ScrollToBottom && eleIframe.contentWindow.ScrollToBottom();
+        }
+    });
+    /*添加聊天人 如果当前聊天人已经出现在聊天面板 那么就触发的是该li的click事件*/
+    window.addChatPerson = function (uid, username, photo, isgroup, roomid) {
+
+        $('.cphead-name').html(username);
+        var elePrev = parent.$('#chatWindow').prev();
+        elePrev.html(username);
+        $('#chatpersonlist li').removeClass("cur");
+        var ele = $('#' + uid);
+        if (ele.length !== 0) {
+            ele.click();
+            if (roomid !== "") {
+                //如果是视频聊天的情况下
+                var eleIframe = window.document.getElementById("ulchat" + uid);
+                eleIframe.contentWindow.GetVideoChatRequest(roomid);
+            }
+            return;
+        }
+        var elestr = "<li class=\"cur\" id=\"" + uid + "\" data-group=\"" + isgroup + "\"><img src=\"" + photo + "\" class=\"head-ssimg mr10 vam\"><span>" + username + "</span><i class=\"unreadmsg\">1</i><i class=\"iconfont icon-close\"></i></li>";
+        $("#chatpersonlist").append(elestr);
+
+        $("#chatpersonlist li").unbind();
+        $('#chatpersonlist li').on('click', function () {
+            tabClick($(this));
+        });
+        $("#chatpersonlist li i").unbind();
+        $('#chatpersonlist li i').on('click', function () {
+            closeChatWindow($(this));
+        });
+    }
+    /*添加聊天面板*/
+    window.addChatWindow = function (uid, connid, tousername, isgroup, roomid) {
+        //如果打开了展示群组成员面板，则关闭该面板
+        if ($("#membersDiv").css('display') !== 'none') {
+            $("#membersDiv").hide();
+        }
+        var ele = $('#ulchat' + uid);
+        if (ele.length !== 0) {
+            ele.show().siblings().hide();
+            return;
+        }
+        var iframeid = 'ulchat' + uid;
+        var elestr = "<iframe style=\"width:100%;height:100%;border:none;\" id=\"" + iframeid + "\" scrolling=\"no\" allowtransparency=\"true\" allowfullscreen=\"true\" allow=\"microphone camera\" ></iframe>";
+        $("#div1").append(elestr);
+        $("#div1").children('iframe').hide();
+
+        var iframeEle = window.document.getElementById(iframeid);
+        iframeEle.allow = "microphone;camera;midi;encrypted-media;";
+
+        var elementC = $("#div1 iframe:last-child");
+        //群组通知消息----start-----
+        var groupMsgUrl = "/im/Chat/GroupMsgNotice";
+        if (uid === "groupMsg") {
+            elementC.attr("src", groupMsgUrl);
+            elementC.show();
+            return;
+        }
+        //群组通知消息----end-----
+        var url = "/im/Chat/UserChatContent?touid=" + uid + "&connid=" + connid + "&tousername=" + tousername;
+        if (isgroup) {
+            //群组暂时不支持视频聊天
+            url = "/im/Chat/UserChatContent?touid=" + uid + "&connid=" + connid + "&tousername=" + tousername + "&isgroup=true";
+            dropdownFunction(true, uid);
+        } else {
+            dropdownFunction(false, uid);
+        }
+        if (roomid !== "") {
+            url = "/im/Chat/UserChatContent?touid=" + uid + "&connid=" + connid + "&tousername=" + tousername + "&roomid=" + roomid + "&isgroup=false";
+            @*console.log("@ViewBag.fromusername" + "---要加入的房间号为-->", roomid);
+            console.log("---这个房间的创立者是-->", tousername);*@
+        }
+        url = encodeURI(url);
+        elementC.attr("src", url);
+        elementC.show();
+    }
+
+
+    window.dropdownFunction = function (b, uid) {
+        parent.$('#gbtn').remove();
+        $("#membersDiv").empty();
+        if (b) {
+            var eleParent = parent.$('#chatWindow').parent();
+            var eleclick = "<span class=\"layui-layer-setwin\" id=\"gbtn\"><i class=\"iconfont icon-down\" style=\"font-size:18px;\" title=\"群组成员\"></i></span>";
+            eleParent.append(eleclick);
+            var eleMenu = eleParent.children("span").eq(1);
+            eleMenu.css("cursor", "pointer");
+            eleMenu.css("right", "40px");
+            eleMenu.css("top", "18px");
+            var ele = window.parent.document.getElementById("chatWindow");
+            var iframeele = ele.children[0];
+            eleMenu.on('click', function () {
+                iframeele.contentWindow.ShowGroupMembers(uid);
+            });
+        }
+    }
+
+    window.ShowGroupMembers = function (groupid) {
+        if ($("#membersDiv").css('display') !== 'none') {
+            $("#membersDiv").slideToggle(200);
+            return;
+        }
+        $("#membersDiv").empty();
+
+        if (groupid.length === 36) {
+            var load = layer.load();
+            @*取群组简介（工作群的简介和群组成员是分开的）*@
+            $.post("/im/Main/GetGroupInfo", { groupID: groupid }, function (result) {
+                var elestr0 = "<div class=\"group-info\"><p class=\"gi-l\">群组说明：</p><p class=\"gi-r\">" + result.Content + "</p></div><div class=\"mt10\"><p class=\"gi-l\">群组成员：</p><ul id=\"membersUl\" class=\"membersUl gi-r\"></ul></div>";
+                $("#membersDiv").append(elestr0);
+                //获取群组成员
+                $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: groupid }, function (data) {
+                    var elestr = "";
+                    $.each(data.Data, function (n, value) {
+                        if (value.realName && value.realName != null) {
+                            elestr += "<li data-uid=\"" + value.id + "\" data-name=\"" + value.realName + "\" class=\"mr18 us\"><span class=\"posr\"><img src=\"" + value.icon + "\" class=\"head-simg vam\"></span><span class=\"dvm\">" + value.realName + "</span></li>";
+                        }
+                    });
+                    layer.close(load);
+                    $("#membersUl").append(elestr);
+                    $("#membersDiv").slideToggle(200);
+
+                });
+            });
+        } else {
+            var load = layer.load();
+            $("#membersDiv").load("@Url.Action("ShowSelfGroupMembers", "GroupChat", new {area = ""})", { groupid: groupid }, function (result) {
+                $("#membersDiv").slideToggle(200);
+                layer.close(load);
+            });
+        }
+    }
+
+    window.closeChatWindow = function (element) {
+        //如果打开了视频聊天 则关闭视频聊天
+        if ($(element).parent().hasClass("cur")) {
+
+        }
+        var eles = $('#chatpersonlist li');
+        if (eles.length === 1) {
+            var chatwindow = $("#chatWindow", parent.document).parent();
+            chatwindow.remove();
+        } else {
+            var elefather = $(element).parent().attr('id');
+            var eleremove = $('#chatpersonlist li[id=' + elefather + ']');
+            //------执行关闭摄像头操作
+            var elechatwindow = window.document.getElementById("ulchat" + elefather);
+            elechatwindow.contentWindow.CloseChatVideo && elechatwindow.contentWindow.CloseChatVideo();
+            //------
+            $("#div1").children('iframe').eq(eleremove.index()).remove();
+            eleremove.remove();
+            $('#chatpersonlist li:first').click();
+            $("#div1").children('iframe').eq(0).show().siblings().hide();
+        }
+    }
+    /*
+        添加自己从别人那里收到的聊天消息
+    */
+    window.AppendOtherUserMsg = function (model) {
+        var uid = model.fromuid;
+        if (model.isgroup === 1) {
+            uid =  model.touid;
+        }
+        var eleC = window.document.getElementById("ulchat" + uid);
+        var eleCj = $("#ulchat" + uid);
+        if (eleC != null) {
+            if (eleCj.css('display') !== 'none') {
+                eleC.contentWindow.AppendOtherUserMsg(model);
+            } else {
+                eleC.contentWindow.AppendOtherUserMsg(model);
+                /*在聊天面板上显示未读消息*/
+                var eleunreadmsg = $("#" + uid).children("i").eq(0);
+                if (eleunreadmsg.hasClass("ishow")) {
+                    var c = Number(eleunreadmsg.text());
+                    if (c >= 98) c = 98;
+                    eleunreadmsg.text(c + 1);
+                } else {
+                    eleunreadmsg.addClass("ishow");
+                    eleunreadmsg.text(1);
+                }
+            }
+        } else {
+            /*在右侧联系人面板上 显示未读消息*/
+            AddNewCircle();
+            var ele = $("#okcsim", parent.document).children(0);
+            //var ele = window.parent.document.getElementById(iframeid);
+            if (ele.length !== 0) {
+                if (model.isgroup===1) {
+                    ele[0].contentWindow.AddUnreadGroupMsgIcon(model);
+                } else {
+                    ele[0].contentWindow.AddUnreadMsgIcon(model);
+                }
+            }
+        }
+    }
+
+    /*
+        添加自己从移动端那里同步过来的自己发送的聊天消息
+    */
+    window.AppendSelfMsg = function (model) {
+        var eleC = window.document.getElementById("ulchat" + model.touid);
+        var eleCj = $("#ulchat" + model.touid);
+        if (eleC != null) {
+            eleC.contentWindow.AppendOtherUserMsg(model);
+        }
+    }
+
+    /*收到视频聊天请求*/
+    window.GetVideoChatRequest = function (fromuid, fromusername, touid, connid) {
+        var id0 = $("#okcsim", parent.document).children(0).attr("id");
+        var ele0 = window.parent.document.getElementById(id0);
+        if (ele0 != null) {
+            ele0.contentWindow.LayerOpenVideoChat(fromuid, fromusername, connid);
+        }
+    }
+    /*发送的视频邀请被拒绝*/
+    window.GetVideoChatRefused = function (fromuid) {
+        //parent.layer.msg("对方拒绝了你的视频邀请");
+        //CloseChatVideo();
+        var eleIframe = window.document.getElementById("ulchat" + fromuid);
+        eleIframe.contentWindow.GetVideoChatRefused();
+    }
+
+
+    window.exitgroup = function (groupid) {
+        parent.layer.confirm("确定退出该群组?", {
+            title: '退出群组',
+            btn: ['确定', '取消'],
+            skin: 'okcsclass dialog-s'
+        }, function () {
+            $.post("@Url.Action("ExitChatGroup", "Main", new {area = ""})", { gid: groupid }, function (result) {
+                if (result.r) {
+                    parent.layer.msg("退出群组成功", { time: 2000 });
+                    /*
+                        1.移除列表中的群组
+                        2.关闭对应的聊天窗口
+                    */
+                    var ele = window.parent.document.getElementById("okcsim");
+                    var iframeele = ele.children[0];
+                    iframeele.contentWindow.removeselfgroup(groupid);
+                    var elek = $('#chatpersonlist li.cur i').eq(1);
+                    closeChatWindow($(elek));
+                    $("#membersDiv").empty();
+                    $("#membersDiv").hide();
+                    layer.closeAll();
+                } else {
+                    layer.msg("退出群组失败" + result.msg, { time: 2000 });
+                    layer.closeAll();
+                }
+            });
+        });
+    }
+
+    window.editgroup = function (groupid) {
+        $("#membersDiv").slideToggle(200);
+        var load = parent.layer.load();
+        $.post("@Url.Action("EditChatGroupPre", "Main", new {area = ""})", { gid: groupid }, function (result) {
+            if (result.result) {
+                parent.layer.close(load);
+                parent.layer.open({
+                    type: 2,
+                    id: "groupeditlayer",
+                    title: '编辑群组',
+                    skin: 'okcsclass createChatGroup',
+                    shade: 0.3,
+                    shadeClose: true,
+                    border: [0],
+                    //skin: 'createGroup',
+                    area: ['750px', '670px'],
+                    content: result.url
+                });
+            } else {
+                parent.layer.msg("操作失败" + result.msg, { time: 2000 });
+                parent.layer.close(load);
+            }
+        });
+    }
+
+    window.giveupgroup = function (groupid) {
+        parent.layer.confirm("确定解散该群组?", {
+            title: '解散群组',
+            btn: ['确定', '取消'],
+            skin: 'okcsclass dialog-s'
+        }, function () {
+            $.post("@Url.Action("GiveupChatGroup", "Main", new {area = ""})", { gid: groupid }, function (result) {
+                if (result.r) {
+                    parent.layer.msg("解散群组成功", { time: 2000 });
+                    /*
+                        1.移除列表中的群组
+                        2.关闭对应的聊天窗口
+                    */
+                    var ele = window.parent.document.getElementById("okcsim");
+                    var iframeele = ele.children[0];
+                    iframeele.contentWindow.removeselfgroup(groupid);
+                    var elek = $('#chatpersonlist li.cur i').eq(1);
+                    closeChatWindow($(elek));
+                    $("#membersDiv").empty();
+                    $("#membersDiv").slideToggle(200);
+                    layer.closeAll();
+                } else {
+                    layer.msg("退出群组失败" + result.msg, { time: 2000 });
+                    layer.closeAll();
+                }
+            });
+        });
+    }
+</script>
+

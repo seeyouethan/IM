@@ -1,0 +1,42 @@
+﻿<#+
+    public class EntityRepositoryTemplate:CSharpTemplate
+    {
+        private string _name;
+        
+        public EntityRepositoryTemplate(string tname)
+        {
+            _name = tname;
+        }
+
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public string FileName
+        {
+            get
+            { 
+                return string.Format("{0}Repository.cs", _name);
+            }
+        }
+        public override string TransformText()
+        {
+#>
+using Edu.Entity;
+namespace Edu.Data
+{
+
+    public partial class D<#=_name#> :GenericRepository<<#=_name#>>
+	{
+		EduContext db;
+		public D<#=_name#>(EduContext DbContext)
+			: base(DbContext)
+		{
+			db = DbContext;
+		}
+	}
+}
+ <#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }
+#>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>日历日程</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">   
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+     <el-container class="container-panel">
+               <el-main>
+                  <div class="list-panel ">
+                       <div class="list-panel-top clearfix">
+                         <span class="float-l"><i></i>工作任务管理</span>
+                         <div class="float-r">
+                            <!-- 日周月切换 -->
+                            <div class="tab-group">
+                              <span class="cur">日</span>
+                              <span>周</span>
+                              <span>月</span>
+                            </div>
+                            <!-- 精简展开切换 -->
+                            <span class="mr10 font-s12 up-down">
+                              <span>精简</span>/
+                              <span class="cur">展开</span>
+                            </span>
+                            <a href="javascript:;" class="link mr05 font-s14">更多</a>
+                            <el-dropdown trigger="click">
+                                  <span class="el-dropdown-link"><i class="iconfont icon-gengduo"></i></span>
+                                  <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item>删除组件</el-dropdown-item>
+                                  </el-dropdown-menu>
+                            </el-dropdown>
+                         </div>
+                       </div>
+                       <div class="skdcal-panel">
+                          <el-row :gutter="20">
+                             <el-col :span="16">
+                               <el-scrollbar>
+                                <div class="skd-panel">
+                                   <p class="skd-top">
+                                      <span>
+                                        <i class="iconfont icon-left-copy color-9 cp"></i>
+                                        <span class="link01">周五&nbsp;&nbsp;&nbsp;&nbsp;2018年05月28日</span>
+                                        <i class="iconfont icon-right-copy color-9 cp"></i>
+                                      </span>
+                                      <el-button type="primary" class="btn-other float-r">新建任务</el-button>
+                                   </p>
+                                   <ul  class="skd-bot">
+                                     <!-- 默认展示状态 -->
+                                     <li>
+                                       <div>
+                                          <i class="skd"></i><!-- 勾选按钮 -->
+                                          <!-- 特急时给p添加类名skdb-txt-tj，紧急时添加类名skdb-txt-j -->
+                                          <p class="skdb-txt skdb-txt-j"><span>知识管理的理论与实践发达国家和国家</span></p><!-- 题名 -->
+                                          <span class="skdb-icon float-r"  style="display:none"><!-- 操作按钮 -->
+                                              <i class="iconfont icon-details"></i>
+                                              <i class="iconfont icon-edit1"></i>
+                                              <i class="iconfont icon-subTask"></i>
+                                              <i class="iconfont icon-del"></i>
+                                              <i class="iconfont icon-stateTop"></i>
+                                          </span>
+                                          <p class="color-9 inline-block float-r">
+                                              <span class="mr10">张玉玉</span>
+                                              <span class="mr10">07/12-07/23</span>
+                                              <span class="mr10">20%</span>
+                                          </p>
+                                       </div>
+                                       <!-- 子集 -->
+                                       <ul class="skd-bot skd-top01">
+                                          <li>
+                                            <div>
+                                                <i class="skd"></i>
+                                                <p class="skdb-txt skdb-txt-tj"><span>知识管理的理论与实践发达国家和国家</span></p>
+                                                <span class="skdb-icon float-r" style="display:none">
+                                                    <i class="iconfont icon-details"></i>
+                                                    <i class="iconfont icon-edit1"></i>
+                                                    <i class="iconfont icon-subTask"></i>
+                                                    <i class="iconfont icon-del"></i>
+                                                    <i class="iconfont icon-stateTop"></i>
+                                                </span>
+                                                <p class="color-9 inline-block float-r">
+                                                    <span class="mr10">张玉玉</span>
+                                                    <span class="mr10">07/12-07/23</span>
+                                                    <span class="mr10">20%</span>
+                                                </p>
+                                             </div>
+                                          </li>
+                                       </ul>
+                                     </li>
+                                     <!-- 已完成样式 给父元素li添加类名skd-finished-->
+                                     <li class="skdb-finished">
+                                       <div>
+                                            <i class="skd"></i>
+                                            <p class="skdb-txt"><span>知识管理的理论与实践发达国家和国家</span></p>
+                                            <span class="skdb-icon float-r" style="display:none">
+                                                <i class="iconfont icon-details"></i>
+                                                <i class="iconfont icon-edit1"></i>
+                                                <i class="iconfont icon-subTask"></i>
+                                                <i class="iconfont icon-del"></i>
+                                                <i class="iconfont icon-stateTop"></i>
+                                            </span>
+                                            <p class="color-9 inline-block float-r">
+                                                <span class="mr10">张玉玉</span>
+                                                <span class="mr10">07/12-07/23</span>
+                                                <span class="mr10">20%</span>
+                                            </p>
+                                       </div>
+                                     </li>
+                                     <!-- 默认展示状态-->
+                                     <li>
+                                       <div>
+                                            <i class="skd"></i>
+                                            <p class="skdb-txt"><span>知识管理的理论与实践发达国家和国家</span></p>
+                                            <span class="skdb-icon float-r" style="display:none">
+                                                <i class="iconfont icon-details"></i>
+                                                <i class="iconfont icon-edit1"></i>
+                                                <i class="iconfont icon-subTask"></i>
+                                                <i class="iconfont icon-del"></i>
+                                                <i class="iconfont icon-stateTop"></i>
+                                            </span>
+                                            <p class="color-9 inline-block float-r">
+                                                <span class="mr10">张玉玉</span>
+                                                <span class="mr10">07/12-07/23</span>
+                                                <span class="mr10">20%</span>
+                                            </p>
+                                       </div>
+                                     </li>
+                                     <!-- 默认展示状态-->
+                                     <li class="skdb-finished">
+                                       <div>
+                                            <i class="skd"></i>
+                                            <p class="skdb-txt"><span>知识管理的理论与实践发达国家和国家</span></p>
+                                            <span class="skdb-icon float-r" style="display:none">
+                                                <i class="iconfont icon-details"></i>
+                                                <i class="iconfont icon-edit1"></i>
+                                                <i class="iconfont icon-subTask"></i>
+                                                <i class="iconfont icon-del"></i>
+                                                <i class="iconfont icon-stateTop"></i>
+                                            </span>
+                                            <p class="color-9 inline-block float-r">
+                                                <span class="mr10">张玉玉</span>
+                                                <span class="mr10">07/12-07/23</span>
+                                                <span class="mr10">20%</span>
+                                            </p>
+                                       </div>
+                                     </li>
+                                     <!-- 默认展示状态-->
+                                     <li>
+                                       <div>
+                                            <i class="skd"></i>
+                                            <p class="skdb-txt"><span>知识管理的理论与实践发达国家和国家</span></p>
+                                            <span class="skdb-icon float-r" style="display:none">
+                                                <i class="iconfont icon-details"></i>
+                                                <i class="iconfont icon-edit1"></i>
+                                                <i class="iconfont icon-subTask"></i>
+                                                <i class="iconfont icon-del"></i>
+                                                <i class="iconfont icon-stateTop"></i>
+                                            </span>
+                                            <p class="color-9 inline-block float-r">
+                                                <span class="mr10">张玉玉</span>
+                                                <span class="mr10">07/12-07/23</span>
+                                                <span class="mr10">20%</span>
+                                            </p>
+                                       </div>
+                                     </li>
+                                   </ul>
+                                 </div>
+                                </el-scrollbar>
+                             </el-col>
+                             <el-col :span="8">
+                               <img src="images/rili.png">
+                             </el-col>
+                          </el-row>
+                       </div>
+                      </div>
+               </el-main>
+          </el-container>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+  <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false,currentDate: new Date() }
+      }
+    })
+  </script>
+</body>
+</html>

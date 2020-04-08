@@ -1,0 +1,28 @@
+﻿@using Edu.Service
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="@(BaseUrl.Url)/Content/Web/css/Element-UI/index.css">
+    <link rel="stylesheet" type="text/css" href="@(BaseUrl.Url)/Content/Web/css/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="@(BaseUrl.Url)/Content/Web/css/style.css">
+    <link rel="stylesheet" type="text/css" href="@(BaseUrl.Url)/Content/Web/css/main.css">
+    <link rel="stylesheet" type="text/css" href="@(BaseUrl.Url)/Content/Web/css/todolist_main.css">
+    <link rel="stylesheet" type="text/css" href="@(BaseUrl.Url)/Content/Web/css/todolist.css" >
+    @RenderSection("Css", false)
+    <script type="text/javascript" src="@(BaseUrl.Url)/Content/Web/js/jquery-1.10.2.min.js"></script>
+    <script src="@(BaseUrl.Url)/Content/Web/js/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="@(BaseUrl.Url)/Content/Web/js/index.js"></script>
+    <script src="@(BaseUrl.Url)/Tookit/layer/layer.js"></script>
+</head>
+
+<body>
+    @RenderBody()
+    @RenderSection("scripts", required: false)
+    @RenderSection("Js", false)
+</body>
+</html>

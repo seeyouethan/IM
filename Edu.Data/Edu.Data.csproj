@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9A7B5ECE-C016-4D94-91AD-2851E334FEFD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Edu.Data</RootNamespace>
+    <AssemblyName>Edu.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Edu.Tools">
+      <HintPath>C:\com\Edu.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\Utility.cs" />
+    <Compile Include="BulkExtensions\BulkOperationProvider.cs" />
+    <Compile Include="BulkExtensions\DbContextBulkOperationExtensions.cs" />
+    <Compile Include="BulkExtensions\Extensions\TypeExtensions.cs" />
+    <Compile Include="BulkExtensions\Mappings\ColumnMapping.cs" />
+    <Compile Include="BulkExtensions\Mappings\DbMapper.cs" />
+    <Compile Include="BulkExtensions\Mappings\DbMapping.cs" />
+    <Compile Include="BulkExtensions\Mappings\TableMapping.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\EntityCodeScript.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityCodeScript.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Repository\Repositories\ConferenceDiscussRepository.cs" />
+    <Compile Include="Repository\Repositories\UserFavoritesRepository.cs" />
+    <Compile Include="Repository\Repositories\GetuiLogRepository.cs" />
+    <Compile Include="Repository\Repositories\EduContextRepository.cs" />
+    <Compile Include="Repository\Repositories\GroupSubjectRepository.cs" />
+    <Compile Include="Repository\Repositories\UserNoticeSwitchRepository.cs" />
+    <Compile Include="Repository\Repositories\GroupNoticeRepository.cs" />
+    <Compile Include="Repository\Repositories\ImApplyRepository.cs" />
+    <Compile Include="Repository\Repositories\ImFriendGroupDetailRepository.cs" />
+    <Compile Include="Repository\Repositories\ImFriendGroupRepository.cs" />
+    <Compile Include="Repository\Repositories\ImGroupDetailRepository.cs" />
+    <Compile Include="Repository\Repositories\ImGroupRepository.cs" />
+    <Compile Include="Repository\Repositories\IMMsgRepository.cs" />
+    <Compile Include="Repository\Repositories\LogInfoRepository.cs" />
+    <Compile Include="Repository\Repositories\MenuRepository.cs" />
+    <Compile Include="Repository\Repositories\PlanDiscussRepository.cs" />
+    <Compile Include="Repository\Repositories\PlanFileRepository.cs" />
+    <Compile Include="Repository\Repositories\PlanProgressRepository.cs" />
+    <Compile Include="Repository\Repositories\PlanRepository.cs" />
+    <Compile Include="Repository\Repositories\PlanTopRepository.cs" />
+    <Compile Include="Repository\Repositories\RecentContactsRepository.cs" />
+    <Compile Include="Repository\Repositories\TopContactsGroupRepository.cs" />
+    <Compile Include="Repository\Repositories\TopContactsRepository.cs" />
+    <Compile Include="Repository\Repositories\UserDeviceRepository.cs" />
+    <Compile Include="Repository\Repositories\UserInfoRepository.cs" />
+    <Compile Include="Repository\Repositories\ConferenceMsgRepository.cs" />
+    <Compile Include="Repository\Repositories\GroupAnnouncementRepository.cs" />
+    <Compile Include="Repository\Repositories\UserRoleRepository.cs" />
+    <Compile Include="Repository\Repository.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Edu.Entity\Edu.Entity.csproj">
+      <Project>{8da3a63f-7a30-4cac-8a16-35fccb48084b}</Project>
+      <Name>Edu.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edu.Models\Edu.Models.csproj">
+      <Project>{c3cf7ee9-e35b-43ca-a2c7-44a11d8fbe70}</Project>
+      <Name>Edu.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Repository\EntityCodeScript.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntityCodeScript.cs</LastGenOutput>
+      <LastOutputs>
+.\EntityCodeScript.cs
+.\Repositories\EduContextRepository.cs
+.\Repositories\ImApplyRepository.cs
+.\Repositories\ImFriendGroupDetailRepository.cs
+.\Repositories\ImFriendGroupRepository.cs
+.\Repositories\ImGroupDetailRepository.cs
+.\Repositories\ImGroupRepository.cs
+.\Repositories\IMMsgRepository.cs
+.\Repositories\LogInfoRepository.cs
+.\Repositories\MenuRepository.cs
+.\Repositories\PlanDiscussRepository.cs
+.\Repositories\PlanFileRepository.cs
+.\Repositories\PlanProgressRepository.cs
+.\Repositories\PlanRepository.cs
+.\Repositories\PlanTopRepository.cs
+.\Repositories\RecentContactsRepository.cs
+.\Repositories\TopContactsGroupRepository.cs
+.\Repositories\TopContactsRepository.cs
+.\Repositories\UserDeviceRepository.cs
+.\Repositories\UserInfoRepository.cs
+.\Repositories\UserRoleRepository.cs
+</LastOutputs>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Repository\EntityRepositoryTemplate.ttinclude" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

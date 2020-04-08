@@ -1,0 +1,139 @@
+﻿@using Edu.Tools
+@*这个是第二版Meeting*@
+@{
+    ViewBag.Title = "群组视频会议";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/EasyRTC/easyrtc.css" rel="stylesheet" />
+<link href="~/Content/EasyRTC/demo_room.css" rel="stylesheet" />
+<script src="~/Content/EasyRTC/socket.io.js"></script>
+<script src="~/Content/EasyRTC/easyrtc.js"></script>
+<script src="~/Content/EasyRTC/desktop_capture_iframe_version.js"></script>
+<script src="~/Content/EasyRTC/demo_multiparty_a2.js"></script>
+<div class="container body-content">
+    <div class="row">
+        <div id="elementApp">
+            <el-container>
+                <el-container>
+                    <el-container class="min800">
+                        <el-main>
+                            <div id="fullpage" class="boxCommon">
+                                <p class="videoTitle">我的视频</p>
+                                <video id="box0" class="transit boxCommon thumbCommon easyrtcMirror width100 k-video" muted="muted" volume="0" autoplay="autoplay" playsinline="playsinline" controls="controls"></video>
+                            </div>
+                            <div>
+                                <!--其他成员视频窗口-->
+                                <div class="submainBox" id="submainVideo"></div>
+                            </div>
+                        </el-main>
+                        <el-footer>
+                            <div>
+                                <button type="button" id="ScreenShare" class="btn btn-primary" style="">屏幕共享</button>
+                            </div>
+                        </el-footer>
+                    </el-container>
+                    <el-aside width="300px">
+                        <ul class="videoMember" id="videoMember"></ul>
+                    </el-aside>
+                </el-container>
+            </el-container>
+        </div>
+    </div>
+</div>
+<script>
+     new Vue({
+        el: '#elementApp',
+    });
+    var roomName = "";//roomName不能太长，如果用uid则会报错
+    var groupid = "@ViewBag.roomid";
+    var uid = "@ViewBag.uid";
+    var username = "@LoginUserService.ssoUserID";//用uid作为username
+    var vCount = 1;//群组成员总个数,默认为1
+    var isMember = false;
+
+    var w = "@ViewBag.w";
+    var h = "@ViewBag.h";
+    var f = "@ViewBag.f";
+    
+
+    /*
+        查询自己是否是该群组成员
+        分为工作群和自建群
+    */
+    $.ajaxSettings.async = false;
+    if (groupid.length === 36) {
+        roomName = groupid.substring(8);
+        $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: "@ViewBag.roomid" }, function (data) {
+            vCount = data.Data.length;
+            $.each(data.Data, function (n, value) {
+                addGroupMembers(value.realName, value.id);
+                if (value.id === uid) {
+                    isMember = true;
+                }
+            });
+        });
+    } else {
+        roomName = groupid;
+        $.post("@Url.Action("GetGroupMembers","Chat")", { groupid: "@ViewBag.roomid" }, function (result) {
+            if (result.Success) {
+                vCount = result.Content.length;
+                //初始化成员列表
+                $.each(result.Content, function (n, value) {
+                    addGroupMembers(value.NickName, value.UserID);
+                    if (value.UserID === uid) {
+                        isMember = true;
+                    }
+                });
+            } else {
+                console.log(result.Error);
+            }
+        });
+    }
+    $.ajaxSettings.async = true;
+
+
+    //不是该团队成员
+    if (!isMember) {
+        console.log("暂无权限进入该房间！");
+        closeWindow();
+    }
+
+
+     var selfVideo = document.getElementById("box0");
+     rtcAppInit(roomName, selfVideo, username, vCount,w,h,f);
+
+
+     function closeWindow() {
+         var userAgent = navigator.userAgent;
+         if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+             location.href = "about:blank";
+         } else {
+             window.opener = null;
+             window.open('', '_self');
+         }
+         window.close();
+     }
+
+    function addGroupMembers(nickName, uid) {
+        var newLi = document.createElement("li");
+        newLi.setAttribute("id", "li" + uid);
+
+        var newImg = document.createElement("img");
+        newImg.setAttribute("src", "@ConfigHelper.GetConfigString("sso_host_name")" + "pic/" + uid);
+
+        var p1 = document.createElement("p");
+        p1.setAttribute("class", "p1");
+        p1.setAttribute("id", "p"+uid);
+        p1.innerHTML = nickName;
+        p1.setAttribute("title", nickName);
+
+        var p2 = document.createElement("p");
+        p2.setAttribute("class", "p2");
+        p2.innerHTML = "未加入";
+
+        newLi.appendChild(newImg);
+        newLi.appendChild(p1);
+        newLi.appendChild(p2);
+        $('#videoMember').append(newLi);
+    }
+</script>

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<UserRole>
+ <a class="btn btn-sm btn-primary" href="javascript:AddOp();">
+    <i class="icon-plus"></i>
+    添加
+</a>
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>角色名称</th>
+            <th>角色编码</th>
+            <th>是否是管理员</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="10" style="text-align: center; font-size: 16px; color: red;">暂无数据</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+
+                <tr>
+                    <td> @Html.DisplayFor(modelItem => item.ID)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Name)</td>
+                    <td> @Html.DisplayFor(modelItem => item.Code)</td>
+
+                    <td>@(Html.Raw(Html.EnumDescriptionText<Edu.Models.YesNoColor>(int.Parse(item.IsAdmin))))</td>
+                    <td>
+                        <a href="@Url.Action("SetAuthority", "FunMenu", new { rid = item.ID })" title="角色权限">
+                            <i class="icon-user"> </i>
+                        </a>
+                        <a href="javascript:ModyOp('@item.ID')" title="修改" data-toggle="tooltip" data-placement="top">
+                            <i class="icon-pencil"> </i>
+                        </a>
+                        <a href="javascript:DeleteOp('@item.ID')" title="删除" data-toggle="tooltip" data-placement="top">
+                            <i class="icon-remove"> </i>
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_Dialog")
+<script type="text/javascript">
+    function AddOp() {
+        $("#dvFm").load("@Url.Action("GetOp")", { date: new Date().getTime() }, function (result) {
+            $("#myModal").modal('show');
+            $("#myModalLabel").text("增加");
+            $('#fm').validation();
+        });
+    }
+    function ModyOp(id) {
+        $("#dvFm").load("@Url.Action("GetOp")", { id: id, date: new Date().getTime() }, function (result) {
+            $("#myModal").modal('show');
+            $("#myModalLabel").text("修改");
+            $('#fm').validation();
+        });
+    }
+    function DeleteOp(id) {
+        layer.confirm("确定删除?", function () {
+            $.post("@Url.Action("DeleteOp")", { id: id, date: new Date().getTime() }, function (result) {
+                if (result.r) {
+                    layer.msg("删除成功");
+                    window.location.reload();
+                }
+                else {
+                    layer.msg("删除失败");
+                }
+            })
+        })
+    }
+
+</script>
+
+
+

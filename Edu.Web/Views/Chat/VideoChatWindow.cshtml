@@ -1,0 +1,159 @@
+﻿@model String
+
+<link href="~/Content/Rtc/css/demo_room.css" rel="stylesheet" />
+<link href="~/Content/Web/css/video.css" rel="stylesheet" />
+<link href="~/Content/VideoConfenence/css/iconfont.css" rel="stylesheet" />
+<link href="~/Content/RtcMultiConnection/getHTMLMediaElement.css" rel="stylesheet" />
+<link href="~/Content/VideoConfenence/css/style.css" rel="stylesheet" />
+
+<script src="~/Content/RtcMultiConnection/RTCMultiConnection.min.js"></script>
+<script src="~/Content/RtcMultiConnection/socket.io.js"></script>
+<script src="~/Content/RtcMultiConnection/adapter.js"></script>
+<script src="~/Content/RtcMultiConnection/getHTMLMediaElement_personal.js"></script>
+<script src="~/Content/RtcMultiConnection/MultiStreamsMixer.js"></script>
+
+<style>
+    .vctb-item{
+        margin:0px;
+    }
+    .media-controls{
+        padding:4px;
+    }
+</style>
+
+
+<div id="fullpage" class="boxCommon">
+    <!--对方的视频画面-->
+    <div id="remotes-container" class="vc-visitb posr">
+        <i class="iconfont icon-video" id="i1"></i>
+        <span id="span1" class="vc-bot">等待对方接收邀请...</span>        
+    </div>   
+    <!--自己的视频画面-->
+    <div id="videos-container" class="text item posr">
+        <i class="iconfont icon-video" id="i0"></i>
+        <san id="span0" class="vc-bot">正在连接视频...</san>        
+    </div>
+</div>
+
+
+<div class="f-div">
+    <button id="changeBtn">分享桌面</button>
+</div>
+<script type="text/javascript">
+
+    var roomid = "@Model";
+    var uid = "@ViewBag.fromuid"
+    var isCamera=true;//当前正在分享摄像头
+   
+
+    //挂断视频聊天
+    window.CloseChatVideo = function () {        
+        closevideoDiv();
+    }
+    //清除div以及相关弹出层
+    window.closevideoDiv = function () {
+        $("#videoChatDiv").empty();
+        $("#videoBtn").removeClass("cur");
+        $("#div0").removeClass('show-video');
+        /*如果有询问窗口 也将询问窗口关闭*/
+        var ele = window.parent.parent.document.getElementById("okcsim");
+        if (ele != null) {
+            var iframeele = ele.children[0];
+            iframeele.contentWindow.CloseVideoChatByFrom("@ViewBag.fromuid", "@ViewBag.touid");
+        }
+    }
+
+
+    $("#changeBtn").click(function () {
+        if (isCamera) {
+            //切换到分享桌面
+            navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then(stream => {
+
+                var screenVideoTrack = stream.getVideoTracks()[0];
+                var screenAudioTrack = stream.getAudioTracks()[0];
+
+                var mixAudioTrack;
+
+                var audioTrack0 = connection.attachStreams[0].getAudioTracks()[0];
+                if (audioTrack0.Label == "System Audio") {
+                    //原来的音频就是桌面声音，不用混流
+                } else {
+                    //混流
+                    var mixer = new MultiStreamsMixer([stream, connection.attachStreams[0]]);
+                    mixAudioTrack = mixer.getMixedStream().getAudioTracks()[0];
+                }
+                connection.getAllParticipants().forEach(function (pid) {
+                    var peer = connection.peers[pid].peer;
+                    if (!peer.getSenders) return;
+
+
+                    peer.getSenders().forEach(function (sender) {
+                        if (!sender || !sender.track) return;
+
+                        if (sender.track.kind === 'video' && screenVideoTrack) {
+                            sender.replaceTrack(screenVideoTrack);
+                        }
+                        if (sender.track.kind === 'audio' && mixAudioTrack) {
+                            sender.replaceTrack(mixAudioTrack);
+                        }
+                    });
+                });
+
+                //本地这个流就改变下视频流，不改变音频流,因为本地不需要取声音
+                connection.attachStreams.forEach(function (stream) {
+                    stream.getVideoTracks().forEach(function (track) {
+                        stream.removeTrack(track);
+                    });
+                    stream.addTrack(screenVideoTrack);
+                });
+                isCamera = false; $("#changeBtn").text("分享摄像头");
+            },
+            function () {
+                //点击了取消按钮
+            });
+
+
+
+        } else {
+            //切换到分享摄像头
+            //先关闭所有的分享
+            connection.attachStreams.forEach(function (localStream) {
+                localStream.stop();
+            });
+            //再重新打开摄像头
+            setTimeout(function () {
+                connection.session = {
+                    audio: true,
+                    video: true,
+                    data: true,
+                };
+                //回音消除
+                connection.mediaConstraints = {
+                    video: true,
+                    audio: {
+                        mandatory: {
+                            echoCancellation: false, // disabling audio processing
+                            googAutoGainControl: true,
+                            googNoiseSuppression: true,
+                            googHighpassFilter: true,
+                            googTypingNoiseDetection: true,
+                            //googAudioMirroring: true
+                        },
+                        optional: []
+                    }
+                };
+
+
+                connection.addStream({
+                    video: true,
+                    audio: true,
+                    data: true,
+                });
+            }, 2000);
+            isCamera = true; $("#changeBtn").text("分享桌面");
+        }
+        
+    })
+
+</script>
+<script src="~/Content/VideoConfenence/js/viceoChat.js"></script>

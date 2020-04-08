@@ -1,0 +1,31 @@
+﻿@*我的群组列表*@
+@model List<Edu.Models.Models.GroupViewNew>
+@{
+    if (Model != null && Model.Any())
+    {
+        <ul>
+            @foreach (var item in Model)
+            {
+                var logo = BaseUrl.Url + "/Content/Images/group.png";
+                if (!string.IsNullOrEmpty(item.Logo))
+                {
+                    logo = item.Logo;
+                }
+                <li class="tab-li"  onclick="GroupChatBySearch(this)" data-id="@item.ID" data-groupname="@item.Name">
+                    <div>
+                        <a href="javascript:void(0);" class="mr10 float-l posr">
+                            <img src="@logo" class="head-ssimg" />
+                        </a>
+                        <div class="tab-li-div">
+                            <p>@item.Name</p>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div>未找到相关群组</div>
+    }
+}

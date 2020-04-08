@@ -1,0 +1,35 @@
+﻿@{ 
+    ViewBag.Title = "SignalR日志查询";
+}
+
+
+<style>
+    .div1{
+        padding:20px;
+    }
+    .ul1 li{
+        margin:10px;
+    }
+    .ul1 li a{
+        text-decoration:underline;
+        color:#2a8cd7;        
+    }
+    .ul1 li a:hover{
+        color:#f60;
+    }
+</style>
+
+
+
+<div class="div1">
+    <ul class="ul1">
+        <li><a href="@("http://oaokcs.cnki.net/okcssignalr/log/LogInfo/"+ViewBag.filename)">Info日志</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/okcssignalr/log/LogError/"+ViewBag.filename)">Error日志</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/okcssignalr/log/AndroidPush/"+ViewBag.filename)">Android个推的监控日志</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/okcssignalr/log/IOSPush/"+ViewBag.filename)">Ios个推的监控日志</a></li>
+    </ul>
+</div>
+

@@ -1,0 +1,468 @@
+﻿@using Edu.Tools
+
+<script src="~/Content/Web/fonts/iconfont.js"></script>
+<div id="app" v-loading="loading" element-loading-text="拼命加载中" style="height: 94%;margin-top: 10px;">
+    <!-- 新建任务 -->
+    <el-scrollbar class="group-dialog" style="height: 100%">
+            <el-form label-width="100px" v-bind:model="formData" v-bind:rules="rules" ref="form"  class="paddingright10 paddingleft20" :label-position="labelPostition">
+                <el-form-item label="任务名称：" prop="Title">
+                    <el-input v-model.trim="formData.Title"></el-input>
+                </el-form-item>
+                <el-form-item label="上级任务：" v-bind:class="{nodisplay:!hasfather}">
+                    <span v-html="FatherTitle"></span>
+                </el-form-item>
+                <el-form-item label="创建人：">
+                    <span class="mr20"><img v-bind:src="creator.photo" class="head-simg mr10 vam">
+                    <span class="dvm vam" v-bind:title="creator.realname" v-html="creator.realname"></span></span>
+                </el-form-item>
+                <el-form-item label="时间：" prop="StartDate">
+                    <el-col :span="9">
+                        <el-form-item prop="StartDate">
+                            <el-date-picker v-model="formData.StartDate"
+                                            style="width: 100%;"
+                                            type="datetime"
+                                            value-format="yyyy/MM/dd HH:mm:ss"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col class="line" :span="2"> —— </el-col>
+                    <el-col :span="9">
+                        <el-form-item prop="EndDate">
+                            <el-date-picker type="datetime"
+                                            v-model="formData.EndDate"
+                                            style="width: 100%;"
+                                            value-format="yyyy/MM/dd HH:mm:ss"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="优先级：">
+                    <el-select v-model="formData.Priority" placeholder="请选择任务优先级">
+                        <el-option label="一般" v-bind:value="0"></el-option>
+                        <el-option label="紧急" v-bind:value="1"></el-option>
+                        <el-option label="特急" v-bind:value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="提醒：">
+                    <el-select v-model="formData.CallDate" placeholder="请选择提醒时间">
+                        <el-option label="不提醒" v-bind:value="0"></el-option>
+                        <el-option label="提前5分钟" v-bind:value="1"></el-option>
+                        <el-option label="提前10分钟" v-bind:value="2"></el-option>
+                        <el-option label="提前15分钟" v-bind:value="3"></el-option>
+                        <el-option label="提前30分钟" v-bind:value="4"></el-option>
+                        <el-option label="提前1小时" v-bind:value="5"></el-option>
+                        <el-option label="提前1天" v-bind:value="6"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="抄送人：" class="check-mem">
+                    <el-popover placement="top-start"
+                                title="抄送人:"
+                                width="200"
+                                trigger="hover"
+                                content="将任务抄送给成员，成员只能查看没有操作的权限">
+                        <span slot="reference" class="tip-sm">
+                            <svg aria-hidden="true" class="icon">
+                                <use xlink:href="#icon-bangzhu"></use>
+                            </svg>
+                        </span>
+                    </el-popover>
+                    <i class="iconfont icon-addT" @@click="show0()"></i>
+                    <ul id="member0Ul" class="posr">
+                        <span class="mr18 us" v-for="(item, index) in copyToUsers" v-bind:key="index">
+                            <span class="posr">
+                                <img v-bind:src="item.photo" class="head-simg vam" />
+                                <a href="javascript:;" class="del-redT" v-bind:data-id="item.uid">
+                                    <i class="iconfont icon-delte  ml10"></i>
+                                </a>
+                            </span>
+                            <span class="dvm" v-bind:title="item.name" v-html="item.name"></span>
+                        </span>
+
+                        @*<i class="iconfont icon-down link03"></i>*@
+                    </ul>
+                </el-form-item>
+                <el-form-item label="执行人：" required class="check-mem">
+                    <i class="iconfont icon-addT" @@click="show1()"></i>
+                    <ul id="member1Ul"></ul>
+                </el-form-item>
+                <el-form-item label="任务描述：" prop="Content">
+                    <el-input type="textarea" v-model="formData.Content"></el-input>
+                </el-form-item>
+
+                <el-form-item class="amid">
+                    <el-button type="primary" @@click="submitForm()">确 定</el-button>
+                    <el-button @@click="closeForm()">取 消</el-button>
+                </el-form-item>
+            </el-form>
+    </el-scrollbar>
+    <check-members ref="members0"
+                   :props="defaultProps"
+                   :empty-text="emptyText"
+                   :radio="radioFalse"
+                   :expanded="expanded"
+                   :title="title"
+                   :append-to-body="true"
+                   :disabled-list="disabledList"
+                   @@confirm="confirm0"></check-members>
+
+    <check-members ref="members1"
+                   :props="defaultProps"
+                   :empty-text="emptyText"
+                   :radio="radioTrue"
+                   :expanded="expanded"
+                   :title="title"
+                   :append-to-body="true"
+                   :disabled-list="disabledList"
+                   @@confirm="confirm1"></check-members>
+</div>
+<script src="~/Scripts/check-members.min.js"></script>
+<script src="~/Tookit/calendar/schedule.js"></script>
+
+<style type="text/css">
+    .check_tree__checkbox.is-checked.is-disabled {
+        background-color: #409eff !important;
+        border-color: #409eff !important;
+    }
+    .check_tree__checkbox.is-checked.is-disabled:after {
+        border-color: #fff !important;
+    }
+</style>
+<script>
+    var member0 = "";
+    var member1 = "";//执行人id
+    var name1 = "";//执行人真实姓名
+    var index = parent.layer.getFrameIndex(window.name);
+    //改变下父级的样式
+    parent.$('#ctWindow').css("padding-left", "10px");
+    parent.$('#ctWindow').css("padding-right", "10px");
+
+    function checkSpecificKey(str) { var specialKey = "[`~!#$^&*()=|{}':;',\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘'"; for (var i = 0; i < str.length; i++) { if (specialKey.indexOf(str.substr(i, 1)) != -1) { return false; } } return true; }
+    
+    new Vue({
+        el: '#app',
+        components: {
+            CheckMembers: CheckMembers
+        },
+        data: function () {
+            var validateInput = function(rule, value, callback) {
+                if (!checkSpecificKey(value)) {
+                    callback(new Error("任务名称中不能包含特殊字符"));
+                } else {
+                     callback();
+                }
+            };
+
+            return {
+                labelPostition:'left',
+                emptyText: '暂无数据',
+                defaultProps: {
+                    realName: 'RealName', // key固定value为传入数据的用户名字段
+                    userId: 'id', // key固定value为传入数据的用户id字段
+                    pId: 'pid', // key固定value为传入数据的用户父id字段
+                    logo: 'icon', // key固定value为传入数据的图标字段
+                    department: 'department', // key固定value为传入数据的部门字段
+                    type: 'type', // key固定value为传入数据的类型字段
+                    userType: 0,
+                    // key固定value为用户类型
+                },
+                title: '选择成员', //弹窗标题
+                radioFalse: false, // 多选
+                radioTrue:true,//单选
+                expanded: false, // 是否默认展开
+                allMember0: [],
+                allMember1: [],
+                members0: [], //已经选中的成员 抄送人
+                members1: [], //已经选中的成员 执行人
+
+                hasfather: false,
+                FatherTitle: '@ViewBag.fathertitle',
+                loading: true,
+                creator: { photo: '', realname: '' },
+                copyToUsers: {},
+                formData: {
+                    Title: '',
+                    Creator: '',
+                    StartDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0),
+                    EndDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0),
+                    Priority: 0,
+                    CallDate: 0,
+                    ManagerPerson: '',
+                    ExecutivesPerson: '',
+                    Content: '',
+                    CreatorTrueName: '',
+                    ParentID: '@ViewBag.fatherid',
+                    GroupID: '@ViewBag.groupid'
+                },
+                
+
+                rules: {
+                    Title: [
+                        { required: true, message: '请输入任务名称', trigger: 'blur' },
+                        { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' },
+                        { validator: validateInput, trigger: ["blur", "change"] }
+                    ],
+                    StartDate: [
+                        { required: true, message: '请选择开始时间', trigger: 'blur' },
+                    ],
+                    EndDate: [
+                        { required: true, message: '请选择结束时间', trigger: 'blur' },
+                    ],
+                    Content: [
+                        { min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'blur' }
+                    ],
+                }
+            };
+        },
+        computed: {
+            disabledList:function() {
+                return [];
+            }
+        },
+        created : function() {
+            this.getInfo();
+            var self = this;
+            //设置抄送人 有多个人
+            window.SetMember0 = function (ids, names) {
+                self.loading = true;
+                member0 = ids;
+                $("#member0Ul").empty();
+                var idArray = ids.split(";");
+                var nameArray = names.split(";");
+
+                $.each(idArray, function (index, value) {
+                    var name = nameArray[index];
+                    addMember(value, name, $("#member0Ul"));
+                });
+                self.loading = false;
+                if (idArray.length > 12) {
+                    $("#member0Ul").append("<i class=\"iconfont icon-down link03\"></i>");
+                }
+            }
+            //设置执行人 只有一个人
+            window.SetMember1 = function (id, name) {
+                member1 = id.replace(';', '');
+                name1 = name.replace(';', '');
+                $("#member1Ul").empty();
+                addMember(member1, name1, $("#member1Ul"));
+            }
+
+            window.addMember = function (id, name, ele) {
+                if (id === '') return;
+                if (name === '') return;
+                var strele = "<span class=\"mr18 us\"><span class=\"posr\"><img src=\"" + '@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")' + id + "\" class=\"head-simg vam\">" + "<a href=\"javascript:;\" class=\"del-redT\" data-id=\"" + id + "\"><i class=\"iconfont icon-delte ml10\"></i></a></span><span class=\"dvm\" title=\""+name+"\">" + name + "</span></span>";
+                $(ele).append(strele);
+            }
+            window.deleteMember0 = function(index) {
+                self.members0.splice(index, 1);
+            }
+            window.deleteMember1 = function() {
+                self.members1 = [];
+            }
+        },
+        methods: {               
+            confirm0: function(mems) {
+                this.members0 = mems.slice(0);
+                var ids = "";
+                var names = "";
+                $.each(mems, function (index, value) {
+                    ids += value.id + ";";
+                    names += value.RealName + ";";
+                });
+                SetMember0(ids, names);
+            },
+
+            confirm1: function (mems) {
+                /*设置执行人 执行人只能是一个人*/
+                if (mems.length === 0) {
+                    SetMember1("", "");
+                    this.members1 = mems.slice(0);
+                    return;
+                }
+                if (mems.length === 1) {
+                    SetMember1(mems[0].id, mems[0].RealName);
+                    this.members1 = mems.slice(0);
+                } else {
+                    this.$message.error('执行人只能是一位成员');
+                }
+            },
+            show0: function () {
+                var data = this.allMember0.slice(0);
+                var members = this.members0.slice(0);
+                var list0 = [{
+                    data: data,
+                    expanded: true,
+                    isTree: true,
+                    name: "机构成员",
+                }];
+
+                this.$refs.members0.show({
+                    list: list0,//所有集合
+                    members: members//已经选中成员
+                });
+            },
+
+            show1: function () {
+                var data = this.allMember1.slice(0);
+                var members = this.members1.slice(0);
+                var bTitle = "群组成员";
+                var b = false;
+                if (this.allMember1.length === this.allMember0.length) {
+                    b = true;
+                    bTitle = "机构成员";
+                }
+                var list1 = [{
+                    data: data,
+                    expanded: true,
+                    isTree: b ,
+                    name: bTitle,
+                }];
+                this.$refs.members1.show({
+                    list: list1,//所有集合
+                    members: members//已经选中成员
+                });
+            },
+
+            getInfo: function () {
+                var self = this;
+                if ('@ViewBag.fathertitle' !== '') {
+                    this.hasfather = true;
+                }
+                if ('@ViewBag.ManagerPerson' !== '') {
+                    member0 = '@ViewBag.ManagerPerson';
+                    /*执行者*/
+                    $.post("@Url.Action("GetCopyToUsers", "Home")", { uids: '@ViewBag.ManagerPerson' }, function (data0) {
+                        self.copyToUsers = data0.data;
+                        if (self.copyToUsers.length > 12) {
+                            $("#member0Ul").append("<i class=\"iconfont icon-down link03\"></i>");
+                        }
+                    });
+
+                }
+                //获取所有成员，为弹窗做准备
+                $.post("@Url.Action("GetAllMembers","Home")", {}, function (data1) {
+                    self.allMember0 = data1.members;
+                    //获取已经选择的成员 抄送人
+                    $.post("@Url.Action("GetCopyToMembers", "Home")", { uids: '@ViewBag.ManagerPerson' }, function (data3) {
+                        self.members0 = data3.data;
+                    });
+                    //如果是群组，获取群组内的所有成员，为选择执行人做准备 这里的群组都是工作群组
+                    if ('@ViewBag.groupid' !== '0') {
+                        $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: '@ViewBag.groupid' }, function (data) {
+                            if (data.Code === 200) {
+                                self.allMember1 = data.Data.slice(0);
+                            }
+                        });
+                    } else {
+                        self.allMember1 = self.allMember0.slice(0);
+                    }
+                    self.loading = false;
+                });
+                //获取创建人的真实姓名和头像
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("GetCreator", "Home")",
+                    data: '',
+                    success: function (result) {
+                        self.creator.photo = result.photo;
+                        self.creator.realname = result.realname;
+                        self.formData.CreatorTrueName = result.realname;
+                    },
+                    dataType: 'json'
+                });
+            },
+            submitForm: function () {
+                var self = this;
+                if (this.loading) return;
+                this.$refs.form.validate(function (valid) {
+
+                    if (member1 == "") {
+                        self.$message.error('执行人不能为空');
+                        return;
+                    }
+                    self.formData.ManagerPerson = member0;
+                    self.formData.ExecutivesPerson = member1;
+                    //判断时间
+                    if (self.formData.StartDate != "" && self.formData.EndDate != "" && (new Date(self.formData.StartDate) >= new Date(self.formData.EndDate))) {
+                        self.$message.error('任务的开始时间必须小于结束时间');
+                        return;
+                    }
+                    if (valid) {
+                        self.loading = true;
+                        $.ajax({
+                            type: 'POST',
+                            url: '/JobAssignment/Home/CreateWork',
+                            data: self.formData,
+                            success: function (result) {
+                                if (result.r) {
+                                    self.$message({
+                                        message: '任务创建成功',
+                                        type: 'success'
+                                    });
+                                    self.loading = false;
+                                    var ele = window.parent.document.getElementById("todolistiframe");
+                                    if (ele.length != 0) {
+                                        /*
+                                            1.MyWorkPmc页面、Index页面
+                                        */
+                                        ele.contentWindow.searchwork && ele.contentWindow.searchwork();
+                                        /*
+                                            2.MyWork页面（回调我的工作->工作交办页面）
+                                        */
+                                        ele.contentWindow.searchworkNew && ele.contentWindow.searchworkNew();
+                                    }
+                                    //调用首页方法，添加一条动态通知
+                                    window.parent.addGroupMessage && window.parent.addGroupMessage("add", self.formData.Title, { name: name1, id: member1 }, result.Content.Guid);
+
+                                    setTimeout(function () {
+                                        parent.layer.close(index);
+                                    }, 700);
+                                } else {
+                                    self.$message.error('请求失败');
+                                    console.log(result.m);
+                                    self.loading = false;
+                                }
+                            },
+                            dataType: 'json'
+                        });
+                        this.loading = true;
+                    } else {
+                        console.log('请求失败');
+                        this.loading = false;
+                        return false;
+                    }
+                });
+            },
+            closeForm: function () {
+                parent.layer.close(index);
+            },
+        }
+    });
+
+    //删除抄送人
+    $(document).on('click', '#member0Ul .icon-delte', function () {
+        var uid = $(this).parent().attr('data-id');
+        var index = $(this).parent().parent().parent().index();
+        deleteMember0(index);
+        $(this).parent().parent().parent().remove();
+        member0 = member0.replace(uid + ';', '');
+        if ($("#member0Ul>span").length <= 12) {
+            $(".link03").remove();
+        }
+    });
+
+    //删除执行人
+    $(document).on('click', '#member1Ul .icon-delte', function () {
+        var uid = $(this).parent().attr('data-id');
+        deleteMember1();
+        $(this).parent().parent().parent().remove();
+        member1 = member1.replace(uid, '');
+    });
+    //展开收起抄送人
+    $(document).on('click', '.link03', function () {
+        if ($(".link03").hasClass("icon-down")) {
+            $("#member0Ul").addClass("mem-con-max");
+            $(".link03").removeClass("icon-down").addClass("icon-up");
+        } else {
+            $("#member0Ul").removeClass("mem-con-max");
+            $(".link03").removeClass("icon-up").addClass("icon-down");
+        }
+    });
+</script>

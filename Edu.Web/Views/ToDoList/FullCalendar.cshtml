@@ -1,0 +1,159 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <link href='~/Tookit/fullcalendar-3.9.0/fullcalendar.css' rel='stylesheet' />
+    <link href='~/Tookit/fullcalendar-3.9.0/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+    <link href="~/Tookit/fullcalendar-3.9.0/myfullcalendar.css" rel="stylesheet" />
+    <script src='~/Tookit/fullcalendar-3.9.0/lib/moment.min.js'></script>
+    <script src='~/Tookit/fullcalendar-3.9.0/lib/jquery.min.js'></script>
+    <script src='~/Tookit/fullcalendar-3.9.0/fullcalendar-utf8.js'></script>
+    <script src='~/Tookit/fullcalendar-3.9.0/locale/zh-cn.js'></script>
+    <script src="~/Scripts/data.js"></script>
+    <script src="~/Tookit/layer/layer.js"></script>
+    <link href="~/Tookit/layer/skin/layer.css" rel="stylesheet" />
+    <script>
+
+        $(document).ready(function () {
+            var today = new Date();
+            $('#calendar').fullCalendar({
+                defaultDate: moment(),
+                editable: false,
+                eventLimit: 5,//这个值可以为false 不限制，一个数字 限制的行数，true 默认限制5行
+                aspectRatio: 1.5,
+                views: {
+                    agenda: {
+                        eventLimit: false // adjust to false only for agendaWeek/agendaDay
+                    }
+                },
+                events: function (start, end, timezone, callback) {
+                    $.post('/im/todolist/GetCalendarPlanMonth', { d1: getFirstDayOfMonth(today).format("yyyy-MM-dd"), d2: getLastDayOfMonth(today).format("yyyy-MM-dd") }, function (result) {
+                        callback(result.data);
+                    });
+                },
+
+                eventClick: function (event, element) {
+                    //点击事件触发事件
+                    //openplandetail(event.id);
+                    var iframetodolist = window.parent.parent.document.getElementById("todolistiframe");
+                    iframetodolist.contentWindow.showplandetail && iframetodolist.contentWindow.showplandetail(event.id);
+                },
+            });
+
+            window.ChangeToMonthView = function (d1, d2) {
+                var day = (new Date()).format("yyyy-MM-dd");
+                $('#calendar').fullCalendar('changeView', 'month', day);
+                //先删除数据，然后再重新绑定数据
+                $('#calendar').fullCalendar('removeEventSources');
+                $.post('/im/todolist/GetCalendarPlanMonth', { d1: d1.format("yyyy-MM-dd"), d2: d2.format("yyyy-MM-dd") }, function (result) {
+                    $('#calendar').fullCalendar('addEventSource', result.data);
+                    $('.fc-scroller').css("overflow-x", "hidden");
+                    $('.fc-scroller').css("overflow-y", "hidden");
+                    $('.fc-scroller').css("height", "auto");
+                });
+            }
+
+            window.ChangeToWeekView = function (d1, d2) {
+                var day = (new Date()).format("yyyy-MM-dd");
+                $('#calendar').fullCalendar('changeView', 'agendaWeek', day);
+                $('#calendar').fullCalendar('removeEventSources');
+                $.post('/im/todolist/GetCalendarPlanWeek', { d1: d1.format("yyyy-MM-dd"), d2: d2.format("yyyy-MM-dd") }, function (result) {
+                    $('#calendar').fullCalendar('addEventSource', result.data);
+                });
+            }
+
+            window.ChangeToDayView = function (d1, d2) {
+                var day = (new Date()).format("yyyy-MM-dd");
+                
+                $('#calendar').fullCalendar('changeView', 'agendaDay', day);
+                $('#calendar').fullCalendar('removeEventSources');
+                $.post('/im/todolist/GetCalendarPlanDay', { d1: d1.format("yyyy-MM-dd"), d2: d2.format("yyyy-MM-dd") }, function (result) {
+                    $('#calendar').fullCalendar('addEventSource', result.data);
+                    $('.fc-scroller').css("overflow-x", "hidden");
+                    $('.fc-scroller').css("overflow-y", "hidden");
+                    $('.fc-scroller').css("height", "auto");
+                    var acLength = 0;
+                    acLength = result.data.length * 80 + 100;
+                    var width = $('.fc-agenda-view').width();
+                    if (width < acLength) { $('.fc-agenda-view').width(acLength) }
+                });
+            }
+
+            window.ChangeToNext = function (d1,d2,type) {
+                $('#calendar').fullCalendar('next');
+                //重新获取数据
+                $('#calendar').fullCalendar('removeEventSources');
+                var url = "";
+                if (type === 'day') { url = "/im/todolist/GetCalendarPlanDay" }
+                if (type === 'week') { url = "/im/todolist/GetCalendarPlanWeek" }
+                if (type === 'month') { url = "/im/todolist/GetCalendarPlanMonth" }
+                $.post(url, { d1: d1.format("yyyy-MM-dd"), d2: d2.format("yyyy-MM-dd") }, function (result) {
+                    $('#calendar').fullCalendar('addEventSource', result.data);
+                    if (type === 'day') {
+                        $('.fc-scroller').css("overflow-x", "hidden");
+                        $('.fc-scroller').css("overflow-y", "hidden");
+                        $('.fc-scroller').css("height", "auto");
+                        var acLength = 0;
+                        acLength = result.data.length * 80 + 100;
+                        //fc-view-container
+                        var width = $('.fc-agenda-view').width();
+                        if (width < acLength) {
+                            $('.fc-agenda-view').width(acLength);
+                        } else {
+                            $('.fc-agenda-view').width($('.fc-view-container').width());
+                        }
+                    }
+                    if (type === 'month') {
+                        $('.fc-scroller').css("overflow-x", "hidden");
+                        $('.fc-scroller').css("overflow-y", "hidden");
+                        $('.fc-scroller').css("height", "auto");
+                    }
+                });
+            }
+
+
+
+            window.ChangeToPrev = function (d1, d2,type) {
+                $('#calendar').fullCalendar('prev');
+                $('#calendar').fullCalendar('removeEventSources');
+                var url = "";
+                if (type === 'day') { url = "/im/todolist/GetCalendarPlanDay" }
+                if (type === 'week') { url = "/im/todolist/GetCalendarPlanWeek" }
+                if (type === 'month') { url = "/im/todolist/GetCalendarPlanMonth" }
+                $.post(url, { d1: d1.format("yyyy-MM-dd"), d2: d2.format("yyyy-MM-dd") }, function (result) {
+                    $('#calendar').fullCalendar('addEventSource', result.data);
+                    if (type === 'day') {
+                        $('.fc-scroller').css("overflow-x", "hidden");
+                        $('.fc-scroller').css("overflow-y", "hidden");
+                        $('.fc-scroller').css("height", "auto");
+                        var acLength = 0;
+                        acLength = result.data.length * 80 + 100;
+                        //fc-view-container
+                        var width = $('.fc-agenda-view').width();
+                        if (width < acLength) {
+                            $('.fc-agenda-view').width(acLength);
+                        } else {
+                            $('.fc-agenda-view').width($('.fc-view-container').width());
+                        }
+                    } if (type === 'month') {
+                        $('.fc-scroller').css("overflow-x", "hidden");
+                        $('.fc-scroller').css("overflow-y", "hidden");
+                        $('.fc-scroller').css("height", "auto");
+                    }
+                });
+            }
+
+
+
+
+        });
+
+    </script>
+</head>
+<body>
+    <div id='calendar'></div>
+</body>
+</html>

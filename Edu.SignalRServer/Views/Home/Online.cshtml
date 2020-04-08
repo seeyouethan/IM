@@ -1,0 +1,115 @@
+﻿@using Edu.Models.Models
+@{
+    ViewBag.Title = "当前在线用户";
+
+    var list0= (List<UserOnLine>)ViewBag.list0;
+    var list1 = (List<UserOnLine>)ViewBag.list1; ;
+}
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <h3>OAOKCS_Web端在线用户</h3>
+            <ul class="list-group" id="listul0">
+                @{
+                    foreach (var item in list0)
+                    {
+                        <li data-id='@item.uid' class="list-group-item">
+                            <span class="span0">@item.uid</span>
+                            <span class="span1">@item.CreateDate</span>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <h3>移动端在线用户</h3>
+            <ul class="list-group" id="listul1">
+                @{
+                    foreach (var item in list1)
+                    {
+                        <li data-id='@item.uid' class="list-group-item">
+                            <span class="span0">@item.uid</span>
+                            <span class="span1">@item.CreateDate</span>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="jumbotron" id="logtext">
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script type="text/javascript">
+    $(function () {
+        var chat = $.connection.chatHub;
+        $.connection.hub.start().done(function () {
+            chat.server.connectWithTerminal("03logger", "oaokcs");
+        });
+        chat.client.loginlog = function (jsonData) {
+
+            var elestr = "<li data-id='"+jsonData.uid+"' class=\"list-group-item\">" +
+                "<span class=\"span0\">" + jsonData.uid + "</span>" +
+                "<span class=\"span1\">" + jsonData.CreateDate + "</span>" +
+                "</li>";
+            var textstr = "";
+            if (jsonData.devicetype !== "android" && jsonData.devicetype !== "ios") {
+                if ($("#listul0  li[data-id='" + jsonData.uid + "']").length !== 0) {
+                    $("#listul0  li[data-id='" + jsonData.uid + "']").remove();
+                    //重新登录
+                    textstr = "<p class=\"p3\">【(web端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线（重新登录）</p>";
+                } else {
+                    textstr = "<p class=\"p3\">【(web端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线</p>";
+                }
+                $("#listul0").prepend(elestr);
+            } else {
+                if ($("#listul1  li[data-id='" + jsonData.uid + "']") != null) {
+                    $("#listul1  li[data-id='" + jsonData.uid + "']").remove();
+                    //重新登录
+                    textstr = "<p class=\"p3\">【(移动端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线（重新登录）</p>";
+                } else {
+                    textstr = "<p class=\"p3\">【(移动端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线</p>";
+                }
+                $("#listul1").prepend(elestr);
+            }
+            $("#logtext").prepend(textstr);
+        };
+
+        chat.client.logoutlog = function (jsonData) {
+            var textstr = "";
+            if (jsonData.devicetype === "web") {
+                textstr = "<p class=\"p5\">【(web端)" + jsonData.uid + "】在  " + showNow() + "  离线,上次登录时间 " + jsonData.CreateDate + " </p>";
+                $("#listul0  li[data-id='" + jsonData.uid + "']").remove();
+            } else {
+                textstr = "<p class=\"p5\">【(移动端)" + jsonData.uid + "】在  " + showNow() + "  离线,上次登录时间 " + jsonData.CreateDate + " </p>";
+                $("#listul1  li[data-id='" + jsonData.uid + "']").remove();
+            }
+            $("#logtext").prepend(textstr);
+        };
+
+        function showNow() {
+            var myDate = new Date();
+            var year = myDate.getFullYear();        //获取当前年
+            var month = myDate.getMonth() + 1;   //获取当前月
+            var date = myDate.getDate();            //获取当前日
+            var h = myDate.getHours();              //获取当前小时数(0-23)
+            var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+            var s = myDate.getSeconds();
+
+            return (year + '-' + getNow(month) + "-" + getNow(date) + " " + getNow(h) + ':' + getNow(m) + ":" + getNow(s));
+        }
+
+        function getNow(s) {
+            return s < 10 ? '0' + s: s;
+        }
+
+
+
+    });
+
+</script>
+

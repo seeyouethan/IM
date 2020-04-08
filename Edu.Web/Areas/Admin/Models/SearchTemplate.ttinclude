@@ -1,0 +1,53 @@
+﻿<#+
+    public class SearchTemplate:CSharpTemplate
+    {
+        private string _name;
+         private List<string> _list;
+        public SearchTemplate(string tname,List<string>tlist)
+        {
+            _name = tname;
+			_list=tlist;
+        }
+
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public string FileName
+        {
+            get
+            { 
+                return "_Search.cshtml";
+            }
+        }
+        public override string TransformText()
+        {
+#>
+@using (Html.BeginForm("Index", "<#=_name#>", FormMethod.Get, new { @id = "fm", @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label for="UserName" class="col-sm-3 control-label">创建时间</label>
+        <div class="col-sm-6">
+            @Html.TextBox("startT", ViewBag.startT as object, new { @class = "form-control datepicker", placeholder = "创建开始时间" })
+            @Html.TextBox("endT", ViewBag.endT as object, new { @class = "form-control datepicker", placeholder = "创建结束时间" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="UserName" class="col-sm-3 control-label">关键词</label>
+        <div class="col-sm-6">
+            @Html.TextBox("sn", ViewBag.sn as object, new { @class = "form-control", placeholder = "输入消息进行检索" })
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd'
+    })
+
+</script>
+
+
+ <#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }
+#>

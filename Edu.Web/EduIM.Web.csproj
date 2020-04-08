@@ -1,0 +1,1077 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{92BA57A4-C402-42A2-8A60-204F0343EEB0}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Edu.Web</RootNamespace>
+    <AssemblyName>Edu.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ChineseConvertPinyin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChineseConvertPinyin.1.0.0\lib\net35\ChineseConvertPinyin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Cnki.NetworkDisk.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetDriveSericeClient.1.0.9\lib\Cnki.NetworkDisk.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Edu.Tools">
+      <HintPath>C:\com\Edu.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Exceptionless">
+      <HintPath>C:\com\Exceptionless\Exceptionless.dll</HintPath>
+    </Reference>
+    <Reference Include="Exceptionless.Mvc">
+      <HintPath>C:\com\Exceptionless\Exceptionless.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="KNet.AAMS.Foundation.Authentication, Version=3.7.6997.27868, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KNet.AAMS.Foundation.Authentication.3.7.6997.27868\lib\net45\KNet.AAMS.Foundation.Authentication.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="KNet.AAMS.Foundation.Authorization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\com\sso\KNet.AAMS.Foundation.Authorization.dll</HintPath>
+    </Reference>
+    <Reference Include="KNet.AAMS.Foundation.Model, Version=3.7.6990.30049, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KNet.AAMS.Foundation.Model.3.7.6990.30049\lib\net45\KNet.AAMS.Foundation.Model.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="KNet.AAMS.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\com\sso\KNet.AAMS.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="KNet.AAMS.Web.Security, Version=3.4.7037.21551, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KNet.AAMS.Web.Security.Mirror.3.4.7037.21551\lib\net45\KNet.AAMS.Web.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="KNet.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\com\sso\KNet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="KNet.Data">
+      <HintPath>C:\com\sso\KNet.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MassTransit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESB.1.0.0\lib\MassTransit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MassTransit.RabbitMqTransport, Version=3.2.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESB.1.0.0\lib\MassTransit.RabbitMqTransport.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Redis, Version=2.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Redis.2.2.3\lib\net45\Microsoft.AspNet.SignalR.Redis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.4.0.1\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewId, Version=2.1.3.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESB.1.0.0\lib\NewId.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OKCS.PMC.MsgContracts">
+      <HintPath>C:\com\okcs\OKCS.PMC.MsgContracts.dll</HintPath>
+    </Reference>
+    <Reference Include="OKMS.BaseService.Model">
+      <HintPath>C:\com\OKMS.BaseService\OKMS.BaseService.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="OKMS.BaseService.WcfService">
+      <HintPath>C:\com\OKMS.BaseService\OKMS.BaseService.WcfService.dll</HintPath>
+    </Reference>
+    <Reference Include="OKMS.Chapter.Model">
+      <HintPath>C:\com\OKMS.Chapter\OKMS.Chapter.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="OKMS.FileConvert, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OKMS.FileConvertService.1.0.2\lib\net45\OKMS.FileConvert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OKMS.Foundation.Log.MVCExtension, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OKMS.Foundation.Log.MVCExtension.1.0.7\lib\net45\OKMS.Foundation.Log.MVCExtension.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OKMS.FragmentService.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OKMS.FragmentService.1.2.5\lib\OKMS.FragmentService.Model.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OKMS.FragmentService.WcfService, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OKMS.FragmentService.1.2.5\lib\OKMS.FragmentService.WcfService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OKMS.Proxy.Model">
+      <HintPath>C:\com\OKMS.Proxy\OKMS.Proxy.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="OKMS.Proxy.WcfService">
+      <HintPath>C:\com\OKMS.Proxy\OKMS.Proxy.WcfService.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5" />
+    <Reference Include="RabbitMQ.Client, Version=3.6.1.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESB.1.0.0\lib\RabbitMQ.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack">
+      <HintPath>C:\com\Redis\ServiceStack.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common">
+      <HintPath>C:\com\Redis\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>C:\com\Redis\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface">
+      <HintPath>C:\com\Redis\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis.StrongName, Version=1.1.608.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.StrongName.1.1.608\lib\net45\StackExchange.Redis.StrongName.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\FunMenuController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LogInfoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PersonInfoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PersonPwdController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserInfoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserRoleController.cs" />
+    <Compile Include="Areas\Admin\Models\AdminControllerTemple.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdminControllerTemple.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\GroupToDoListController.cs" />
+    <Compile Include="Controllers\GroupMsgApiController.cs" />
+    <Compile Include="Controllers\ToDoListApiController.cs" />
+    <Compile Include="Controllers\ToDoListController.cs" />
+    <Compile Include="Controllers\OkcsGroupChatController.cs" />
+    <Compile Include="Controllers\GroupChatController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SelfGroupNotice.cs" />
+    <Compile Include="Models\SelfGroupNoticeMore.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\CollectionExtend.cs" />
+    <Compile Include="Service\MassTransitConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Models\AdminControllerTemple.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AdminControllerTemple.cs</LastGenOutput>
+      <LastOutputs>
+.\AdminControllerTemple.cs
+.\Template\UserRoleController.cs
+.\UserRole\_Op.cshtml
+.\UserRole\_Search.cshtml
+.\UserRole\Index.cshtml
+</LastOutputs>
+    </Content>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\CropAvatar\css\bootstrap.min.css" />
+    <Content Include="Content\CropAvatar\css\cropper.min.css" />
+    <Content Include="Content\CropAvatar\css\main.css" />
+    <Content Include="Content\CropAvatar\img\loading.gif" />
+    <Content Include="Content\CropAvatar\js\bootstrap.min.js" />
+    <Content Include="Content\CropAvatar\js\cropper.min.js" />
+    <Content Include="Content\CropAvatar\js\jquery.min.js" />
+    <Content Include="Content\CropAvatar\js\main.js" />
+    <Content Include="Content\EasyRTC\demo_audio_video.js" />
+    <Content Include="Content\EasyRTC\demo_multiparty_a.js" />
+    <Content Include="Content\EasyRTC\demo_multiparty_a2.js" />
+    <Content Include="Content\EasyRTC\demo_room.css" />
+    <Content Include="Content\EasyRTC\desktop_capture_iframe_version.js" />
+    <Content Include="Content\EasyRTC\easyrtc.css" />
+    <Content Include="Content\EasyRTC\easyrtc.js" />
+    <Content Include="Content\EasyRTC\socket.io.js" />
+    <Content Include="Content\Group\font-awesome-4.7.0\css\font-awesome.css" />
+    <Content Include="Content\Group\font-awesome-4.7.0\css\font-awesome.min.css" />
+    <Content Include="Content\Group\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\Group\font-awesome-4.7.0\HELP-US-OUT.txt" />
+    <Content Include="Content\Group\group.css" />
+    <Content Include="Content\Images\audio.png" />
+    <Content Include="Content\Images\author.jpg" />
+    <Content Include="Content\Images\group.png" />
+    <Content Include="Content\Images\loginLogo.png" />
+    <Content Include="Content\Images\loginSmallImg.png" />
+    <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\Images\logo1.png" />
+    <Content Include="Content\Images\noImg.png" />
+    <Content Include="Content\Images\noPhoto.png" />
+    <Content Include="Content\Images\noPng.png" />
+    <Content Include="Content\Images\note.png" />
+    <Content Include="Content\Images\openfolder.gif" />
+    <Content Include="Content\Images\other.png" />
+    <Content Include="Content\Images\pdf.gif" />
+    <Content Include="Content\Images\pencil.png" />
+    <Content Include="Content\Images\ppt.png" />
+    <Content Include="Content\Images\remove.png" />
+    <Content Include="Content\Images\resourceTalkBg.jpg" />
+    <Content Include="Content\Images\shareGroup.png" />
+    <Content Include="Content\Images\shareImg.png" />
+    <Content Include="Content\Images\square_tip.jpg" />
+    <Content Include="Content\Images\stable.jpg" />
+    <Content Include="Content\Images\s_xman_guide_f3aebfe5.png" />
+    <Content Include="Content\Images\t.gif" />
+    <Content Include="Content\Images\talk-l.png" />
+    <Content Include="Content\Images\talk-r.png" />
+    <Content Include="Content\Images\videoLogo.png" />
+    <Content Include="Content\Images\word.png" />
+    <Content Include="Content\Images\知网logo反白.png" />
+    <Content Include="Content\Images\知网logo反白1.png" />
+    <Content Include="Content\janus\css\janus.css" />
+    <Content Include="Content\janus\js\adapter.js" />
+    <Content Include="Content\janus\js\janus-common.js" />
+    <Content Include="Content\janus\js\janus.js" />
+    <Content Include="Content\Jquery2Doc\js\FileSaver.js" />
+    <Content Include="Content\Jquery2Doc\js\jquery.wordexport.js" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\css\iconfont.css" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\css\main.css" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\css\style.css" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\fonts\iconfont.svg" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\images\bookImg.jpg" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\images\defaultHeadImg.png" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\images\pustVideo.gif" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\js\index.js" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\js\jquery-1.10.2.min.js" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\js\style.js" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\js\vue.js" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\聊天窗口.html" />
+    <Content Include="Content\OKCS_日历日程刘静杰20180801\dialog.html" />
+    <Content Include="Content\RtcMultiConnection\adapter.js" />
+    <Content Include="Content\RtcMultiConnection\common.js" />
+    <Content Include="Content\RtcMultiConnection\getHTMLMediaElement_personal.js" />
+    <Content Include="Content\RtcMultiConnection\getHTMLMediaElement.css" />
+    <Content Include="Content\RtcMultiConnection\getHTMLMediaElement.js" />
+    <Content Include="Content\RtcMultiConnection\getScreenId.js" />
+    <Content Include="Content\RtcMultiConnection\MultiStreamsMixer.js" />
+    <Content Include="Content\RtcMultiConnection\RTCMultiConnection.js" />
+    <Content Include="Content\RtcMultiConnection\RTCMultiConnection.min.js" />
+    <Content Include="Content\RtcMultiConnection\screen-sharing.html" />
+    <Content Include="Content\RtcMultiConnection\screen-sharingcs.html" />
+    <Content Include="Content\RtcMultiConnection\socket.io.js" />
+    <Content Include="Content\RtcMultiConnection\video-conferencing-demo.html" />
+    <Content Include="Content\Rtc\api\easyrtc.css" />
+    <Content Include="Content\Rtc\api\easyrtc.js" />
+    <Content Include="Content\Rtc\api\easyrtc_app.js" />
+    <Content Include="Content\Rtc\api\easyrtc_ft.js" />
+    <Content Include="Content\Rtc\api\easyrtc_int.js" />
+    <Content Include="Content\Rtc\api\easyrtc_lang.js" />
+    <Content Include="Content\Rtc\api\img\easyrtc.png" />
+    <Content Include="Content\Rtc\api\img\powered_by_easyrtc.png" />
+    <Content Include="Content\Rtc\api\img\priologic_logo_white.png" />
+    <Content Include="Content\Rtc\api\img\x.svg" />
+    <Content Include="Content\Rtc\api\labs\desktop_capture_iframe_version.js" />
+    <Content Include="Content\Rtc\api\labs\desktop_capture_no_iframe_version.js" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_rates.js" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_recorder.js" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_sc.js" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_sc_extension\background-script.js" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_sc_extension\content-script.js" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_sc_extension\Icon-16.png" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_sc_extension\Icon-64.png" />
+    <Content Include="Content\Rtc\api\labs\inline-installcode.html" />
+    <Content Include="Content\Rtc\css\demo4.css" />
+    <Content Include="Content\Rtc\css\demo_audio_video_simple.css" />
+    <Content Include="Content\Rtc\css\demo_audio_video_simple_hd.css" />
+    <Content Include="Content\Rtc\css\demo_lowbandwidth.css" />
+    <Content Include="Content\Rtc\css\demo_recording.css" />
+    <Content Include="Content\Rtc\css\demo_room.css" />
+    <Content Include="Content\Rtc\css\demo_statistics.css" />
+    <Content Include="Content\Rtc\css\landing.css" />
+    <Content Include="Content\Rtc\images\bg_dark.png" />
+    <Content Include="Content\Rtc\images\bg_light.png" />
+    <Content Include="Content\Rtc\images\blank.gif" />
+    <Content Include="Content\Rtc\images\br_chrome.png" />
+    <Content Include="Content\Rtc\images\br_chrome_canary.png" />
+    <Content Include="Content\Rtc\images\br_chromium.png" />
+    <Content Include="Content\Rtc\images\br_edge.png" />
+    <Content Include="Content\Rtc\images\br_ff.png" />
+    <Content Include="Content\Rtc\images\br_ff_aurora.png" />
+    <Content Include="Content\Rtc\images\br_ff_beta.png" />
+    <Content Include="Content\Rtc\images\br_ff_dev.png" />
+    <Content Include="Content\Rtc\images\br_ff_nightly.png" />
+    <Content Include="Content\Rtc\images\br_ie.png" />
+    <Content Include="Content\Rtc\images\br_opera.png" />
+    <Content Include="Content\Rtc\images\br_safari.png" />
+    <Content Include="Content\Rtc\images\br_safari_ios.png" />
+    <Content Include="Content\Rtc\images\br_status_fail.png" />
+    <Content Include="Content\Rtc\images\br_status_pass.png" />
+    <Content Include="Content\Rtc\images\br_status_warn.png" />
+    <Content Include="Content\Rtc\images\button_close.png" />
+    <Content Include="Content\Rtc\images\button_mute.png" />
+    <Content Include="Content\Rtc\images\button_refresh.png" />
+    <Content Include="Content\Rtc\images\button_unmute.png" />
+    <Content Include="Content\Rtc\images\by_priologic_logo.png" />
+    <Content Include="Content\Rtc\images\cloud.png" />
+    <Content Include="Content\Rtc\images\easyrtc_logo.png" />
+    <Content Include="Content\Rtc\images\irongrip.png" />
+    <Content Include="Content\Rtc\images\powered_by_easyrtc.png" />
+    <Content Include="Content\Rtc\images\skedans_logo.png" />
+    <Content Include="Content\Rtc\images\textEntry.png" />
+    <Content Include="Content\Rtc\js\demo4.js" />
+    <Content Include="Content\Rtc\js\demo_audio_only.js" />
+    <Content Include="Content\Rtc\js\demo_audio_video.js" />
+    <Content Include="Content\Rtc\js\demo_audio_video_simple.js" />
+    <Content Include="Content\Rtc\js\demo_audio_video_simple_hd.js" />
+    <Content Include="Content\Rtc\js\demo_connector.js" />
+    <Content Include="Content\Rtc\js\demo_data_channel_filesharing.js" />
+    <Content Include="Content\Rtc\js\demo_data_channel_messaging.js" />
+    <Content Include="Content\Rtc\js\demo_ice_filter_n.js" />
+    <Content Include="Content\Rtc\js\demo_ice_filter.js" />
+    <Content Include="Content\Rtc\js\demo_instant_messaging.js" />
+    <Content Include="Content\Rtc\js\demo_instant_messaging_rooms.js" />
+    <Content Include="Content\Rtc\js\demo_instant_messaging_selfconnect.js" />
+    <Content Include="Content\Rtc\js\demo_lowbandwidth.js" />
+    <Content Include="Content\Rtc\js\demo_multiparty_k.js" />
+    <Content Include="Content\Rtc\js\demo_multiparty.js" />
+    <Content Include="Content\Rtc\js\demo_multistream.js" />
+    <Content Include="Content\Rtc\js\demo_multistream_iframe.js" />
+    <Content Include="Content\Rtc\js\demo_multistream_no_iframe.js" />
+    <Content Include="Content\Rtc\js\demo_reconnect.js" />
+    <Content Include="Content\Rtc\js\demo_recording.js" />
+    <Content Include="Content\Rtc\js\demo_statistics.js" />
+    <Content Include="Content\Rtc\js\demo_video_only.js" />
+    <Content Include="Content\Rtc\js\prettify\jquery.js" />
+    <Content Include="Content\Rtc\js\prettify\jquery.min.js" />
+    <Content Include="Content\Rtc\js\prettify\lang-css.js" />
+    <Content Include="Content\Rtc\js\prettify\lang-sql.js" />
+    <Content Include="Content\Rtc\js\prettify\lang-vhdl.js" />
+    <Content Include="Content\Rtc\js\prettify\lang-yaml.js" />
+    <Content Include="Content\Rtc\js\prettify\loadAndFilter.js" />
+    <Content Include="Content\Rtc\js\prettify\prettify.css" />
+    <Content Include="Content\Rtc\js\prettify\prettify.js" />
+    <Content Include="Content\TRTC\css\bootstrap-material-design.min.css" />
+    <Content Include="Content\TRTC\css\common.css" />
+    <Content Include="Content\TRTC\css\getHTMLMediaElement_trtc.css" />
+    <Content Include="Content\TRTC\css\toastify.min.css" />
+    <Content Include="Content\TRTC\index.html" />
+    <Content Include="Content\TRTC\js\bootstrap-material-design.min.js" />
+    <Content Include="Content\TRTC\js\debug\GenerateTestUserSig.js" />
+    <Content Include="Content\TRTC\js\index.js" />
+    <Content Include="Content\TRTC\js\jquery-3.2.1.min.js" />
+    <Content Include="Content\TRTC\js\lib-generate-test-usersig.min.js" />
+    <Content Include="Content\TRTC\js\popper.js" />
+    <Content Include="Content\TRTC\js\rtc-client-common.js" />
+    <Content Include="Content\TRTC\js\rtc-client.js" />
+    <Content Include="Content\TRTC\js\toastify.js" />
+    <Content Include="Content\TRTC\js\trtc.js" />
+    <Content Include="Content\TRTC\js\utils.js" />
+    <Content Include="Content\VideoConfenence\css\Element-UI\index.css" />
+    <Content Include="Content\VideoConfenence\css\iconfont.css" />
+    <Content Include="Content\VideoConfenence\css\style_trtc.css" />
+    <Content Include="Content\VideoConfenence\css\style.css" />
+    <Content Include="Content\VideoConfenence\css\swiper.min.css" />
+    <Content Include="Content\VideoConfenence\fonts\iconfont.svg" />
+    <Content Include="Content\VideoConfenence\images\charts01.jpg" />
+    <Content Include="Content\VideoConfenence\images\charts02.jpg" />
+    <Content Include="Content\VideoConfenence\images\charts03.jpg" />
+    <Content Include="Content\VideoConfenence\images\charts04.jpg" />
+    <Content Include="Content\VideoConfenence\images\charts05.jpg" />
+    <Content Include="Content\VideoConfenence\images\headImg.jpg" />
+    <Content Include="Content\VideoConfenence\images\videoB.jpg" />
+    <Content Include="Content\VideoConfenence\images\videoImg.jpg" />
+    <Content Include="Content\VideoConfenence\images\videoImgB.jpg" />
+    <Content Include="Content\VideoConfenence\images\videoM.jpg" />
+    <Content Include="Content\VideoConfenence\images\videoS.jpg" />
+    <Content Include="Content\VideoConfenence\js\getHTMLMediaElement_TRTC.js" />
+    <Content Include="Content\VideoConfenence\js\index.js" />
+    <Content Include="Content\VideoConfenence\js\swiper.min.js" />
+    <Content Include="Content\VideoConfenence\js\viceoConference_TRTC.js" />
+    <Content Include="Content\VideoConfenence\js\viceoConference.js" />
+    <Content Include="Content\VideoConfenence\js\viceoConference-signalr.js" />
+    <Content Include="Content\VideoConfenence\js\viceoChat.js" />
+    <Content Include="Content\VideoConfenence\js\vue-infinite-loading.js" />
+    <Content Include="Content\VideoConfenence\js\vue-resource.js" />
+    <Content Include="Content\VideoConfenence\js\vue.js" />
+    <Content Include="Content\VideoConfenence\video.html" />
+    <Content Include="Content\VideoConfenence\videoDetail.html" />
+    <Content Include="Content\Web\css\Element-UI\index.css" />
+    <Content Include="Content\Web\css\group.css" />
+    <Content Include="Content\Web\css\k-style.css" />
+    <Content Include="Content\Web\css\video.css" />
+    <Content Include="Content\Web\css\iconfont.css" />
+    <Content Include="Content\Web\css\mylayer.css" />
+    <Content Include="Content\Web\css\mystyle-icon.css" />
+    <Content Include="Content\Web\css\todolist.css" />
+    <Content Include="Content\Web\css\todolist_main.css" />
+    <Content Include="Content\Web\css\main.css" />
+    <Content Include="Content\Web\css\chat.css" />
+    <Content Include="Content\Web\css\videochat.css" />
+    <Content Include="Content\Web\css\style.css" />
+    <Content Include="Content\Web\fonts\demo.css" />
+    <Content Include="Content\Web\fonts\iconfont.js" />
+    <Content Include="Content\Web\fonts\iconfont.svg" />
+    <Content Include="Content\Web\images\defaultHeadImg.png" />
+    <Content Include="Content\Web\images\group.png" />
+    <Content Include="Content\Web\images\icoType.png" />
+    <Content Include="Content\Web\images\todoImg.png" />
+    <Content Include="Content\Web\images\yuyin.png" />
+    <Content Include="Content\Web\js\index.js" />
+    <Content Include="Content\Web\js\jquery-1.10.2.min.js" />
+    <Content Include="Content\Web\js\jquery.cookie.js" />
+    <Content Include="Content\Web\js\style.js" />
+    <Content Include="Content\Web\js\vue.js" />
+    <Content Include="Content\Web\检索结果页.html" />
+    <Content Include="Content\Web\聊天窗口.html" />
+    <Content Include="Content\Web\联系人界面.html" />
+    <Content Include="Content\Web\设置群组.html" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Models\AdminTemplate.ttinclude" />
+    <Content Include="Areas\Admin\Models\IndexTemplate.ttinclude" />
+    <Content Include="Areas\Admin\Models\OpTemplate.ttinclude" />
+    <Content Include="Areas\Admin\Models\SearchTemplate.ttinclude" />
+    <Content Include="Areas\Admin\Views\Shared\_Dialog.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\FunMenu\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\FunMenu\SetAuthority.cshtml" />
+    <Content Include="Areas\Admin\Views\FunMenu\_Op.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Right.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\_Left.cshtml" />
+    <Content Include="Areas\Admin\Views\LogInfo\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\LogInfo\_Search.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonInfo\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonInfo\Mody.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonPwd\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserInfo\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserInfo\ModyOp.cshtml" />
+    <Content Include="Areas\Admin\Views\UserInfo\_ModyPwd.cshtml" />
+    <Content Include="Areas\Admin\Views\UserInfo\_Search.cshtml" />
+    <Content Include="Areas\Admin\Views\UserRole\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserRole\_Op.cshtml" />
+    <Content Include="Content\Web\css\Element-UI\fonts\element-icons.ttf" />
+    <Content Include="Content\Web\css\Element-UI\fonts\element-icons.woff" />
+    <Content Include="Content\Web\fonts\iconfont.eot" />
+    <Content Include="Content\Web\fonts\iconfont.ttf" />
+    <Content Include="Content\Web\fonts\iconfont.woff" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\fonts\iconfont.eot" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\fonts\iconfont.ttf" />
+    <Content Include="Content\OKCS_im视频聊天刘静杰\fonts\iconfont.woff" />
+    <Content Include="Content\Rtc\api\buildEnglishVersions.bat" />
+    <Content Include="Content\Rtc\api\buildEnglishVersions.sh" />
+    <Content Include="Content\Rtc\api\img\LICENSE" />
+    <Content Include="Content\Rtc\api\labs\desktopCapture.zip" />
+    <Content Include="Content\Rtc\api\labs\easyrtc_sc_extension\manifest.json" />
+    <Content Include="Content\Rtc\api\labs\README.md" />
+    <Content Include="Content\Rtc\api\README.md" />
+    <Content Include="Content\Rtc\images\LICENSE" />
+    <Content Include="Content\Rtc\js\prettify\README" />
+    <Content Include="Content\VideoConfenence\css\Element-UI\fonts\element-icons.ttf" />
+    <Content Include="Content\VideoConfenence\css\Element-UI\fonts\element-icons.woff" />
+    <Content Include="Content\VideoConfenence\fonts\iconfont.eot" />
+    <Content Include="Content\VideoConfenence\fonts\iconfont.ttf" />
+    <Content Include="Content\VideoConfenence\fonts\iconfont.woff" />
+    <Content Include="Content\VideoConfenence\fonts\iconfont.woff2" />
+    <Content Include="Content\Group\font-awesome-4.7.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\Group\font-awesome-4.7.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\Group\font-awesome-4.7.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\Group\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\Group\font-awesome-4.7.0\fonts\FontAwesome.otf" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\animated.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\bordered-pulled.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\core.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\fixed-width.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\font-awesome.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\icons.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\larger.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\list.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\mixins.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\path.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\rotated-flipped.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\screen-reader.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\stacked.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\less\variables.less" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\font-awesome.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_animated.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_bordered-pulled.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_core.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_fixed-width.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_icons.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_larger.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_list.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_mixins.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_path.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_rotated-flipped.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_screen-reader.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_stacked.scss" />
+    <Content Include="Content\Group\font-awesome-4.7.0\scss\_variables.scss" />
+    <Content Include="Content\TRTC\CHANGELOG.md" />
+    <Content Include="Content\TRTC\README.md" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <None Include="Scripts\jquery-1.8.0.intellisense.js" />
+    <Content Include="Scripts\check-members.min.js" />
+    <Content Include="Scripts\data.js" />
+    <Content Include="Scripts\chatindex.js" />
+    <Content Include="Scripts\drawingGroupPic.js" />
+    <Content Include="Scripts\emoji.js" />
+    <None Include="Scripts\drag.js-backup" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.0.min.js" />
+    <Content Include="Scripts\okcs_im.js" />
+    <Content Include="Scripts\pasteimg.js" />
+    <Content Include="Scripts\im.js" />
+    <Content Include="Scripts\jquery-1.8.0.js" />
+    <Content Include="Scripts\jquery-1.8.0.min.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\skin\layer.css" />
+    <Content Include="Scripts\socket.io.js" />
+    <Content Include="Scripts\bmfmd5.js" />
+    <Content Include="Scripts\sparkmd5.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Tookit\anyRTC_Meet\css\meeting.css" />
+    <Content Include="Tookit\anyRTC_Meet\js\adapter.js" />
+    <Content Include="Tookit\anyRTC_Meet\js\anyrtc.js" />
+    <Content Include="Tookit\anyRTC_Meet\js\jquery.min.js" />
+    <Content Include="Tookit\anyRTC_Meet\js\RTMeetKit.js" />
+    <Content Include="Tookit\anyRTC_Meet\js\Screen-Capturing.js" />
+    <Content Include="Tookit\anyRTC_Meet\js\xmlhttp.js" />
+    <Content Include="Tookit\calendar\calendar.css" />
+    <Content Include="Tookit\calendar\index.html" />
+    <Content Include="Tookit\calendar\schedule.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\CHANGELOG.txt" />
+    <Content Include="Tookit\fullcalendar-3.9.0\CONTRIBUTING.txt" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\agenda-views - 复制.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\agenda-views.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\background-events.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\basic-views.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\default - 复制.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\default.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\external-dragging.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\gcal.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\json.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\js\theme-chooser.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\list-views.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\locales.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\selectable.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\themes.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\timezones.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\week-numbers.html" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar-utf8.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar.css" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\myfullcalendar.css" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar.min.css" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar.min.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar.print.css" />
+    <Content Include="Tookit\fullcalendar-3.9.0\fullcalendar.print.min.css" />
+    <Content Include="Tookit\fullcalendar-3.9.0\gcal.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\gcal.min.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\lib\jquery-ui.min.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\lib\jquery.min.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\lib\moment.min.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\LICENSE.txt" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale-all.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\af.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar-dz.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar-kw.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar-ly.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar-ma.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar-sa.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar-tn.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ar.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\bg.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\bs.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ca.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\cs.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\da.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\de-at.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\de-ch.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\de.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\el.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\en-au.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\en-ca.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\en-gb.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\en-ie.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\en-nz.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\es-do.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\es-us.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\es.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\et.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\eu.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\fa.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\fi.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\fr-ca.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\fr-ch.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\fr.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\gl.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\he.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\hi.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\hr.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\hu.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\id.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\is.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\it.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ja.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ka.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\kk.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ko.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\lb.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\lt.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\lv.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\mk.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ms-my.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ms.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\nb.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\nl-be.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\nl.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\nn.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\pl.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\pt-br.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\pt.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ro.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\ru.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\sk.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\sl.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\sq.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\sr-cyrl.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\sr.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\sv.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\th.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\tr.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\uk.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\vi.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\zh-cn.js" />
+    <Content Include="Tookit\fullcalendar-3.9.0\locale\zh-tw.js" />
+    <Content Include="Tookit\jQuery-emoji\css\jquery.emoji.okcsgroup.css" />
+    <Content Include="Tookit\jQuery-emoji\css\jquery.emoji.css" />
+    <Content Include="Tookit\jQuery-emoji\js\jquery.emoji.min.js" />
+    <Content Include="Tookit\jQuery-emoji\lib\css\jquery.mCustomScrollbar.min.css" />
+    <Content Include="Tookit\jQuery-emoji\lib\script\jquery.mCustomScrollbar.min.js" />
+    <Content Include="Tookit\jQuery-emoji\lib\script\jquery.min.js" />
+    <Content Include="Tookit\jQuery-emoji\lib\script\jquery.mousewheel-3.0.6.min.js" />
+    <Content Include="Tookit\layer\layer.js" />
+    <Content Include="Tookit\layer\skin\layer.css" />
+    <Content Include="Tookit\layui\css\layui.css" />
+    <Content Include="Tookit\layui\layui.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\images\minirefresh-totop.png" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\minirefresh.css" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\minirefresh.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\applet\minirefresh.theme.applet.css" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\applet\minirefresh.theme.applet.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\default\minirefresh.theme.default.css" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\default\minirefresh.theme.default.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\drawer3d\minirefresh.theme.drawer3d.css" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\drawer3d\minirefresh.theme.drawer3d.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\drawerslider\minirefresh.theme.drawerslider.css" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\drawerslider\minirefresh.theme.drawerslider.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\native\minirefresh.theme.native.js" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\taobao\images\taobao-bg.jpg" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\taobao\images\taobao-moon.png" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\taobao\minirefresh.theme.taobao.css" />
+    <Content Include="Tookit\minirefresh-master\dist\debug\themes\taobao\minirefresh.theme.taobao.js" />
+    <Content Include="Tookit\minirefresh-master\dist\images\minirefresh-totop.png" />
+    <Content Include="Tookit\minirefresh-master\dist\minirefresh.min.css" />
+    <Content Include="Tookit\minirefresh-master\dist\minirefresh.min.js" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\applet\minirefresh.theme.applet.min.css" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\applet\minirefresh.theme.applet.min.js" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\default\minirefresh.theme.default.min.css" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\default\minirefresh.theme.default.min.js" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\drawer3d\minirefresh.theme.drawer3d.min.css" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\drawer3d\minirefresh.theme.drawer3d.min.js" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\drawerslider\minirefresh.theme.drawerslider.min.css" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\drawerslider\minirefresh.theme.drawerslider.min.js" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\native\minirefresh.theme.native.min.js" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\taobao\images\taobao-bg.jpg" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\taobao\images\taobao-moon.png" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\taobao\minirefresh.theme.taobao.min.css" />
+    <Content Include="Tookit\minirefresh-master\dist\themes\taobao\minirefresh.theme.taobao.min.js" />
+    <Content Include="Tookit\Push\push.js" />
+    <Content Include="Tookit\vue-fullcalendar\bundle.min.js" />
+    <Content Include="Tookit\vue-fullcalendar\bundle.js" />
+    <Content Include="Tookit\vue-fullcalendar\vue-fullcalendar.js" />
+    <Content Include="Tookit\vue-fullcalendar\vue-fullcalendar.min.js" />
+    <Content Include="Tookit\WebRTC\build.js" />
+    <Content Include="Tookit\WebRTC\index.html" />
+    <Content Include="Tookit\WebRTC\out\jquery-1.10.2.min.js" />
+    <Content Include="Tookit\WebRTC\out\simplewebrtc-with-adapter.bundle.js" />
+    <Content Include="Tookit\WebRTC\out\simplewebrtc.bundle.js" />
+    <Content Include="Tookit\WebRTC\src\peer.js" />
+    <Content Include="Tookit\WebRTC\src\simplewebrtc.js" />
+    <Content Include="Tookit\WebRTC\src\socketioconnection.js" />
+    <Content Include="Tookit\WebRTC\src\webrtc.js" />
+    <Content Include="Tookit\WebRTC\test\index.html" />
+    <Content Include="Tookit\WebRTC\test\selenium\index.js" />
+    <Content Include="Tookit\WebRTC\test\selenium\p2p.js" />
+    <Content Include="Tookit\WebRTC\test\selenium\three.js" />
+    <Content Include="Views\Main\_SearchUser.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_BootStrap.cshtml" />
+    <Content Include="Views\Shared\_LayoutFrame.cshtml" />
+    <Content Include="Views\Shared\_ReturnTop.cshtml" />
+    <Content Include="Views\Main\Index.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\Main\_InitUserList.cshtml" />
+    <Content Include="Views\Main\_RecentlyChatUserList.cshtml" />
+    <Content Include="Views\Main\_TopChatUserList.cshtml" />
+    <Content Include="Views\Main\_SelfChatGroupList.cshtml" />
+    <Content Include="Views\Chat\_RecentlyChat.cshtml" />
+    <Content Include="Views\Main\CreateChatGroup.cshtml" />
+    <Content Include="Views\Main\EditChatGroup.cshtml" />
+    <Content Include="Views\Main\ChooseGroupMember.cshtml" />
+    <Content Include="Views\Main\_InitGroupList.cshtml" />
+    <Content Include="Views\Main\_WorkChatGroupList.cshtml" />
+    <Content Include="Views\Main\_SearchGroup.cshtml" />
+    <Content Include="Views\GroupChat\_RecentlyChat.cshtml" />
+    <Content Include="Views\Main\_MemberList.cshtml" />
+    <Content Include="Views\GroupChat\_GroupMembersList.cshtml" />
+    <Content Include="Views\Common\ShowImg.cshtml" />
+    <Content Include="Tookit\WebRTC\test\run-selenium" />
+    <Content Include="Views\Chat\VideoChatWindow.cshtml" />
+    <Content Include="Views\Home\IMTest.cshtml" />
+    <Content Include="Views\Chat\UserChatContent.cshtml" />
+    <Content Include="Web - 我的发布.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web - 我的发布.Debug.config">
+      <DependentUpon>Web - 我的发布.config</DependentUpon>
+    </Content>
+    <Content Include="Web - 我的发布.Release.config">
+      <DependentUpon>Web - 我的发布.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Home\ToDoList.cshtml" />
+    <Content Include="Views\ToDoList\Index.cshtml" />
+    <Content Include="Views\ToDoList\Create.cshtml" />
+    <Content Include="Views\ToDoList\ChooseMember.cshtml" />
+    <Content Include="Views\ToDoList\CreateSub.cshtml" />
+    <Content Include="Views\ToDoList\Edit.cshtml" />
+    <Content Include="Views\ToDoList\Detail.cshtml" />
+    <Content Include="Views\ToDoList\CreateWorkLog.cshtml" />
+    <Content Include="Tookit\vue-fullcalendar\vue-fullcalendar.js.map" />
+    <Content Include="Tookit\vue-fullcalendar\vue-fullcalendar.min.js.map" />
+    <Content Include="Views\ToDoList\FullCalendar.cshtml" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\json\events.json" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\php\get-events.php" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\php\get-timezones.php" />
+    <Content Include="Tookit\fullcalendar-3.9.0\demos\php\utils.php" />
+    <Content Include="Views\ToDoList\MyWork.cshtml" />
+    <Content Include="Views\ToDoList\MoreDetail.cshtml" />
+    <Content Include="Views\ToDoList\MyWorkPmc.cshtml" />
+    <Content Include="Views\ToDoList\DetailNew.cshtml" />
+    <Content Include="Views\ToDoList\ChooseMemberNew.cshtml" />
+    <Content Include="Views\ToDoList\ReadOnline.cshtml" />
+    <Content Include="Web - oa.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web - oa.Debug.config">
+      <DependentUpon>Web - oa.config</DependentUpon>
+    </Content>
+    <Content Include="Web - oa.Release.config">
+      <DependentUpon>Web - oa.config</DependentUpon>
+    </Content>
+    <Content Include="Web - 正式版.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web - 正式版.Debug.config">
+      <DependentUpon>Web - 正式版.config</DependentUpon>
+    </Content>
+    <Content Include="Web - 正式版.Release.config">
+      <DependentUpon>Web - 正式版.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Home\WebRtcTest.cshtml" />
+    <Content Include="Views\Home\WebRtcTestiframe.cshtml" />
+    <Content Include="Views\ToDoList\EditWorkLog.cshtml" />
+    <Content Include="Views\Chat\GroupMsgNotice.cshtml" />
+    <Content Include="Views\Chat\VideoChatRequestNew.cshtml" />
+    <Content Include="Views\Home\WebApiTest.cshtml" />
+    <Content Include="Web - test.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web - test.Debug.config">
+      <DependentUpon>Web - test.config</DependentUpon>
+    </Content>
+    <Content Include="Web - test.Release.config">
+      <DependentUpon>Web - test.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Home\UploadPage.cshtml" />
+    <Content Include="Views\Home\WebRtcA.cshtml" />
+    <Content Include="Views\Home\WebRtcB.cshtml" />
+    <Content Include="Views\Chat\Meeting.cshtml" />
+    <Content Include="Views\Chat\GroupMeeting.cshtml" />
+    <Content Include="Views\Chat\VideoChatRequest.cshtml" />
+    <Content Include="Views\Chat\VideoConference.cshtml" />
+    <Content Include="Views\Group\Index.cshtml" />
+    <Content Include="Views\Group\OkcsDemo.cshtml" />
+    <Content Include="Views\Main\ServiceLog.cshtml" />
+    <Content Include="Views\Chat\VideoConferenceTRTC.cshtml" />
+    <Content Include="Views\Chat\VideoConferenceJanus.cshtml" />
+    <Content Include="Views\Chat\UserChatContent2.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Models\Template\" />
+    <Folder Include="Content\TRTC\Web\" />
+    <Folder Include="Tookit\layui2.1.5\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Edu.Data\Edu.Data.csproj">
+      <Project>{9a7b5ece-c016-4d94-91ad-2851e334fefd}</Project>
+      <Name>Edu.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edu.Entity\Edu.Entity.csproj">
+      <Project>{8da3a63f-7a30-4cac-8a16-35fccb48084b}</Project>
+      <Name>Edu.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edu.Models\Edu.Models.csproj">
+      <Project>{c3cf7ee9-e35b-43ca-a2c7-44a11d8fbe70}</Project>
+      <Name>Edu.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edu.Service\Edu.Service.csproj">
+      <Project>{c1aa5f52-ab12-417f-9b70-21947002e6e2}</Project>
+      <Name>Edu.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>12744</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:1244/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://127.dev.cnki.net/im</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

@@ -1,0 +1,43 @@
+body {
+    background-color: #EEF3F8;
+    border: 1px solid #E0E5E8;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.layui-card .layui-card-header{
+    text-align: left;
+    font-size: 16px;
+    padding: 10px;
+}
+.layui-card .layui-card-body{
+    text-align: center;
+    line-height: 36px;
+    padding-top: 10px;
+   
+}
+
+.layui-card .layui-card-body span {
+    
+    font-weight: bold;
+    display: inline-block;
+
+width: 6.5em;
+
+margin-left: 5px;
+
+font-size: 14px;
+
+overflow: hidden;
+
+white-space: nowrap;
+
+text-overflow: ellipsis;
+
+padding-top: -18px;
+
+vertical-align: middle;
+}
+.layui-layer-btn {
+    text-align: center;margin-top: 20px;
+}
+

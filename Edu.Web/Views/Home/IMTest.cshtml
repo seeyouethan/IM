@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "IM测试页面";
+}
+<h1>您好:@(Edu.Service.LoginUserService.userName)</h1>
+
+<iframe style="height: 600px; width: 550px;" id="imdiv" src="@Url.Action("Index","GroupChat",new {area="",groupid=ViewBag.groupid,groupname=ViewBag.groupname})">
+    
+</iframe>
+
+<script type="text/javascript">
+    $(function () {
+        layer.open({
+            type: 2,
+            id: 'okcsim',
+            shade: 0,
+            closeBtn: 0,
+            title: false, //不显示标题
+            area: ['350px', '100%'],
+            offset: 'rb', //右下角弹出
+            shadeClose: false, //开启遮罩关闭
+            content: "@Url.Action("Index","Main",new { area=""}) ",
+            success: function (layero, index) {
+            }
+        });
+
+    });
+
+    layerPhotos = function (json) {
+        json = JSON.parse(JSON.stringify(json));
+        layer.photos({
+            photos: json, shift: 5
+        });
+    }
+
+
+</script>

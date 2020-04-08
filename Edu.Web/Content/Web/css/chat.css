@@ -1,0 +1,410 @@
+#app {
+    height: 99% !important;
+}
+
+.pCursor {
+    cursor: pointer;
+}
+
+.offlineP {
+    text-align: center;
+    padding: 10px;
+}
+
+.p0 {
+    max-height: 265px !important;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+.chatrp-bot .el-date-editor.el-input {
+    width: 120px !important;
+    margin-top: 4px;
+}
+
+.el-icon-circle-close {
+    display: none;
+}
+
+.el-input--suffix .el-input__inner {
+    padding-right: 2px !important;
+}
+
+.layui-layim-file > .layui-icon {
+    font-size: 50px !important;
+}
+
+.videoContainer video {
+    width: 280px;
+}
+
+* {
+    outline: none;
+}
+
+#msgTextarea {
+    border: none;
+    height: 120px;
+    overflow-y: auto;
+    padding: 10px;overflow-wrap: break-word;
+}
+#msgTextarea img {
+    max-width: 100px;
+    padding: 0 10px;
+}
+#msgTextarea  .emoji_icon {
+    height: 32px;
+    width: 32px;
+}
+.media-body img {
+    padding: 10px;
+}
+#div1{width: calc(75% - 2px) !important;}
+/*#div2{ height: 202px;}*/
+#dragdiv{ cursor: pointer;}
+.mb-txt>.layui-layim-file {
+    display: block;
+    margin-top: 20px;
+}
+.mb-filetxt{
+    white-space: normal !important;
+}
+
+
+#div0 ul li .unreadmsg{
+right: 10px;
+top: 19px;
+    padding: 2px;
+    border-radius: 50%;
+    line-height: normal;
+    background-color: #ea4b4b;
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+}
+#div0 ul li .unreadmsg.ishow {
+    display: block;
+}
+#div0 ul li {
+    /*cursor: pointer;*/
+}
+#div1 ul li {
+    cursor: default !important;
+}
+#div0 ul li:hover .unreadmsg{ display: none !important;}
+#videoContainer{ height: 200px;background-color: #2389d8;margin-top: 10px;text-align: center;}
+
+#videoContainer i{
+    font-size: 50px;
+    margin-bottom: 30px;
+    margin-top: 60px;
+    display: inline-block;
+    color: #fff;
+    text-align: center;
+}
+#videoContainer .vc-bot {
+    color: #fff;
+}
+.posr .video-btn {
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
+.layui-layer-title {
+    text-align: center;
+    background-color: rgb(35, 137, 216);
+    color: white;
+}
+.col-12{ width: 100%;}
+#historychatDiv{ height: 100%;border-left: 1px solid #DDD;/*font-size: 12px;*/}
+.ihide {
+    display: none;
+}
+#searchDatetime {
+        width: 88px;
+    display: inline-block;
+    height: 24px;
+}
+
+ #membersUl .fli{
+    position: relative;
+    width: 100%;
+     display: inline-block;
+    text-align: center;
+    top: 16px;
+}
+ .fli,
+ .fli a{
+     text-align:center;
+ }
+
+.groupdesc {
+    text-indent: 2em;
+    padding: 10px;
+    line-height: 26px;
+}
+
+#chatpersonlist li span{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    width: 130px;
+        
+}
+#chatpersonlist li img {
+    float: left;
+    margin-top: 10px;
+}
+#chatpersonlist li .icon-close {
+    top: 2px;
+}
+
+
+/*语音类消息样式------start------*/
+.yuyin{
+    cursor: pointer;
+    margin: .1rem 0;
+    color: #999999;
+    height: 32px;
+    max-width: 220px;
+    min-width: 80px;
+    background-color: #a0e75a;
+    border: 1px solid #83d45a;
+    border-radius: 6px; 
+    position: relative;
+  }
+.clp-item .yuyin {
+    margin-left: 1rem;
+}
+ 
+  /* 右侧样式 */
+.yuyin_img {
+    position: absolute;
+    width: 30px;
+    height: 32px;
+    background: url('../images/yuyin.png');
+    background-size: 115px 32px;
+    background-repeat: no-repeat;
+    background-position: -3px;
+    animation: bofang 1s steps(1) infinite;
+    -moz-animation: bofang 1s steps(1) infinite;
+    -webkit-animation: bofang 1s steps(1) infinite;
+    -o-animation: bofang 1s steps(1) infinite;
+    animation-play-state: paused;
+}
+
+.out .yuyin_txt{
+    left: 5px;
+
+}
+.out .yuyin_img{
+    right: 5px;
+    transform: rotate(180deg);
+}
+
+.in .yuyin_txt{
+    right: 5px;
+
+}
+.in .yuyin_img{
+    left: 5px;
+}
+ 
+  .yuyin_img_l{
+    left: 5px;
+  }
+  .yuyin_img_r{
+    right: 5px;
+    transform: rotate(180deg);
+  }
+  .yuyin_txt{
+    position: absolute;
+    color: #000000;
+    line-height: 32px;
+  }
+  .yy_txt_r{
+    left: 5px;
+  }
+  .yy_txt_l{
+    right: 5px;
+  }
+@keyframes bofang {
+    25% {
+        background-position: -33px;
+    }
+
+    50% {
+        background-position: -59px;
+    }
+
+    75% {
+        background-position: -84px;
+    }
+
+    100% {
+        background-position: 0px;
+    }
+}
+/*语音类消息------end------*/
+/*群组信息小弹窗*/
+.gi-l,.gi-r{line-height: 26px;}
+.gi-l{ float:left;width: 5em;font-weight: bold}
+.gi-r{width: calc(100% - 6em);display: inline-block;word-break:break-all;}
+#membersUl.gi-r{ margin-top: -8px;}
+
+.a-blue,.a-default {
+    display: inline-block;
+    padding: 7px 0px;
+    width:78px;
+    border:1px solid #dcdfe6;
+    border-radius:4px;
+    line-height: normal;
+}
+.a-blue{background-color:#409EFF;border-color:#409EFF;color:#fff;margin-right: 10px;}
+.a-blue:hover{ 
+         background: #66b1ff;
+         border-color: #66b1ff;
+         color: #fff;
+}
+.a-default:hover{
+   color: #409EFF;
+   border-color: #c6e2ff;
+   background-color: #ecf5ff;
+}
+/*聊天发送位置*/
+.map-item{padding:10px;border: 1px solid #f5f5f5;border-radius: 4px;width: 172px;box-sizing: border-box}
+.mapi-top{ width: 150px;height: 110px;}
+.mapi-bot{ overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;font-size: 12px;color: #666;}
+.text-mid{ text-align: center;}
+.nodisplay {
+    display: none;
+}
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    overflow: hidden;
+    font-size: 34px;
+}
+[v-cloak] {
+        display: none !important;
+     }
+.mb10 h2{
+    text-align:center;
+}
+.mb10 .gi-a{    
+    text-indent: 25px;
+}
+#searchDatetime {
+    font-size: 12px !important;
+}
+/*导出聊天记录*/
+.chat-export{float: right;margin-right: 10px;cursor: pointer;color:#2389d8}
+.chat-export:hover{color: #003E8B !important;}
+.h3-time{font-weight:normal;}
+.p-msg{text-indent:35px;}
+.p-msg-img{margin-left:35px;}
+
+/*字体大小改变*/
+/* #ulChat li .color-9,
+#ulChat li .mb-txt{
+    font-size:16px
+} */
+.ul-font-big li .color-9,
+.ul-font-big li .mb-txt{
+    font-size:18px
+}
+.ul-font-normal li .color-9,
+.ul-font-normal li .mb-txt{
+    font-size:16px
+}
+.ul-font-small li .color-9,
+.ul-font-small li .mb-txt{
+    font-size:14px
+}
+
+/*字体大小选择*/
+.msg-font-style{
+    font-size: 12px;
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.msg-font-style.hover,
+.msg-font-style:hover{
+    color:#2389d8
+}
+
+/*SignalR断开/重连提示*/
+
+
+.chat-disconnect {
+    /*top: 414px;*/
+    bottom: 202px;
+    position: absolute;
+    right: 10px;
+    padding: 10px;
+    background-color: #F9CF8D;
+    display: none;
+}
+
+.chat-disconnect.show{
+    display :block;
+}
+
+/*主题功能提示*/
+.div-subject {
+    height: 200px;
+    position: absolute;
+    width: 663px;
+    padding: 0 20px;
+    z-index: 999;
+}
+
+.span-subject {
+    padding: 6px;
+    background-color: #9BD7E7;
+    border: 1px solid #9BD7E7;
+    border-radius: 0px 0px 12px 12px;
+    width: 100px;
+    display: block;
+    float: left;
+    margin-right: 10px;
+    text-align: center;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+    .span-subject.hover,
+    .span-subject:hover {
+        background-color: #FAD08D;
+        border-color: #FAD08D;
+    }
+
+    /*新增的样式*/
+.chat-div{
+    height:100%;
+}
+[v-cloak] {
+    display: none;
+}
+.showtext-close-icon {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor:pointer;
+}
+.showtext-close-icon:hover{
+    color:red;
+    font-weight:bold;
+}
+
+/*表情图标变小 防止格式化的时候高度不一致*/
+.media-body .emoji_icon, .p0 .emoji_icon {
+    width: 20px !important;    
+    padding:0 !important
+}

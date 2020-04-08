@@ -1,0 +1,43 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ include file="EF.Utility.CS.ttinclude" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="$(SolutionDir)\Edu.Data\bin\Debug\Edu.Data.dll" #>
+<#@ import namespace="Edu.Data" #>
+<#@ include file="T4Toolbox.tt" #>
+<#@ include file="AdminTemplate.ttinclude" #>
+<#@ include file="IndexTemplate.ttinclude" #>
+<#@ include file="OpTemplate.ttinclude" #>
+<#@ include file="SearchTemplate.ttinclude" #>
+<#    
+   var curName="UserRole";
+   string curPath = Path.GetDirectoryName(Host.TemplateFile);
+   string csPath = Path.Combine(curPath, "Template");
+   //创建Controller
+   AdminTemplate irep= new AdminTemplate(curName);
+   irep.Output.Encoding = Encoding.UTF8;
+   irep.RenderToFile(Path.Combine(csPath, irep.FileName));
+  
+    //创建ViewIndex
+   string indexPath=  Path.Combine(curPath,curName);
+    IndexTemplate irepIndex= new IndexTemplate(curName,Utility.GetFeildName(curName));
+    irepIndex.Output.Encoding = Encoding.UTF8;
+    irepIndex.RenderToFile(Path.Combine(indexPath, irepIndex.FileName));
+	  
+	   //创建partiverOp
+   string OpPath=  Path.Combine(curPath,curName);
+    OpTemplate irepOp= new OpTemplate(curName,Utility.GetFeildName(curName));
+    irepOp.Output.Encoding = Encoding.UTF8;
+    irepOp.RenderToFile(Path.Combine(OpPath, irepOp.FileName));
+		   //创建 Search
+   string SearchPath=  Path.Combine(curPath,curName);
+    SearchTemplate irepSearch= new SearchTemplate(curName,Utility.GetFeildName(curName));
+    irepSearch.Output.Encoding = Encoding.UTF8;
+    irepSearch.RenderToFile(Path.Combine(SearchPath, irepSearch.FileName));
+
+	
+#>
+
+ 

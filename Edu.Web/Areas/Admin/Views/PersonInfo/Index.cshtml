@@ -1,0 +1,105 @@
+﻿@model UserInfo
+@{
+    ViewBag.Title = "用户信息";
+    var role = new Edu.Service.UnitOfWork().DUserRole.GetByID(Model.RoleID);
+}
+
+<style type="text/css">
+    .form-group {
+        font-size: 14px;
+        vertical-align: top;
+    }
+
+        .form-group div p {
+            vertical-align: top;
+        }
+
+    .control-label {
+        font-weight: bold;
+        text-align: right;
+        padding-right: 5px;
+    }
+</style>
+
+
+
+<div class="form-horizontal">
+    <div class="col-xs-12">
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">用户ID</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">
+                    @Model.ID
+                </p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">用户名</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">
+                    @Model.UserName
+                </p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <label for="mail" class="col-sm-3 control-label">真实姓名</label>
+            <div class="col-xs-4">
+                <p class="form-control-static">@Model.TrueName</p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label ">用户头像</label>
+            <div class="col-sm-4">
+                <p class="form-control-static">
+                    <img class="img-thumbnail" src="@(Model == null || string.IsNullOrEmpty(Model.Photo) ? "/Content/images/NoPhoto.png" : Model.Photo)" style="width:150px; height:150px;" />
+                </p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">手机号码</label>
+            <div class="col-sm-6">
+                <div class="col-xs-4">
+                    <p class="form-control-static">@Model.Phone</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">邮箱</label>
+            <div class="col-sm-6">
+                <div class="col-xs-4">
+                    <p class="form-control-static">@Model.Email</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">所在单位</label>
+            <div class="col-sm-6">
+                <div class="col-xs-4">
+                    <p class="form-control-static">@Model.Company</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">角色</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">@role.Name</p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">描述</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">@Html.Raw(Model.BZ)</p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+
+            <div class="col-sm-offset-3 col-sm-8">
+                <a href="@Url.Action("Mody")" id="submit1" class="btn btn-info col-sm-3">修  改 </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

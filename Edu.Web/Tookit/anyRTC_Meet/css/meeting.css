@@ -1,0 +1,107 @@
+.submainBox > video {
+    display: inline-block;
+    vertical-align: top;
+    width: 33%;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+}
+
+.el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+}
+
+.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+}
+
+body > .el-container {
+    margin-bottom: 40px;
+}
+
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+}
+
+.min800 {
+    min-width: 800px;
+}
+
+.videoTitle {
+    padding: 10px;
+    position: absolute;
+    color: white;
+}
+
+.videoMember {
+    padding: 20px;
+    padding-top: 20px;
+}
+
+    .videoMember li {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        padding: 6px 0;
+    }
+
+        .videoMember li img {
+            width: 36px;
+            border-radius: 50%;
+            display: block;
+            float: left;
+        }
+
+        .videoMember li .p1, .videoMember li .p2 {
+            display: block;
+            width: 60px;
+            float: left;
+            line-height: 28px;
+            margin: 0;
+            padding: 4px;
+        }
+
+        .videoMember li .p2 {
+            float: right;
+            margin-right: 30px;
+            color: #FF0000;
+        }
+
+            .videoMember li .p2.inRoom {
+                float: right;
+                margin-right: 30px;
+                color: green;
+            }
+
+.remoteMemberDiv {
+    width: 32%;
+    padding: 3px;
+    border: 1px solid black;
+    margin: 2px 2px;
+    float: left;display: none;
+}
+.remoteMemberDiv.vShow {
+    display: block;
+}
+
+    .remoteMemberDiv video {
+        width: 100%;
+    }
+    .width100 {
+        width: 100%;
+    }

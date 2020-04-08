@@ -1,0 +1,29 @@
+.editClass {
+    padding: 10px;background-color: white;
+}
+.editClass .el-scrollbar {
+    height: 90%;
+}
+.editClass .el-textarea {
+    padding-bottom: 20px;
+}
+.editfoot{
+    text-align: center;
+    display: block;
+}
+.us {
+    position: relative;
+}
+.h500 {
+    height: 500px;
+}
+
+.paddingright10 {
+    padding-right: 10px;
+}
+.paddingleft20 {
+    padding-left: 20px;
+}
+[v-cloak] {
+    display: none;
+}

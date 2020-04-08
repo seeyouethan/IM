@@ -1,0 +1,250 @@
+﻿@using Edu.Tools
+
+<link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet" />
+<link href="~/Content/Web/css/iconfont.css" rel="stylesheet" />
+<link href="~/Content/Web/css/style.css" rel="stylesheet" />
+<link href="~/Content/Web/css/main.css" rel="stylesheet" />
+<style>
+    body{padding:25px 35px;box-sizing:border-box}
+</style>
+<div id="app">
+    <div class="talk-wrap clearfix">
+        <div class="talk-box float-r">
+            <h2 class="tree-ht"><span>已添加人员：<span id="personCount">0</span> 人</span></h2>
+            <div class="tree-hide top32">
+                <ul class="mtb10" id="list1">
+                    @*<div>正在加载数据...</div>*@
+                </ul>
+            </div>
+        </div>
+        <div class="talk-box float-l">
+            <div class="search-sm clearfix">
+                <input type="text" placeholder="输入查找关键字" class="f-input float-l" id="searchUserInput"/>
+                <button class="s-btn float-r">
+                    <i class="iconfont icon-searchBtn"></i>
+                </button>
+            </div>
+            <div class="tree-hide">
+                <div class="group-tree">
+                    <h2 class="tree-ht">
+                        <span class="float-l">群组成员</span>
+                        <div class="float-r">
+                            <a href="javascript:;" class="el-icon-arrow-down"></a>
+                        </div>
+                    </h2>
+                    <ul class="mtb5" id="list0">
+                        <div>正在加载数据...</div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="talk-box-c"><i class="iconfont icon-rightJ"></i></div>
+    </div>
+    <div class="btn-group text-center">
+        <el-button type="primary" id="submitBtn">确定</el-button>
+        <el-button id="cancelBtn">取消</el-button>
+    </div>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: function () {
+            return { visible: false }
+        }
+    });
+
+    var allmembers;
+    var selectedMembers;
+
+    $(function () {
+        /*发起请求 请求所有用户  groupid 不为空的时候 选人范围为群组的成员 为0的时候 选择范围为全部人员  */
+        if ('@ViewBag.groupid' === '0') {
+            $.post("@Url.Action("GetAllMembers","Home",new {area=""})", {}, function(data) {
+                $("#list0").empty();
+                allmembers = data.members;
+                $.each(data.members, function(n, value) {
+                    if (value.type != 1) {
+                        AddPersonLeft(value.id, value.icon, value.RealName, value.department);
+                    }
+                });
+                var elespan = $("#list0 li label .myclick");
+                elespan.on('click', function() {
+                    Check($(this));
+                });
+            });
+        } else {
+            $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: '@ViewBag.groupid' }, function (data) {
+                $("#list0").empty();
+                allmembers = data.Data;
+                $.each(data.Data, function (n, value) {
+                    AddPersonLeft(value.id, value.icon, value.realName, value.department);
+                });
+                var elespan = $("#list0 li label .myclick");
+                elespan.on('click', function () {
+                    Check($(this));
+                });
+            });
+        }
+
+
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        /*搜索文本框*/
+        $('#searchUserInput').on({
+            keyup: function (e) {
+                var flag = e.target.isNeedPrevent;
+                if (flag) return;
+                SearchUser(e);
+                e.target.keyEvent = false;
+            },
+            keydown: function (e) {
+                e.target.keyEvent = true;
+            },
+            input: function (e) {
+                if (!e.target.keyEvent) {
+                    //SearchUser(e);
+                }
+            },
+            compositionstart: function (e) {
+                e.target.isNeedPrevent = true;
+            },
+            compositionend: function (e) {
+                e.target.isNeedPrevent = false;
+            }
+        });
+        /*取消按钮*/
+        $("#cancelBtn").click(function () {
+            parent.layer.close(index);
+        });
+        /*确定按钮*/
+        $("#submitBtn").click(function() {
+            var gname = $.trim($("#gname").val());
+            var gdes = $.trim($("#gdes").val());
+
+            var glist = "";
+            var names = "";
+            var eles = $("#list1 li");
+            eles.each(function () {
+                glist += $(this).attr("data-id") + ";";
+                names += $(this).children('span:eq(0)').html() + ";";
+            });
+            var ele = window.parent.document.getElementById("ctWindow");
+            var iframeele = ele.children[0];
+            if ('@ViewBag.type' === '0') {
+                /*设置抄送人*/
+                iframeele.contentWindow.SetMember0(glist, names);
+            } else {
+                /*设置执行人 执行人只能是一个人*/
+                if (glist.length > 37) {
+                    parent.layer.msg('任务执行人只能选择一个人');
+                    return;
+                }
+                iframeele.contentWindow.SetMember1(glist, names);
+            }
+            parent.layer.close(index);
+        });
+    });
+
+
+    function Check(element) {
+        element = element.parent();
+        var uid = element.attr("data-id");
+        if (element.hasClass("is-checked")) {
+            //去掉勾选
+            element.removeClass("is-checked");
+            RemovePersonRight(uid);
+        } else {
+            //勾选上
+            element.addClass("is-checked");
+            var imgsrc = "@(ConfigHelper.GetConfigString("sso_host_name"))" + "pic/" + uid;
+            var realname = element.parent().next().next().html();
+            var deptname = element.parent().next().next().next().html();
+            AddPersonRight(uid,imgsrc, realname, deptname);
+        }
+    }
+
+    function DeletePerson(element) {
+        var ele = element.parent();
+        var uid = ele.attr("data-id");
+        RemovePersonRight(uid);
+    }
+
+    function AddPersonLeft(uid,imgsrc,realname,deptname){
+        var elestr = "<li class=\"group-li\"><label role=\"checkbox\" class=\"el-checkbox\"><span aria-checked=\"mixed\" class=\"el-checkbox__input\" data-id=\"" + uid + "\"><span class=\"el-checkbox__inner myclick\"></span><input class=\"el-checkbox__original\" type=\"checkbox\"></span></label> <img src=\"" + imgsrc + "\" class=\"head-simg vam mr05 inline-block\"> <span class=\"vam mr05\">" + realname + "</span> <span class=\"font-s12 color-9 vam mr05\">" + deptname + "</span></li>";
+        $("#list0").append(elestr);
+    }
+
+    function AddPersonRight(uid,imgsrc,realname,deptname) {
+        var elestr = "<li data-id=\""+uid+"\" class=\"group-li\"><a href=\"javascript:void(0)\" class=\"iconfont icon-close vam mr05\"></a><img src=\"" + imgsrc + "\"  class=\"head-simg vam mr05\" /><span class=\"vam mr05\">" + realname + "</span><span class=\"font-s12 color-9 vam mr05\">" + deptname + "</span></li>";
+        $("#list1").append(elestr);
+
+        $("#personCount").html($("#list1 li").length);
+        var elesa = $("#list1 li a");
+        elesa.on('click', function () {
+            DeletePerson($(this));
+        });
+    }
+
+    function RemovePersonRight(uid) {
+        var ele = $("#list1 li[data-id='" + uid + "']");
+        if (ele.length != 0) {
+           ele.remove();
+        }
+        var ele2 = $("#list0 li label span[data-id='" + uid + "']");
+        if (ele2.length != 0) {
+            if(ele2.hasClass("is-checked"))
+            ele2.removeClass("is-checked");
+        }
+        $("#personCount").html($("#list1 li").length);
+    }
+
+    function SearchUser(e) {
+        if (e.keyCode === 13) {
+            return;
+        }
+        var val = $('#searchUserInput').val();
+        if (val === "") {
+            $("#list0").empty();
+            if ('@ViewBag.groupid' === '0') {
+                $.each(allmembers, function(n, value) {
+                    if (value.type != 1) {
+                        AddPersonLeft(value.id, value.icon, value.RealName, value.department);
+                    }
+                });
+            } else {
+                $.each(allmembers, function(n, value) {
+                    if (value.type != 1) {
+                        AddPersonLeft(value.id, value.icon, value.realName, value.department);
+                    }
+                });
+            }
+
+            var elespan = $("#list0 li label .myclick");
+            elespan.on('click', function() {
+                Check($(this));
+            });
+            return;
+        }
+        console.log("用户搜索--->" + val);
+        $("#list0").empty();
+
+        if ('@ViewBag.groupid' === '0') {
+            $.each(allmembers, function (n, value) {
+                if (value.RealName.indexOf(val) >= 0) {
+                    AddPersonLeft(value.id, value.icon, value.RealName, value.department);
+                }
+            });
+        } else {
+            $.each(allmembers, function (n, value) {
+                if (value.RealName.indexOf(val) >= 0) {
+                    AddPersonLeft(value.id, value.icon, value.realName, value.department);
+                }
+            });
+        }
+        var elelabel = $("#list0 li label .myclick");
+        elelabel.on('click', function () {
+            Check($(this));
+        });
+    }
+
+</script>

@@ -1,0 +1,44 @@
+﻿@*根据关键字查找用户*@
+@using Edu.Tools
+@model IEnumerable<Edu.Models.Models.SUser>
+@{
+
+    var unitOfWork = new UnitOfWork();
+    var uidList = ViewBag.contactIdList as List<string>;
+    if (Model != null && Model.Any())
+    {
+        <style>
+            .tab-li-div{width: 250px;}
+        </style>
+        <ul>
+            @{
+                foreach (var item in Model)
+                {
+                    <li class="tab-li" data-id='@item.id' data-connid="">
+                        <div>
+                            <a href="javascript:void(0)" onclick="ChatBySearch('@item.id','@item.RealName')" class="mr10 float-l">
+                                <img src="@(ConfigHelper.GetConfigString("sso_host_name") + "pic/"+item.id)" class="head-ssimg" />
+                            </a>
+                            <div class="tab-li-div">
+                                <p onclick="ChatBySearch('@item.id','@item.RealName')">@item.RealName</p>
+                                <p onclick="ChatBySearch('@item.id','@item.RealName')">@item.department</p>
+                                <!--判断是否为常用联系人-->
+                                @{
+                                    if (uidList != null && !uidList.Contains(item.id))
+                                    {
+                                        <span class="tip-add" onclick="AddToContact('@item.id')">添加为常用联系人</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                    </li>
+                }
+            }
+        </ul>
+        }
+        else
+        {
+            <div>未找到相关用户</div>
+        }
+}

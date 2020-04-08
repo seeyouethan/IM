@@ -1,0 +1,35 @@
+﻿@*常用联系人*@
+@model IEnumerable<Edu.Models.Models.UserViewWeb>
+@{
+    if (Model != null && Model.Any())
+    {
+        foreach (var user in Model)
+        {
+            if (user != null)
+            {
+                <li class="tab-li" onclick="Chat(this)" data-id='@user.UserId' data-connid="@user.Connid">
+                    <div>
+                        <a href="javascript:void(0);" class="mr10 float-l">
+                            <img src="@(user.Logo)" class="head-ssimg" />
+                        </a>
+                        <div class="tab-li-div">
+                            <p title="@user.RealName">@user.RealName</p>
+                            <p title="@user.Department">@user.Department</p>
+                            @{
+                                if (user.Connid != "")
+                                {
+                                    <span class="tab-status"></span>
+                                }
+                                else
+                                {
+                                    <span class="tab-status tab-status-no"></span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </li>
+                                        }
+                                    }
+                                }
+
+}

@@ -1,0 +1,193 @@
+
+.transit {
+    /*transition: left 1s, top 1s, right 1s, bottom 1s, width 1s, height 1s, transform 1s;
+    -moz-transition: left 1s, top 1s, right 1s, bottom 1s, width 1s, height 1s, -moz-transform 1s;
+    -webkit-transition: left 1s, top 1s, right 1s, bottom 1s, width 1s, height 1s, -webkit-transform 1s;
+    -o-transition: left 1s, top 1s, right 1s, bottom 1s, width 1s, height 1s,-o-transform 1s;*/
+}
+
+.hidden {
+    background-color: transparent;
+    border: solid 2px blue;
+}
+
+.boxCommon {
+    /*position:absolute;*/
+}
+
+
+.closeButton {
+    display: none; /* hide the easyApp's close button because we have our own */
+}
+
+
+
+#controlArea {
+    background-color: #ff8000;
+}
+
+body {
+    /*background-color:#ffd0d0;*/
+    background-color:#fff;
+    margin-left:0;
+    margin-top:0;
+}
+
+#killButton {
+    opacity:0.7;
+}
+
+#killButton:hover {
+    opacity:1.0;
+}
+
+#muteButton {
+    opacity:0.7;
+}
+
+#muteButton:hover {
+    opacity:1.0;
+}
+
+#textentryBox {
+    border:2px solid #a0ffa0;
+    border-radius:10px;
+    z-index:5;
+    position: absolute;
+    background-color: #ffffff;
+    box-shadow: 5px 5px 5px #000000;
+    font-family: 'Courier New',Courier,monospace;
+}
+
+#textentryField {
+    font-size:x-large;
+    margin: 20px;
+}
+
+#textentrySubmit {
+    font-size:larger;
+}
+
+#textentryCancel {
+    font-size:larger;
+}
+.submainBox > video {
+    display: inline-block;
+    vertical-align: top;
+    width: 33%;
+    padding: 2px;
+    border: 1px solid #ccc;
+}
+
+.el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+}
+
+.el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+}
+
+.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+}
+
+body > .el-container {
+    margin-bottom: 40px;
+}
+
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+}
+
+.min800 {
+    min-width: 800px;
+}
+
+.videoTitle {
+    padding: 10px;
+    position: absolute;
+    color: black;
+}
+
+.videoMember {
+    padding: 20px;
+    padding-top: 20px;
+}
+
+    .videoMember li {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        padding: 6px 0;
+    }
+
+        .videoMember li img {
+            width: 36px;height: 36px;
+            border-radius: 50%;
+            display: block;
+            float: left;
+        }
+
+        .videoMember li .p1, .videoMember li .p2 {
+            display: block;
+            width: 90px;
+            float: left;
+            line-height: 28px;
+            margin: 0;
+            padding: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .videoMember li .p2 {
+            float: right;
+            margin-right: 30px;
+            color: #FF0000;
+        }
+
+            .videoMember li .p2.inRoom {
+                float: right;
+                margin-right: 30px;
+                color: green;
+            }
+
+.remoteMemberDiv {
+    width: 32%;
+    padding: 3px;
+    border: 1px solid black;
+    margin: 2px 2px;
+    float: left;display: none;
+    height: 210px;
+}
+.remoteMemberDiv.vShow {
+    display: block;
+}
+
+    .remoteMemberDiv video {
+        width: 100%;
+        height: 100%;
+    }
+    .width100 {
+        width: 100%;
+    }
+
+ #ScreenShare{
+    float: left; margin-top: 12px; width: auto !important;
+}
+ .k-video {
+     cursor: pointer;
+ }

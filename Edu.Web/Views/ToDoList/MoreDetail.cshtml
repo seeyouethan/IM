@@ -1,0 +1,183 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/iconfont.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/style.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/todolist_main.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/todolist.css" rel="stylesheet" />
+</head>
+<body>
+<div id="app" class="editClass" v-loading="loading" element-loading-text="拼命加载中">
+    <el-scrollbar>
+        <div class="task-panel-con">
+            <div class="tasklist-top posr">
+                <i class="iconfont" v-bind:class="{'icon-bottomDouble': spread,'icon-topDouble': !spread}" ></i>
+                <el-form label-width="100px">
+                    <el-form-item label="任务名称：" class="item-right">
+                        {{formData.Title}}
+                    </el-form-item>
+                    <div v-bind:class="{'form-hide': !spread}">
+                        <el-form-item label="上级任务：">
+                            {{fatherTitle}}
+                        </el-form-item>
+                        <el-form-item label="完成进度：">
+                            <el-progress v-bind:percentage="formData.Completing"></el-progress><!-- 进度条 -->
+                        </el-form-item>
+                        <el-form-item label="创建人：">
+                            <span class="mr20">
+                                <img v-bind:src="creator.photo" class="head-simg mr10 vam">{{creator.realname}}
+                            </span>
+                        </el-form-item>
+                        <el-form-item label="时间：">
+                            <i class="iconfont icon-date"></i>
+                            {{formData.StartDate}}
+                            <span> —— </span>
+                            <i class="iconfont icon-date"></i>
+                            {{formData.EndDate}}
+                        </el-form-item>
+                        <el-form-item label="优先级：">{{priorityText[formData.Priority]}}</el-form-item>
+                        <el-form-item label="提醒：">{{callDateText[formData.CallDate]}}</el-form-item>
+                        <el-form-item label="抄送人：">
+                            <span v-for="item in copyToUsers" class="mr20">
+                                <img v-bind:src="item.photo" class="head-simg mr10 vam">{{item.name}}
+                            </span>
+                        </el-form-item>
+                        <el-form-item label="执行人：">
+                            <span class="mr20">
+                                <img v-bind:src="doUser.photo" class="head-simg mr10 vam">{{doUser.name}}
+                            </span>
+                        </el-form-item>
+                        <el-form-item label="任务描述：">
+                            {{formData.Content}}
+                        </el-form-item>
+                    </div>
+                </el-form>
+            </div>
+            <div class="tasklist-mid">
+                <h2 class="mb20">
+                    <span class="color-4a font-s16 mr10">工作任务</span>
+                    <el-popover placement="right-start" width="170" trigger="click">
+                        <i class="iconfont icon-addSolid cp" slot="reference"></i>
+                        <ul class="popover-ul">
+                            <li class="small-circle"><a href="javascript:;">新建协同研究</a></li>
+                            <li class="small-circle"><a href="javascript:;">新建协同研讨</a></li>
+                            <li class="small-circle"><a href="javascript:;">新建协作文档</a></li>
+                        </ul>
+                    </el-popover>
+                </h2>
+                <el-row class="taskul-list" gutter="20">
+                    <el-col class="small-circle" span="12"><a href="javascript:;">工作任务管理插件研讨</a></el-col>
+                    <el-col class="small-circle" span="12"><a href="javascript:;">工作任务管理插件研讨</a></el-col>
+                    <el-col class="small-circle" span="12"><a href="javascript:;">工作任务管理插件研讨</a></el-col>
+                    <el-col class="small-circle" span="12"><a href="javascript:;">工作任务管理插件研讨</a></el-col>
+                </el-row>
+            </div>
+            <div class="tasklist-bot">
+                <h2 class="mb20">
+                    <span class="color-4a font-s16 mr10">工作日志</span>
+                    <i class="iconfont icon-addSolid cp"></i>
+                </h2>
+                <div class="step-panel">
+                    <div class="step-list posr step-list-finish" v-for="log in planlogs">
+                        <span class="step-list-l float-l"></span>
+                        <div class="step-list-r">
+                            <div class="mb10">
+                                <span class="color-4a">{{log.Planlog.CreateDate.ToString("yyyy/MM/dd")}}</span>
+                                <el-progress v-bind:percentage="log.Planlog.CurProgress"></el-progress>
+                                <i class="iconfont icon-del float-r"></i>
+                            </div>
+                            <p class="mb10">{{log.Planlog.Content}}</p>
+                            <a class="i-type block"  v-for="logfile in log.PlanFiles" key="o">
+                                <i class="doc-type"></i>
+                                <span class="color-4a">{{logfile.FileName}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </el-scrollbar>
+</div>
+<script src="~/Content/Web/js/vue.js"></script>
+<script src="~/Content/Web/js/index.js"></script>
+<script src="~/Tookit/calendar/schedule.js"></script>
+    <script src="~/Scripts/data.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                loading: true,
+                creator: { photo: '', realname: '' },
+                formData: {},
+                copyToUsers: {},
+                doUser: {},
+                priorityText: ['一般', '紧急', '特急'],
+                callDateText: ['不提醒', '提前5分钟', '提前10分钟', '提前15分钟', '提前30分钟', '提前1小时', '提前1天'],
+                fatherTitle: "无",
+                spread: true,
+                planlogs:{},
+            };
+        },
+        created () {
+            this.getDetail();
+        },
+        methods: {
+            clickone: function () {
+                //向左滑动、设置iframe的src
+                window.slideTodolistDetail();
+                //parent.slideTodolistDetail();
+            },
+            spreadDetail: function () {
+                this.spread = !this.spread;
+            },
+            getDetail: function() {
+                var self = this;
+                //获取创建人的真实姓名和头像
+                $.post('/im/ToDoList/GetPlanDetail', { uid: '@ViewBag.uid' }, function (result) {
+                    if (result.r) {
+                        self.loading = false;
+                        self.formData = result.data;
+                        self.formData.StartDate = self.formData.StartDate.ToString("yyyy-MM-dd hh:mm:ss");
+                        self.formData.EndDate = self.formData.EndDate.ToString("yyyy-MM-dd hh:mm:ss");
+                        self.fatherTitle = result.fatherTitle;
+                        //创建者
+                        self.creator.photo = result.creatorPhoto;
+                        self.creator.realname = self.formData.CreatorTrueName;
+                        //抄送人
+                        $.post("/im/ToDoList/GetCopyToUsers", { uids: result.data.ManagerPerson }, function (data0) {
+                            console.log(data0.data);
+                                self.copyToUsers = data0.data;
+                            });
+                        //执行人
+                        $.post('/im/ToDoList/GetDoUsers', { uid: result.data.ExecutivesPerson }, function (data1) {
+                            self.doUser = data1.data;
+                        });
+                        //任务日志
+                        $.post('/im/ToDoList/GetPlanLogs', { uid: result.data.Guid }, function (data) {
+                            //console.log("任务日志----->",data.data);
+                            if (data.r) {
+                                self.planlogs = data.data;
+                                self.spread1 = true;
+                            }
+                        });
+
+                    } else {
+                        self.$message.error('请求失败');
+                        console.log(result.m);
+                        self.loading = false;
+                    }
+                });
+            },
+        }
+    });
+
+</script>
+</body>
+</html>

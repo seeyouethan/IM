@@ -1,0 +1,115 @@
+﻿@model Edu.Entity.UserInfo
+
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    密码重置
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <div class="col-xs-12">
+                    @using (Html.BeginForm("ModyPwd", "PersonPwd", FormMethod.Post, new { @id = "fm", @class = "form-horizontal", enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(p => p.ID)
+                       
+                        <div class="form-group">
+                            <label for="UserName" class="col-sm-3 control-label">用户名</label>
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(p => p.UserName, new { @readonly= "readonly", @class = "form-control", placeholder = "输入5~16位英文字母，数字或者下划线", checktype = "userName", requiredmessage = "*" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="UserName" class="col-sm-3 control-label">旧密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" id="opwd" name="opwd"  class = "form-control"  checktype = "required"  requiredmessage = "*"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="UserName" class="col-sm-3 control-label">新密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" id="newpwd" name="newpwd" class="form-control" checktype="required" requiredmessage="*" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="UserName" class="col-sm-3 control-label">重复密码</label>
+                            <div class="col-sm-6">
+                                <input type="password" id="rePwd" name="rePwd" class="form-control"  />
+                            </div>
+                        </div>
+            
+
+                        <div class="form-group" style="margin-top: 20px;">
+
+                            <div class="col-sm-offset-3 col-sm-5">
+                                <button type="button" id="btnSave" class="btn btn-info col-sm-2">确 定</button>
+ 
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("_KindEditor")
+<script type="text/javascript">
+    function validatePwd() {
+        $("#rePwd").blur(function () {
+            var objDv = $(this).parent();
+            if ($("#rePwd").val() != $("#newpwd").val()) {
+                objDv.parent().addClass("has-error");
+                return false;
+            }
+            else {
+                var objDv = $(this).parent();
+                objDv.parent().addClass("has-success");
+            }
+        });
+        $("#rePwd").focus(function () {
+            var objDv = $(this).parent();
+            objDv.parent().removeClass("has-error");
+            $(objDv).find(".help-block").remove();
+        });
+    }
+
+    $(function () {
+        validatePwd();
+        $('#fm').validation();
+       
+
+        $("#btnSave").click(function () {
+            validatePwd();
+            if ($("#fm").valid() == false) {
+                return;
+            }
+            if ($(".form-group").hasClass("has-error")) {
+                return false;
+            }
+ 
+            var load = layer.load();
+            //异步提交
+            $('#fm').ajaxSubmit(function (data) {
+                layer.close(load);
+                if (data.r) {
+                    layer.alert("操作成功", function () {
+                        window.location.href = "@Url.Action("Index")";
+                    });
+                 
+                }
+                else {
+                    layer.alert(data.m);
+                }
+            });
+            return false;
+
+        })
+    })
+</script>

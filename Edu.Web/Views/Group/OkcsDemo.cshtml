@@ -1,0 +1,451 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>OKCS</title>
+    <!-- 引入样式 -->
+    <link href="~/Content/VideoConfenence/css/iconfont.css" rel="stylesheet" />
+    <link href="~/Content/VideoConfenence/css/style.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet">
+    <link href="~/Tookit/layer/skin/layer.css" rel="stylesheet" />
+    <link href="~/Content/Group/group.css" rel="stylesheet" />
+    <link href="~/Content/Group/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        <el-container style="height: 500px; border: 1px solid #eee">
+            <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+                <el-menu default-openeds="['1', '3']">
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <i class="el-icon-message"></i>导航一
+                        </template>
+                        <el-menu-item-group>
+                            <template slot="title">
+                                分组一
+                            </template>
+                            <el-menu-item index="1-1">选项1</el-menu-item>
+                            <el-menu-item index="1-2">选项2</el-menu-item>
+                        </el-menu-item-group>
+                        <el-menu-item-group title="分组2">
+                            <el-menu-item index="1-3">选项3</el-menu-item>
+                        </el-menu-item-group>
+                        <el-submenu index="1-4">
+                            <template slot="title">
+                                选项4
+                            </template>
+                            <el-menu-item index="1-4-1">选项4-1</el-menu-item>
+                        </el-submenu>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title">
+                            <i class="el-icon-menu"></i>导航二
+                        </template>
+                        <el-menu-item-group>
+                            <template slot="title">
+                                分组一
+                            </template>
+                            <el-menu-item index="2-1">选项1</el-menu-item>
+                            <el-menu-item index="2-2">选项2</el-menu-item>
+                        </el-menu-item-group>
+                        <el-menu-item-group title="分组2">
+                            <el-menu-item index="2-3">选项3</el-menu-item>
+                        </el-menu-item-group>
+                        <el-submenu index="2-4">
+                            <template slot="title">
+                                选项4
+                            </template>
+                            <el-menu-item index="2-4-1">选项4-1</el-menu-item>
+                        </el-submenu>
+                    </el-submenu>
+                    <el-submenu index="3">
+                        <template slot="title">
+                            <i class="el-icon-setting"></i>导航三
+                        </template>
+                        <el-menu-item-group>
+                            <template slot="title">
+                                分组一
+                            </template>
+                            <el-menu-item index="3-1">选项1</el-menu-item>
+                            <el-menu-item index="3-2">选项2</el-menu-item>
+                        </el-menu-item-group>
+                        <el-menu-item-group title="分组2">
+                            <el-menu-item index="3-3">选项3</el-menu-item>
+                        </el-menu-item-group>
+                        <el-submenu index="3-4">
+                            <template slot="title">
+                                选项4
+                            </template>
+                            <el-menu-item index="3-4-1">选项4-1</el-menu-item>
+                        </el-submenu>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
+
+            <el-container>
+                <iframe src="/im/group" height="600" width="100%"></iframe>
+            </el-container>
+            <el-container>
+                <div id="okcsim">
+                    <iframe src="/im/main" height="600" width="100%"></iframe>
+                </div>
+            </el-container>
+        </el-container>
+    </div>
+    <!-- 引入组件库 -->
+    <script type="text/javascript" src="~/Content/Web/js/jquery-1.10.2.min.js"></script>
+    <script src="~/Content/Web/js/vue.js"></script>
+    <script src="~/Content/Web/js/index.js"></script>
+    <script src="~/Tookit/layer/layer.js"></script>
+    <script src="~/Content/VideoConfenence/js/vue-resource.js"></script>
+    <script>
+        Vue.http.options.root = 'http://okcs.test.cnki.net';
+        Vue.http.headers.common['ignore-identity'] = "true";
+
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    main_loading: true,
+                    editAnnouncementDialogVisible: false,//创建群组弹窗
+                    createAnnouncementDialogVisible: false,//编辑群组弹窗
+                    memberDialogVisible: false,//群组成员弹窗
+                    announcementDialogVisible: false,//公告管理弹窗
+
+                    tableData: [],//当前群组页面的群组数据
+                    pageNo: 0,//分页的时候，页码
+                    pageSize: 0,//页码大小
+                    groupAnnouncement: [],//当前选中群组，群公告消息
+                    canCreateAnnouncement: false,//公告页面中，是否可以创建群组公告
+                    groupMembers: [],//当前群组成员
+                    isAdmin: false,//是否是当前群组管理员
+                    uid: '@ViewBag.uid',//当前用户id
+                    userRealName: '@ViewBag.uRealName',//当前用户真实姓名
+
+                    currentGroupid: '',//当前选中群组id
+
+                    form_announcement: { title: '', content: '' },//新建公告的model
+                    currentAnnouncement: [],//编辑公告的model
+
+                    rule_announcement: {
+                        title: [
+                           { required: true, message: '请输入公告标题', trigger: 'blur' },
+                           { min: 1, max: 25, message: '长度在 1 到 25 个字符', trigger: 'blur' }
+                        ],
+                        content: [
+                           { required: true, message: '请输入公告内容', trigger: 'change' },
+                           { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur' }
+                        ],
+                    }
+                }
+            },
+            created: function () {
+                var self = this;
+                
+
+            },
+            methods: {
+
+                //初始化数据
+                initialData: function (groupid) {
+                    var self = this;
+                    self.main_loading = true;
+                    this.$http.get('imwebapi/api/GroupApi/GetSelfGroups?userId=' + self.uid + '&pageNo=' + self.pageNo + '&pageSize=' + self.pageSize, { emulateJson: true }).then(function (res) {
+                        if (res.data.Success) {
+                            self.tableData = res.data.Content;
+                        } else {
+                            this.$message.error('GetSelfGroups请求失败！');
+
+                        }
+                    },
+                       function () {
+                           this.$message.error('GetSelfGroups请求失败！error');
+                       });
+
+                    self.main_loading = false;
+                },
+
+                //新建群组
+                createGroup: function () {
+                    layer.open({
+                        type: 2,
+                        id: "groupeditlayer",
+                        title: '新建群聊',
+                        skin: 'okcsclass createChatGroup',
+                        shade: 0.3,
+                        shadeClose: true,
+                        border: [0],
+                        //skin: 'createGroup',
+                        area: ['750px', '700px'],
+                        content: "@Url.Action("CreateChatGroup", "Main", new {area = ""})",
+                    });
+                },
+
+                //编辑群组
+                editGroup: function (groupid) {
+                    layer.open({
+                        type: 2,
+                        id: "groupeditlayer",
+                        title: '编辑群组',
+                        skin: 'okcsclass createChatGroup',
+                        shade: 0.3,
+                        shadeClose: true,
+                        border: [0],
+                        //skin: 'createGroup',
+                        area: ['750px', '700px'],
+                        content: '/im/Main/EditChatGroupView?gid=' + groupid,
+                    });
+                },
+
+                //查看群组成员
+                openGroupMembers: function (groupid) {
+                    var self = this;
+                    self.memberDialogVisible = true;
+                    this.$http.get('imwebapi/api/GroupApi/GetSelfGroupMember?uid=' + self.uid + '&groupid=' + groupid, { emulateJson: true }).then(function (res) {
+                        if (res.data.Success) {
+                            self.groupMembers = res.data.Content;
+                        } else {
+                            this.$message.error('GetSelfGroupMember请求失败！');
+
+                        }
+                    },
+                       function () {
+                           this.$message.error('GetSelfGroupMember请求失败！error');
+                       });
+                },
+
+                //创建公告
+                createGroupAnnouncement: function () {
+
+                    this.$refs['form_announcement_create'].validate((valid) => {
+                        if (valid) {
+                            var self = this;
+                            var formData = new FormData(); //FormData构造器接收的是一个form的DOM对象
+                            formData.append('uid', this.uid);
+                            formData.append('groupid', this.currentGroupid);
+                            formData.append('title', this.form_announcement.title);
+                            formData.append('content', this.form_announcement.content);
+                            formData.append('creatorname', this.userRealName);
+                            this.$http.post('imwebapi/api/GroupApi/CreateGroupAnnouncement', formData, { emulateJson: true }).then(
+                               result => {
+                                   if (result.data.Success) {
+                                       self.groupAnnouncement.unshift(result.data.Content);
+                                   } else {
+                                       this.$message.error('创建公告失败！');
+                                       console.log(result.data.Error);
+                                   }
+                               },
+                               function () {
+                                   self.$message.error('CreateGroupAnnouncement失败！');
+                               });
+                            self.form_announcement.title = "";
+                            self.form_announcement.content = "";
+                            self.createAnnouncementDialogVisible = false;
+                        } else {
+                            console.log('表单验证未通过');
+                            return false;
+                        }
+                    });
+
+                },
+
+
+                //查看群组公告
+                openAnnouncement: function (b, groupid) {
+                    var self = this;
+                    self.announcementDialogVisible = true;
+                    self.canCreateAnnouncement = b;
+                    self.currentGroupid = groupid;
+                    this.$http.get('imwebapi/api/GroupApi/GetGroupAnnouncement?userId=' + self.uid + '&groupId=' + groupid, { emulateJson: true }).then(function (res) {
+                        if (res.data.Success) {
+                            self.groupAnnouncement = res.data.Content;
+                        } else {
+                            this.$message.error('GetGroupAnnouncement请求失败！');
+
+                        }
+                    },
+                       function () {
+                           this.$message.error('GetGroupAnnouncement请求失败！error');
+                       });
+                },
+
+                //退出群组
+                exitGroup: function (groupid) {
+                    var self = this;
+                    this.$confirm('确认退出该群组?', '提示', {
+                        cancelButtonText: '取消',
+                        confirmButtonText: '确定',
+                        type: 'warning'
+                    }).then(() => {
+                        var formData = new FormData(); //FormData构造器接收的是一个form的DOM对象
+                        formData.append('uid', this.uid);
+                        formData.append('groupid', groupid);
+                        this.$http.post('imwebapi/api/GroupApi/ExitGroup', formData, { emulateJson: true }).then(
+                           result => {
+                               if (result.data.Success) {
+                                   self.initialData();
+                                   this.$message({
+                                       type: 'success',
+                                       message: '退出成功!'
+                                   });
+                               } else {
+                                   this.$message.error('操作失败！');
+                                   console.log(result.data.Error);
+                               }
+                           },
+                           function () {
+                               self.$message.error('ExitGroup失败！');
+                           });
+                    }).catch(() => {
+                    });
+                },
+
+                //解散群组
+                exitGroupAll: function (groupid) {
+                    var self = this;
+                    this.$confirm('确认解散该群组?', '提示', {
+                        cancelButtonText: '取消',
+                        confirmButtonText: '确定',
+                        type: 'warning'
+                    }).then(() => {
+                        var formData = new FormData(); //FormData构造器接收的是一个form的DOM对象
+                        formData.append('uid', this.uid);
+                        formData.append('groupid', groupid);
+                        this.$http.post('imwebapi/api/GroupApi/ExitGroup', formData, { emulateJson: true }).then(
+                           result => {
+                               if (result.data.Success) {
+                                   self.initialData();
+                                   this.$message({
+                                       type: 'success',
+                                       message: '解散成功!'
+                                   });
+                               } else {
+                                   this.$message.error('操作失败！');
+                                   console.log(result.data.Error);
+                               }
+                           },
+                           function () {
+                               self.$message.error('ExitGroup失败！');
+                           });
+
+                    }).catch(() => {
+                    });
+                },
+
+
+
+                //打开群组聊天窗口
+                openGroupChat: function (groupid,groupname,photo) {
+                    //this.$message.info('打开群组聊天窗口！');
+                    var ele = window.parent.document.getElementById('okcsim');
+                    if (ele) {
+                        var iframeele = ele.children[0];
+                        iframeele.contentWindow.LayerOpenChatWindow && iframeele.contentWindow.LayerOpenChatWindow(groupid, groupname, photo, "", "", true);                        
+                    } else {
+                        this.$message.error('打开群组聊天窗口出错！');
+                    }
+                    
+                },
+                //打开单人聊天窗口
+                openChat: function (uid,uname,photo) {
+                     var ele = window.parent.document.getElementById('okcsim');
+                    if (ele) {
+                        var iframeele = ele.children[0];
+                        iframeele.contentWindow.LayerOpenChatWindow && iframeele.contentWindow.LayerOpenChatWindow(uid, uname, photo, "", "", false);;
+                    } else {
+                        this.$message.error('打开群组聊天窗口出错！');
+                    }
+
+                },
+                //编辑公告打开窗口
+                editGroupAnnouncement: function (model) {
+                    this.currentAnnouncement = model
+                    this.editAnnouncementDialogVisible = true;
+                },
+
+                //编辑公告
+                editGroupAnnouncementSubmit: function () {
+
+                    this.$refs['form_announcement_edit'].validate((valid) => {
+                        if (valid) {
+                            var self = this;
+                            var formData = new FormData(); //FormData构造器接收的是一个form的DOM对象
+                            formData.append('uid', this.uid);
+                            formData.append('aid', this.currentAnnouncement.id);
+                            formData.append('title', this.currentAnnouncement.title);
+                            formData.append('content', this.currentAnnouncement.content);
+                            this.$http.post('imwebapi/api/GroupApi/EditGroupAnnouncement', formData, { emulateJson: true }).then(
+                               result => {
+                                   if (result.data.Success) {
+                                       self.openAnnouncement(self.canCreateAnnouncement, self.currentGroupid);
+                                   } else {
+                                       self.$message.error('编辑公告失败！');
+                                       console.log(result.data.Error);
+                                   }
+                               },
+                               function () {
+                                   self.$message.error('EditGroupAnnouncement失败！');
+                               });
+                            this.editAnnouncementDialogVisible = false;
+                            this.currentAnnouncement = [];
+                        } else {
+                            console.log('表单验证未通过!');
+                            return false;
+                        }
+                    });
+
+
+                },
+                //删除公告
+                deleteGroupAnnouncement: function (aid) {
+                    var self = this;
+                    this.$confirm('确认删除该公告?', '提示', {
+                        cancelButtonText: '取消',
+                        confirmButtonText: '确定',
+                        type: 'warning'
+                    }).then(() => {
+                        var formData = new FormData(); //FormData构造器接收的是一个form的DOM对象
+                        formData.append('uid', this.uid);
+                        formData.append('aid', aid);
+                        var self = this;
+                        this.$http.post('imwebapi/api/GroupApi/DeleteGroupAnnouncement', formData, { emulateJson: true }).then(
+                           result => {
+                               if (result.data.Success) {
+                                   self.$message({
+                                       type: 'success',
+                                       message: '删除公告成功!'
+                                   });
+                                   //更新
+
+                                   self.openAnnouncement(self.canCreateAnnouncement, self.currentGroupid);
+
+                               } else {
+                                   self.$message.error('删除公告失败！');
+                                   console.log(result.data.Error);
+                               }
+                           },
+                           function () {
+                               self.$message.error('DeleteGroupAnnouncement失败！');
+                           });
+                    }).catch(() => {
+                    });
+                },
+
+
+
+
+
+            },
+        })
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>回收站</title>
+	<!-- 引入样式 -->
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" href="css/element-ui/index.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">	
+</head>
+<body>
+<div id="app">
+    <el-container class="wrap">
+        <el-header class="header">
+           <el-row>
+            <el-col :span="7">
+                <div class="pull-left" >
+                   <a href="javascript:;"><img src="images/LogoImg.png" class="vam" /></a>
+                   <h1 class="inline-block vam">协同创作</h1>
+                </div>
+            </el-col>
+            <el-col :span="8">
+              <el-menu class="header-menu" mode="horizontal" default-active="1">
+                <el-menu-item index="1">协同</el-menu-item>
+                <el-menu-item index="2">个人</el-menu-item>
+                <el-menu-item index="3">模板</el-menu-item>
+                <!-- <el-menu-item index="4"><a href="" target="_blank">统计</a></el-menu-item> -->
+              </el-menu>
+            </el-col>
+            <el-col :span="9">
+               <el-menu class="pull-right" mode="horizontal" default-active="activeIndex">
+                <el-menu-item index="1"><a href="javascript:;" >OKMS首页</a></el-menu-item>
+                <el-menu-item index="2"><a href="javascript:;" >邱菊</a></el-menu-item>
+                <el-menu-item index="3"><a href="javascript:;" >退出</a></el-menu-item>
+                <el-menu-item index="4"><a href="javascript:;" >我的OKMS</a></el-menu-item>
+                <el-menu-item index="4"><a href="javascript:;" class="mes-img">消息34</a></el-menu-item>
+               </el-menu>
+            </el-col>
+           </el-row>
+        </el-header>
+        <el-container class="container">
+            <el-aside class="left-sider" style="width:210px;">               
+                <el-dropdown trigger="click">
+                  <el-button type="primary">新建</el-button>
+                  <el-dropdown-menu slot="dropdown"  class="select01">
+                    <el-dropdown-item><i class="iconfont icon-wendang"></i>文件夹</el-dropdown-item>
+                    <el-dropdown-item><i class="iconfont icon-wenjianjia1"></i>文档</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+                <el-menu class="left-sider-menu" default-active="1">
+                  <el-menu-item index="1">
+                    <i class="iconfont icon-wenjianjia"></i>
+                    <a href="javascript:;" slot="title">我的文件</a>
+                  </el-menu-item>
+                  <el-menu-item index="2">
+                    <i class="iconfont icon-woderenwu"></i>
+                    <a href="javascript:;" slot="title">我的任务</a>
+                  </el-menu-item>
+                  <el-menu-item index="3">
+                    <i class="iconfont icon-history"></i>
+                    <a href="javascript:;" slot="title">最近打开</a>
+                  </el-menu-item>
+                  <el-menu-item index="4">
+                    <i class="iconfont icon-guidang"></i>
+                    <a href="javascript:;" slot="title">归档</a>
+                  </el-menu-item>
+                  <el-menu-item index="5">
+                    <i class="iconfont icon-huishouzhan"></i>
+                    <a href="javascript:;" slot="title">回收站</a>
+                  </el-menu-item>
+                </el-menu>
+            </el-aside>
+            <el-main class="main">
+                <el-header class="header-top">
+                  <p class="float-r color-9 ht-search posr">
+                    <input type="text" name="" class="ht-input">
+                    <i class="iconfont icon-sousuo posa"></i>
+                  </p>
+                </el-header>
+                <div class="main-panel main-panel02">
+                  <el-table :data="[1,2,3,4,5,6]" class="table-first" style="width: 100%">
+                    <el-table-column prop="name" label="名称" min-width="160">
+                      <template slot-scope="scope" >
+                         <i class="iconfont icon-wendang"></i>
+                         <span>测试文档</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="date" label="创建时间">
+                      <template slot-scope="scope">
+                        <span>2017/10/20</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column  label="操作">
+                      <template slot-scope="scope">
+                          <i class="iconfont icon-huishouzhan"></i>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+body {
+    background-color: #EEF3F8;
+    border: 1px solid #E0E5E8;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.layui-card .layui-card-header{
+    text-align: left;
+    font-size: 16px;
+    padding: 10px;
+}
+.layui-card .layui-card-body{
+    text-align: center;
+    line-height: 10px;
+    padding-top:20px;
+   
+}
+
+.layui-card .layui-card-body span {
+    font-size: 12px;
+    font-weight: bold;
+}
+.layui-layer-btn {
+    text-align: center;margin-top: 20px;
+}
+

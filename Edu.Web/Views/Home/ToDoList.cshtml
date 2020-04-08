@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "OKCS的ToDoList";
+}
+<h1>您好:@(Edu.Service.LoginUserService.userName)</h1>
+<script type="text/javascript">
+    $(function() {
+        layer.open({
+            type: 2,
+            id: 'todolistiframe',
+            shade: 0,
+            closeBtn: 0,
+            title: false, //不显示标题
+            offset: 'auto', 
+            area: ['1000px', '500px'],
+            shadeClose: false, //开启遮罩关闭
+            content: "@Url.Action("Index","ToDoList",new { area="", groupid ="0"}) ",
+            success: function (layero, index) {
+                console.log("从layer弹出");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,901 @@
+/*html {
+    height: 100%;
+}
+
+body {
+    color: #333;
+    font: 14px Arial,"\5FAE\8F6F\96C5\9ED1";
+    *font-family: "Microsoft YaHei";
+    position: relative;
+    min-height: 100%;
+}
+
+.el-main {
+    padding-top: 0;
+}
+
+.todolist-panel {
+    padding: 0;
+}
+.dvm{display: inline-block; width: 5.5em;margin-left: 5px;font-size: 14px;overflow: hidden;white-space: nowrap;text-overflow:ellipsis}
+.completing {width: 40px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.container-panel {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0;
+    right: 0;
+    transition: all .3s;
+    height: 431px;
+    overflow-y: auto;
+}
+/*切换背景色*/
+.main-con {
+    padding: 20px 20px 30px;
+    background-color: #fff;
+    min-height: calc(100% - 177px);
+    position: relative;
+}
+
+.main-con-nobg {
+    background-color: transparent;
+    padding: 0;
+}
+/*最小高度无背景颜色-知识订阅*/
+.main-con .el-form-item {
+    margin-bottom: 11px;
+}
+
+.main-con.list-panel {
+    min-height: calc(100% - 177px);
+    padding: 23px 30px 20px !important;
+}
+
+.tab-mh, .constru-con {
+    min-height: 100%;
+}
+
+    .constru-con .el-tabs {
+        min-height: calc(100% - 177px);
+        background-color: #fff;
+    }
+
+    .constru-con .el-tabs__header {
+        background-color: #f3f4f8;
+    }
+
+.groupdl-bot .main-con {
+    min-height: 212px;
+}
+/*弹窗*/
+.el-dialog {
+    border-radius: 10px;
+    width: 641px;
+    min-width: 300px;
+    margin-top: 8vh !important;
+}
+
+.el-dialog__header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.el-dialog__body {
+    padding: 10px;
+}
+
+.group-dialog .el-dialog__body {
+    padding: 20px 30px;
+}
+
+.el-dialog__footer {
+    text-align: center;
+}
+
+    .el-dialog__footer .el-button {
+        width: 78px;
+        padding: 9px 0 !important;
+    }
+/*弹窗按钮*/
+.dialog-con {
+    max-height: 500px;
+    padding: 0 20px;
+}
+/*日历日程*/
+.skdcal-panel {
+    transition: all 0.5s ease;
+    width: 100%;
+}
+
+.list-panel, .skdcal-panel {
+    background-color: #fff;
+    position: relative;
+    height: 431px;
+    box-sizing: border-box;
+}
+
+    .list-panel:before {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 20px;
+        background-color: #41a0e9;
+        left: 0px;
+        top: 34px;
+        border-radius: 7px;
+    }
+
+.list-panel-top {
+    font-size: 18px;
+    line-height: 40px;
+}
+
+    .list-panel-top .float-r {
+        font-size: 12px;
+    }
+
+.todo-list-panel {
+    width: 100%;
+    height: 321px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 25px 15px 25px;
+    margin: 15px 0;
+}
+
+.todo-item {
+    line-height: 41px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.skdcal-panel .el-row, .skdcal-panel .el-col {
+    height: 97%;
+}
+
+.skdcal-panel .el-scrollbar {
+    height: calc(100% - 19px);
+}
+
+.underline {
+    position: relative;
+}
+
+    .underline:after {
+        content: "";
+        width: auto;
+        height: 2px;
+        display: inline-block;
+        background-color: #666;
+        position: absolute;
+        left: -6px;
+        right: -4px;
+        top: 6px;
+    }
+
+.todo-list-panel a.icon-addPerson {
+    display: block;
+    margin-top: 14px;
+    font-size: 32px;
+}
+
+.todo-item .el-input {
+    width: calc(100% - 30px);
+}
+
+.todo-item .el-input__inner {
+    height: 30px;
+    line-height: 30px;
+}
+
+.todo-item .icon-del {
+    visibility: hidden;
+    color: #999;
+}
+
+.todo-item:hover .icon-del {
+    visibility: visible;
+}
+
+.todo-item .icon-del:hover {
+    color: #f60;
+}
+
+.todo-item-p {
+    width: calc(100% - 30px);
+}
+
+    .todo-item-p span {
+        display: inline-block;
+        max-width: calc(100% - 23px);
+        white-space: nowrap;
+        overflow: hidden;
+        vertical-align: bottom;
+        text-overflow: ellipsis;
+    }
+
+.skd {
+    cursor: pointer;
+    display: inline-block;
+    width: 22px;
+    height: 20px;
+    background: url(../images/todoImg.png) no-repeat;
+    background-position: -2px -23px;
+    vertical-align: middle;
+    float: left;
+    transition: .3s;
+}
+
+.skdb-txt {
+    position: relative;
+    display: inline-block;
+    width: calc(100% - 275px);
+    white-space: nowrap;
+}
+
+    .skdb-txt span {
+        display: inline-block;
+        max-width: calc(100% - 10px);
+        margin-right: 5px;
+        line-height: 20px;
+        overflow: hidden;
+        vertical-align: top;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+/*紧急特急*/
+.skdb-txt-j:before, .skdb-txt-tj:before, .skdb-txt-fb:after, .skdb-txt-zx:after, .skdb-txt-cs:after, .skdb-txt-zd:before {
+    content: "\7D27\6025";
+    display: inline-block;
+    border-radius: 4px;
+    padding: 1px 3px;
+    background-color: rgb(242,143,14);
+    color: #fff;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.skdb-txt-tj:before {
+    content: "\7279\6025";
+    background-color: rgb(234,1,1);
+}
+/*特急*/
+.skdb-txt-fb:after {
+    content: "\521B\5EFA";
+    background-color: #41a0e9;
+}
+/*创建*/
+.skdb-txt-zx:after {
+    content: "\6267\884C";
+    background-color: #5fd748;
+}
+/*执行*/
+.skdb-txt-cs:after {
+    content: "\6284\9001";
+    background-color: #be7ad2;
+}
+/*抄送*/
+.skdb-txt-zd:before {
+    content: "\7F6E\9876";
+    background-color: rgb(234,1,1);
+}
+/*置顶*/
+.skd-top {
+    margin-bottom: 10px;
+}
+
+.skd-panel, .skd-edit {
+    padding: 10px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.skdcal-panel .el-col-14 {
+    border-right: 1px solid #ddd;
+    width: calc(100% - 375px);
+}
+
+.skdcal-panel .el-col-10 {
+    width: 360px;
+}
+
+@media screen and (max-width:815px) {
+    .skdcal-panel .el-col-14 {
+        width: calc(100% - 315px);
+    }
+
+    .skdcal-panel .el-col-10 {
+        width: 310px;
+    }
+
+    #schedule-box {
+        width: auto;
+    }
+}
+
+@media screen and (max-width:738px) {
+    .skdcal-panel .el-col-14 {
+        width: calc(100% - 250px);
+    }
+
+    .skdcal-panel .el-col-10 {
+        width: 246px;
+    }
+
+    #schedule-box {
+        width: auto;
+    }
+}
+
+.skdb-icon i {
+    color: #c5c5c5;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.up-down span {
+    color: #999;
+    cursor: pointer;
+}
+
+    .skdb-icon i:hover, .up-down span.cur {
+        color: #41a0e9;
+    }
+/*不可用状态*/
+.skdb-icon .disabled, .skdb-icon .disabled:hover {
+    color: #c5c5c5;
+    cursor: default;
+}
+
+.skdb-finished .skdb-icon .editwork:hover,
+.skdb-finished .skdb-icon .icon-subTask:hover {
+    color: #c5c5c5;
+    cursor: default;
+}
+
+.skdb-finished .skdb-icon .icon-edit1:hover {
+    color: #c5c5c5;
+    cursor: default;
+}
+
+.editwork {
+    cursor: pointer;
+}
+
+.skd-bot {
+    margin-top: 14px;
+}
+
+    .skd-bot > li {
+        border-bottom: 1px dashed #dcdcdc;
+        padding: 10px 0;
+    }
+
+.skd-top01 > li {
+    border: none;
+    padding-left: 32px;
+}
+
+.skd-bot > li > div {
+    padding: 5px;
+    transition: .3s;
+    cursor: pointer;
+}
+
+    .skd-bot > li > div:hover {
+        background-color: #f5f7fa;
+    }
+
+.skd:hover {
+    background-position: 0 0;
+}
+
+.skdb-finished > div > .skd {
+    background-position: 0 -49px;
+}
+
+/*.skdb-finished ul li .skd  {
+    background-position: 0 -49px;
+}*/
+
+.skdb-finished > div .skdb-txt span {
+    color: #999;
+    text-decoration: line-through;
+}
+
+.skdli-fiished {
+    font-size: 12px;
+}
+
+.icon-gengduo {
+    font-size: 20px;
+    color: #999;
+    transition: .3s;
+    cursor: pointer;
+}
+
+    .icon-gengduo:hover {
+        color: #f60;
+    }
+
+.skdb-icon {
+    display: none;
+}
+
+.skd-bot > li > div:hover .skdb-icon {
+    display: inline-block;
+}
+
+.skd-bot > li > div:hover .skdb-infor {
+    display: none;
+}
+
+#schedule-box {
+    clear: both;
+}
+
+.line {
+    text-align: center;
+}
+
+.cal {
+    height: 30px;
+}
+
+    .cal .todaybtn {
+        display: block;
+        float: right;
+        border: 1px solid #42A0E9;
+        border-radius: 4px;
+        background-color: #42A0E9;
+        color: white;
+        height: 30px;
+        width: 50px;
+        text-align: center;
+        line-height: 30px;
+        cursor: pointer;
+    }
+
+/*任务详情*/
+.task-item {
+    padding: 15px 20px;
+    background-color: #f8f8f8;
+}
+
+    .task-item p {
+        line-height: 26px;
+    }
+
+    .task-item .el-progress {
+        width: 200px;
+        display: inline-block;
+        margin-left: 50px;
+    }
+
+.task-his-panel li {
+    margin-bottom: 15px;
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 21px;
+    top: 5px;
+}
+
+.item-right {
+    width: calc(100% - 248px);
+}
+
+.spread0 {
+    overflow: hidden;
+    height: 0;
+    transition: height .2s ease-out, opacity .2s ease-out;
+    -moz-transition: height .2s ease-out, opacity .2s ease-out;
+    -webkit-transition: height .2s ease-out, opacity .2s ease-out;
+    -o-transition: height .2s ease-out, opacity .2s ease-out;
+}
+
+.spread1 {
+    height: 0;
+    overflow: hidden;
+    transition: height .2s ease-out, opacity .2s ease-out;
+    -moz-transition: height .2s ease-out, opacity .2s ease-out;
+    -webkit-transition: height .2s ease-out, opacity .2s ease-out;
+    -o-transition: height .2s ease-out, opacity .2s ease-out;
+}
+
+.dialog-con .small-circle {
+    cursor: pointer;
+}
+
+.more-p {
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: .3s;
+    margin-bottom: 10px;
+}
+
+    .more-p:hover {
+        color: #f60;
+    }
+/*向右箭头*/
+.icon-right {
+    cursor: pointer;
+    color: #c0c4cc;
+    font-size: 12px;
+    transform: rotate(0deg);
+    transition: transform .3s ease-in-out;
+    margin-right: 3px;
+}
+
+.expand .icon-right {
+    transform: rotate(90deg);
+}
+
+.expand + ul {
+    display: none;
+}
+
+.nodisplay {
+    display: none;
+}
+
+/*tooltip*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 40px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 4px 0;
+        /* 定位 */
+        position: absolute;
+        z-index: 1;
+        display: block;
+        left: -13px;
+        top: -26px;
+        font-size: 12px;
+    }
+
+.icon-endtop .tooltiptext, .icon-subTask .tooltiptext, .len {
+    width: 70px !important;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.icon-addSolid {
+    font-size: 22px;
+    color: #666;
+    vertical-align: middle;
+}
+
+.taskul-list {
+    padding-left: 30px;
+}
+
+    .taskul-list .el-col {
+        line-height: 40px;
+    }
+
+.step-list-r {
+    padding: 5px;
+    padding-bottom: 20px;
+}
+
+.step-list:before {
+    position: absolute;
+    content: "";
+    width: 1px;
+    height: 100%;
+    border-left: 1px solid #e3e4e4;
+    left: 7px;
+    top: 5px;
+}
+
+.step-list-r:hover {
+    background-color: #f6f6f6;
+}
+
+.step-list .icon-del,
+.step-list .icon-edit1 {
+    visibility: hidden;
+    transition: .3s;
+    cursor: pointer;
+    color: #999;
+}
+
+.step-list:hover .icon-del,
+.step-list:hover .icon-edit1 {
+    visibility: visible;
+}
+
+.tasklist-mid {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    margin: 15px 0;
+}
+
+.step-list-l {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #41a0e9;
+    border-radius: 50%;
+    background: #fff;
+    z-index: 2;
+    position: relative;
+    margin-top: 6px;
+}
+
+.step-list-r {
+    margin-left: 28px;
+}
+
+.tasklist-top .icon-topDouble, .tasklist-top .icon-bottomDouble {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #999;
+    top: 11px;
+    right: -9px;
+    cursor: pointer;
+}
+
+.step-list-finish .step-list-l {
+    background-color: #41a0e9;
+}
+
+.task-panel {
+    margin-right: -520px;
+    width: 500px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+    background-color: #fff;
+    transition: all 0.5s ease;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 1px 17px rgba(0,0,0,.4);
+    padding: 50px 15px;
+    box-sizing: border-box;
+}
+
+.task-arrow {
+    position: absolute;
+    display: inline-block;
+    top: 313px;
+    left: -10px;
+    width: 0;
+    height: 0px;
+    content: '';
+    border-style: solid;
+    border-width: 10px;
+    border-color: #fff #fff transparent transparent;
+    transform: rotate(-135deg);
+    box-shadow: 3px -3px 3px #ccc;
+    margin-right: -700px;
+    display: none;
+}
+
+.r0 {
+    margin-right: 0;
+}
+
+.task-panel > div {
+    height: 100%;
+}
+
+.task-panel-con {
+    padding: 0 15px;
+}
+
+.tasklist-top .el-form-item {
+    margin-bottom: 0;
+}
+
+.form-hide {
+    height: 0;
+    overflow: hidden;
+}
+
+.close-btnt {
+    position: absolute;
+    right: 18px;
+    color: #666;
+    font-size: 20px;
+    font-weight: bold;
+    top: 24px;
+    z-index: 999;
+}
+
+    .close-btnt:hover {
+        color: red;
+        cursor: pointer;
+    }
+
+.isHidden {
+    display: none;
+}
+
+.padding0 {
+    padding: 0 !important;
+}
+/*日程提醒*/
+.alarmclock-panel {
+    width: 365px;
+    height: 220px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 1px 17px rgba(0,0,0,.4);
+    padding: 20px 10px 20px 25px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    box-sizing: border-box;
+}
+
+.acp-con i {
+    font-size: 78px;
+    color: #bbb;
+    vertical-align: middle;
+}
+
+.acp-con-right {
+    width: calc(100% - 120px);
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.clock-time {
+    font-size: 36px;
+    color: #cc0000;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-family: "Arial";
+}
+
+.acp-con-right h2 {
+    font-size: 18px;
+    line-height: 30px;
+    overflow: hidden;
+    height: 60px;
+}
+
+.width70 {
+    width: calc(100% - 500px);
+    float: left;
+}
+
+#rightPanel {
+    height: 100%;
+}
+
+body .demo-class .layui-layer-iframe {
+    box-shadow: none !important;
+}
+
+.el-scrollbar__view {
+    overflow-x: hidden;
+}
+
+.nodata-tipL {
+    left: 20% !important;
+    width: 40% !important;
+}
+
+.step-panel .i-type {
+    cursor: pointer;
+}
+
+    .step-panel .i-type:hover .color-4a,
+    .step-list .icon-del:hover,
+    .step-list .icon-edit1:hover {
+        color: #f60;
+    }
+
+.displaynone {
+    display: none;
+}
+
+.amid .el-form-item__content {
+    margin-left: 0 !important;
+    text-align: center;
+}
+
+    .amid .el-form-item__content button {
+        width: 78px;
+        height: 34px;
+        line-height: 0px;
+    }
+
+.copymember .icon-down,
+.copymember .icon-up {
+    position: absolute;
+    bottom: -5px;
+    right: 8px;
+    cursor: pointer;
+}
+
+.copymember .mr05 {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.copymember .dvm {
+    width: 4.5em !important;
+}
+
+.maxheight120 .el-form-item__content {
+    max-height: 120px;
+    overflow: hidden;
+}
+
+.mem-con-max .el-form-item__content {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.p-4a {
+    cursor: pointer;
+}
+
+    .p-4a .color-4a:hover {
+        color: orange !important;
+    }
+
+.tip-sm {
+    position: absolute;
+    left: -118px;
+    top: 0px;
+    color: #666;
+    cursor: pointer;
+}
+
+.pmc-box .tip-sm {
+    top: 9px;
+}
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    overflow: hidden;
+    font-size: 16px;
+}
+.pmc-box .project-type-help {
+    top: -42px;
+}
+.project-type-help {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0px;
+    max-width: 215px;
+    padding: 20px;
+    text-align: left;
+    word-wrap: break-word;
+    font-size: 12px;
+    background: #fff;
+    border-radius: 2px;
+    border: 1px solid #d8dfef;
+    z-index: 1;
+}
+.margin10 {
+    margin: 10px;
+}

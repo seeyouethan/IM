@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>聊天窗口</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">  
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+    <!-- 点击具体人弹窗聊天窗口 -->
+       <div class="chat-con"><!-- 收起消息记录时添加了类名.chat-con-show  -->
+          <el-row>
+            <el-col :span="17" class="chat-con-left">
+               <div class="chatl-panel">
+                  <ul class="chatlp-top">
+                     <li class="chat-time"><span>16:20:30</span></li>
+                     <li class="in">
+                        <div class="media clearfix">
+                           <div class="float-l inline-block mr10"><img class="head-ssimg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body">
+                             <p>法简洁的表达你的想法达你法简洁的表达你表达你的想法达你法简洁的表达你的想法的想法达你法简 达你的想法达你法简洁的表达你的想法的</p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="out">
+                        <div class="media clearfix">
+                           <div class="float-r inline-block ml10"><img class="head-ssimg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body">
+                             <p>法简洁的表达你的想法达你法简洁的表达你表达你的想法达你法简洁的表达你的想法的想法达你法简 达你的想法达你法简洁的表达你的想法的</p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="chat-time"><span>16:20:30</span></li>
+                     <li class="in">
+                        <div class="media clearfix">
+                           <div class="float-l inline-block mr10"><img class="head-ssimg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body inline-block">
+                             <p class="p-img"><img src="images/pustVideo.gif" class="block" /></p>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+                  <div class="chatlp-bot"> 
+                      <div class="clearfix mt10">
+                        <p class="chatlpb-btn float-l">
+                          <i class="iconfont icon-chatsmile"></i>
+                          <i class="iconfont icon-chatimg"></i>
+                          <i class="iconfont icon-chatfile"></i>
+                          <i class="iconfont icon-chatvideo"></i>
+                        </p>
+                        <p class="mes-cont float-r color-9">消息记录<i class="el-icon-caret-bottom"></i></p><!-- 点击时加类名cur -->
+                      </div>
+                      <textarea></textarea>
+                      <p class="btn-group text-right"><el-button type="primary">发送</el-button></p>
+                  </div>
+               </div>
+            </el-col>
+            <el-col :span="7" >
+              <div class="chatr-panel posr">
+                 <p class="chatrp-top">消息记录 <i class="iconfont icon-delte"></i></p>
+                 <div class="chatrp-mid">
+                    <p class="chatrpm-top mt10"><span class="cur">全部</span><span>图片</span><span>文件</span></p>
+                    <ul class="chatrpm-bot">
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码,发布版本</p>
+                      </li>
+                      <li class="cur"><!-- 点击时加cur -->
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码</p>
+                      </li>
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p><img src="images/bookImg.jpg" width="100%" /></p>
+                      </li>
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码</p>
+                      </li>
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码</p>
+                      </li>
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码</p>
+                      </li>
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码</p>
+                      </li>
+
+                      <li>
+                        <p><span>张钰 </span><span>17:02:56</span></p>
+                        <p>各位同事准备提交一下代码</p>
+                      </li>
+                    </ul>
+                 </div>
+                 <div class="chatrp-bot clearfix posr" >
+                   <i class="iconfont icon-searchBtn float-l"></i>
+                   <div class="search-div">
+                     内容：<el-input type="text"></el-input>
+                     <a href="javascript:;">确定</a>
+                   </div>
+                   <div class="float-r">
+                     <el-date-picker type="date"></el-date-picker>2018-5-25
+                     <span class="arrow-group">
+                      <i class="iconfont icon-last" title="第一页"></i>
+                      <i class="iconfont icon-rightJian" title="上一页"></i>
+                      <i class="iconfont icon-rightJ disabled" title="下一页"></i>
+                      <i class="iconfont icon-first disabled" title="最后页"></i>
+                     </span>
+                   </div>
+                 </div>
+              </div>
+            </el-col>
+          </el-row>
+       </div>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+   <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+﻿@using Edu.Tools
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>在线阅读</title>
+    <link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/iconfont.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/style.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/todolist_main.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <el-main>
+                <div>
+                    <el-row>
+                        <el-col v-bind:span="24" v-loading="loading" element-loading-text="拼命加载中">
+                            <div>
+                                <!-- 阅读部分 -->
+                                <div class="read-panel" v-if="readShow" id="read-panel">
+                                    <a href="javascript:;" class="close-bg" @@click="closeRead()"></a>
+                                    <div class="read-con posr">
+                                        <div class="read-top posr">
+                                            <div id="jiaoImg">
+                                                <img src="../../assets/images/jiao.png" />
+                                            </div>
+                                            <span v-html="readTitle" class="read-title"></span>
+                                            <i class="i-learn" @@click="toggleFullScreen"></i>
+                                        </div>
+                                        <div class="read-bot" v-if="readType==1" v-loading="loadingR" element-loading-text="loadingTextR">
+                                            <div class="pdf-con">
+                                                <!--展开时去掉类名 tree-con-hide-->
+                                                <div class="tree-con tree-con-hide">
+                                                    <h2>文档大纲</h2>
+                                                    <el-tree data="outline" props="defaultProps"></el-tree>
+                                                    <!--展开时i类名为icon-sLeft，收起时类名为icon-sRight-->
+                                                    <!--<span class="btn-tog">
+                              <i class="iconfont icon-sRight"></i>
+                            </span>-->
+                                                </div>
+                                                <!--展开时加上类名 art-con-r0-->
+                                                <div class="art-con">
+                                                    <div class="art-box" v-html="readContent"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="read-bot" v-loading="loadingR" element-loading-text="loadingTextR" v-else>
+                                            <div class="pdf-con" @@scroll="scroll">
+                                                <div class="art-con">
+                                                    <div class="text-center">
+                                                        <div class="load-box" v-for="(chapter, index) in chapters" key="index+`+`">
+                                                            <div class="loading-panel" v-if="!chapter.loaded">
+                                                                <div class="loading-center">
+                                                                    <svg viewBox="25 25 50 50">
+                                                                        <circle cx="50" cy="50" r="20" fill="none" class="path"></circle>
+                                                                    </svg>
+                                                                    <p class="loading-text">拼命加载中</p>
+                                                                </div>
+                                                            </div>
+                                                            <img v-if="chapter.load" v-show="chapter.loaded" src="imgSrc + chapter.ImageName" @@load="changeState(chapter)">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="footer-nav">
+                                                <div class="f-page inline-block">
+                                                    <a href="javascript:;" @@click="prevPage">
+                                                        <i class="iconfont icon-rightJian"></i>
+                                                    </a>
+                                                    <span class="foot-page">
+                                                        <input type="text" v-model="curPageNumR" @@keypress .13="jumpPage" /> /
+                                                        <span>{{pageTotalR}}</span>
+                                                    </span>
+                                                    <a href="javascript:;" @@click="nextPage">
+                                                        <i class="iconfont icon-rightJ"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-main>
+        </el-container>
+    </div>
+    <script src="~/Content/Web/js/vue.js"></script>
+    <script src="~/Content/Web/js/index.js"></script>
+    <script>
+    var type = "day";
+    var today = new Date();
+    var pageNo = 1;
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                imgSrc: '/discuss/discuss/GetHfsImg?filename=',
+                readType: 1,
+                readTitle: '',
+                outline: [],
+                defaultProps: '',
+                readContent: '',
+                loadingR: false,
+                loadingTextR: '',
+                readShow: false,
+                shadowShow: false,
+                curPageNumR: 1,
+                pageTotalR: 2,
+                chapters: [],
+                isJump: false,
+                loading: true,
+            };
+        },
+        created () {
+            this.GetReadInfo('@ViewBag.filecode', '@ViewBag.fileType');
+        },
+        methods: {
+            GetReadInfo: function (filecode, fileType) {
+                var self = this;
+                if (fileType == '1') {
+                    $.post('/im/todolist/GetKnowledgeContent', { fileCode: filecode }, function (result) {
+                        var json = result;
+                        if (json.Code == 200) {
+                            console.log("文件转换成功......");
+                            self.readContent = json.Data;
+                        } else if (json.Code === 500) {
+                            console.log("文件转换失败......");
+                        }
+                        self.loading = false;
+                        self.readShow = true;
+                    }, 'json');
+                }else if (fileType=='0') {
+                    
+                }
+            }
+        },
+    });
+
+    </script>
+
+    
+</body>
+</html>

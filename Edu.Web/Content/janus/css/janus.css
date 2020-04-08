@@ -1,0 +1,13 @@
+.media-video{
+    width: 100%;
+    height: auto !important; 
+    position: absolute;
+    object-fit: cover;
+}
+audio::-webkit-media-controls-enclosure, video::-webkit-media-controls.audio-only [pseudo="-webkit-media-controls-enclosure"] {
+   display: none;
+}
+
+.member-ul .bg-icon{
+    margin-right: 6px;;
+}

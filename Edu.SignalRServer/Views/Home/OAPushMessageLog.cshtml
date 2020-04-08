@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "SignalR监听";
+}
+
+<div class="jumbotron">
+    <h1>SignalR监听日志(OA平台通知)</h1>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script type="text/javascript">
+    $(function() {
+        var chat = $.connection.chatHub;
+        $.connection.hub.start().done(function () {
+            chat.server.connectWithTerminal("oalogger", "oaokcs");
+        });
+        chat.client.oalog = function (msgtime,msg) {
+            var elestr = "<div>" +
+                "<p class=\"p0\">------" + msgtime + "------</p>" +
+                "<p class=\"p1\">收到一条推送消息:" +
+                "<p class=\"p3\">" + msg + "</p>" +
+                "</div>";
+            $(".jumbotron").append(elestr);
+        };
+    });
+
+</script>
+

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Im-视屏聊天</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">  
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div class="chat-panel">
+   <!-- 视频聊天头部 -->
+   <div class="chat-panel-head">
+      <div class="col-2 float-l">
+         <span class="chat-head-search">
+            <input type="text" />
+            <i class="iconfont icon-searchBtn"></i>
+            <i class="iconfont icon-close"></i>
+         </span>
+      </div>
+      <div class="col-4 text-center float-l">
+         <span class="cphead-name">史阳艳</span>
+      </div>
+      <div class="col-2 float-l text-right">
+          <i class="iconfont icon-delte cphead-close cp"></i>
+      </div>
+   </div>
+   <!-- 视频聊天内容 -->
+   <div class="chat-panel-body clearfix hide-video">
+      <!-- 左侧列表 -->
+      <ul class="col-2 float-l tab-list">
+          <li class="cur"><img src="images/defaultHeadImg.png" class="head-ssimg mr10 vam">史阳艳<i class="iconfont icon-close"></i></li>
+          <li><img src="images/defaultHeadImg.png" class="head-ssimg mr10 vam">史阳艳<i class="iconfont icon-close"></i></li>
+          <li><img src="images/defaultHeadImg.png" class="head-ssimg mr10 vam">泡沫<i class="iconfont icon-close"></i></li>
+      </ul>
+      <!-- 中间聊天内容 -->
+      <div class="col-4 float-l tab-content">
+          <ul class="chatlp-top">
+                     <li class="chat-time"><span>16:20:30</span></li>
+                     <li class="in">
+                        <div class="media clearfix">
+                           <div class="float-l inline-block mr10"><img class="head-simg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body">
+                             <p class="color-9">邱菊</p>
+                             <p class="mb-txt">1111法简洁的表达你</p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="out">
+                        <div class="media clearfix">
+                           <div class="float-r inline-block ml10"><img class="head-simg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body">
+                             <p class="color-9">邱菊2</p>
+                             <p class="mb-txt">法111简洁的表达你</p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="chat-time"><span>16:20:30</span></li>
+                     <li class="in">
+                        <div class="media clearfix">
+                           <div class="float-l inline-block mr10"><img class="head-simg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body inline-block">
+                             <p class="color-9">邱菊</p>
+                             <p class="p-img"><img src="images/pustVideo.gif" class="block" /></p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="chat-under text-center"><span>对方已下线</span></li>
+          </ul>
+          <ul class="chatlp-top">
+                     <li class="chat-time"><span>16:20:30</span></li>
+                     <li class="in">
+                        <div class="media clearfix">
+                           <div class="float-l inline-block mr10"><img class="head-simg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body">
+                             <p class="color-9">邱菊</p>
+                             <p class="mb-txt">法简洁的表达你的
+                        </div>
+                     </li>
+                     <li class="out">
+                        <div class="media clearfix">
+                           <div class="float-r inline-block ml10"><img class="head-simg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body">
+                             <p class="color-9">邱菊2</p>
+                             <p class="mb-txt">法简洁的表达你的想法达你法简洁的表达你表达你的想法达你</p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="chat-time"><span>16:20:30</span></li>
+                     <li class="in">
+                        <div class="media clearfix">
+                           <div class="float-l inline-block mr10"><img class="head-simg" src="images/defaultHeadImg.png" /></div>
+                           <div class="media-body inline-block">
+                             <p class="color-9">邱菊</p>
+                             <p class="p-img"><img src="images/pustVideo.gif" class="block" /></p>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="chat-under text-center"><span>对方已下线</span></li>
+          </ul>
+          <div class="chatlp-bot"> 
+                      <div class="clearfix mt10">
+                        <p class="chatlpb-btn float-l">
+                          <i class="iconfont icon-chatsmile"></i>
+                          <i class="iconfont icon-chatimg"></i>
+                          <i class="iconfont icon-chatfile"></i>
+                          <i class="iconfont icon-chatvideo"></i>
+                        </p>
+                        <p class="float-r color-6"><i class="iconfont icon-historyTime cp link"></i></p><!-- 点击时加类名cur -->
+                      </div>
+                      <textarea></textarea>
+                      <p class="btn-group text-right"><a href="javascript:;">发送</a></p>
+          </div>
+      </div>
+      <!-- 右侧聊天记录 -->
+      <div class="col-2 float-l chatlist-content posr">
+          <p class="vc-top color-9">消息记录</p>
+          <!-- 顶部聊天切换 -->
+          <p class="chatlist-tab">
+             <a href="javascript:;" class="cur">全部</a><!-- 当前选中加cur -->
+             <a href="javascript:;">图片</a>
+             <a href="javascript:;">文件</a>
+          </p>
+          <!-- 搜索到的消息记录条数 -->
+          <p class="chatlist-count clearfix hide">
+            <span class="float-l color-9">已搜索到18条消息记录</span>
+            <a class="float-r color-23">返回</a>
+          </p>
+          <!-- 中间聊天记录内容全部 -->
+          <div class="chatlist-panel">
+            <div class="clp-item">
+               <p class="color-23 font-s12"><span>史阳艳</span><span>9:59:15</span></p>
+               <p>tree是<span class="bgcolor-fe">多叉树</span></p>
+            </div>
+            <div class="clp-item">
+               <p class="color-75c font-s12"><span>史阳艳</span><span>9:59:15</span></p>
+               <p>tree是多叉树</p>
+            </div>
+            <!-- 查找时间 -->
+            <p class="chatlist-time font-s12 color-6">2018-7-12</p>
+            <div class="clp-item">
+               <p class="color-23 font-s12"><span>史阳艳</span><span>9:59:15</span></p>
+               <p>tree是多叉树</p>
+            </div>
+            <div class="clp-item">
+               <p class="color-75c font-s12"><span>史阳艳</span><span>9:59:15</span></p>
+               <p><img src="images/bookImg.jpg" /></p>
+            </div>
+          </div>
+          <!-- 中间聊天记录内容图片 -->
+          <div class="chatlist-panel hide chatlist-img">
+             <p><i class="iconfont icon-historyTime mr10 vam"></i>2017/7/12</p>
+             <ul class="clearfix">
+               <li><img src="images/bookImg.jpg" /></li>
+               <li><img src="images/bookImg.jpg" /></li>
+               <li class="cur"><img src="images/bookImg.jpg" /></li>
+               <li><img src="images/bookImg.jpg" /></li>
+               <li><img src="images/bookImg.jpg" /></li>
+               <li><img src="images/bookImg.jpg" /></li>
+             </ul>
+          </div>
+          <!-- 中间聊天记录内容文件 -->
+          <div class="chatlist-panel chatlist-file hide">
+             <ul>
+               <li class="cl-file-l cur">
+                  <img src="images/bookImg.jpg" />
+                  <div class="cl-file-r"> 
+                      <p class="mb5">用户体验方法论.jpg</p>
+                      <p class="font-s12 color-9"><span class="mr10">2018-11-14  14:24</span><span>史阳艳</span></p>
+                  </div>
+                  <div class="cl-file-rr">
+                     <i class="iconfont icon-download mb5"></i>
+                     <span class="block">255.77kb</span>
+                  </div>
+               </li>
+               <li class="cl-file-l">
+                  <img src="images/bookImg.jpg" />
+                  <div class="cl-file-r"> 
+                      <p class="mb5">用户体验方法论.jpg</p>
+                      <p class="font-s12 color-9"><span class="mr10">2018-11-14  14:24</span><span>史阳艳</span></p>
+                  </div>
+                  <div class="cl-file-rr">
+                     <i class="iconfont icon-download mb5"></i>
+                     <span class="block">255.77kb</span>
+                  </div>
+               </li>
+             </ul>
+          </div>
+          <!-- 底部搜索 -->
+          <div class="chatlist-bot clearfix posr" >
+              <i class="iconfont icon-searchBtn float-l cp"></i>
+              <div class="search-div">
+                     内容：<input type="text" />
+                     <i class="iconfont icon-delte"></i>
+                     <a href="javascript:;">确定</a>
+              </div> 
+              <div class="float-r">
+                     <i class="iconfont icon-date mr10 cp"></i><span class="color-9">2018-5-25</span>
+                     <span class="arrow-group">
+                      <i class="iconfont icon-last" title="第一页"></i>
+                      <i class="iconfont icon-rightJian" title="上一页"></i>
+                      <i class="iconfont icon-rightJ disabled" title="下一页"></i>
+                      <i class="iconfont icon-first disabled" title="最后页"></i>
+                     </span>
+              </div>
+          </div>
+      </div>
+      <!-- 右侧视频聊天 -->
+      <div class="col-2 float-l video-content hide">
+          <p class="vc-top color-9">视频</p>
+          <div class="vc-visitb posr">
+             <p>对方邀请你视频通话...</p>
+             <!-- <p>正在呼叫史阳艳...</p> -->
+             <i class="iconfont icon-video"></i>
+             <span class="vc-bot">等待对方接收邀请...</span>
+          </div>
+          <div class="posr">
+            <img src="images/bookImg.jpg" width="100%" height="200px">
+            <i class="iconfont icon-fullScreen cp"></i>
+          </div>
+          <p class="video-btn clearfix">
+            <a href="javascript:;" class="float-l video-btn0">拒绝</a>
+            <a href="javascript:;" class="float-r video-btn1">接听</a>
+            <!-- <a href="javascript:;" class="float-r video-btn0">挂断</a>
+            <a href="javascript:;" class="float-r video-btn2">静音</a>
+            <a href="javascript:;" class="float-r video-btn2">共享桌面</a> -->
+          </p>
+          <div>
+           <img src="images/bookImg.jpg" width="100%" height="200px">
+          </div>
+      </div>
+   </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+          $(document).ready(
+            function(){
+              $('.tab-content').each( function() {
+                 $(this).children('.chatlp-top:gt(0)').hide();
+              });
+              $('.tab-list li').click(
+                function(){
+                  $(this).addClass('cur').siblings('li').removeClass('cur');
+                  $(this).parent().siblings('.tab-content').children('.chatlp-top').eq($(this).index()).show().siblings('.chatlp-top').hide();
+                }
+              );
+            }
+          );
+</script>
+</body>
+</html>

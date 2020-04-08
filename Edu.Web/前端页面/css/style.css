@@ -1,0 +1,117 @@
+
+/*reset*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td,figure,figcaption{padding: 0;margin: 0;}
+h1,h2,h3,h4,h5,h6 {font-weight: normal;}
+ul, ol{list-style: none;}
+img{border:none;max-width: 100%}
+a{cursor:pointer;text-decoration: none;color:#333;}
+a:hover{color:#f60;}
+table{border-collapse: collapse;border-spacing:0;}
+i{font-style:normal;}
+/*form*/
+input, button, option, textarea, select, fieldset{outline: none;vertical-align: middle;}
+input[type="text"],input[type="password"]{padding-left:5px;box-sizing: border-box;}
+input[type="text"],input[type="password"],input[type="button"]{font-family: "Microsoft YaHei"}
+input::-ms-clear{display:none;}
+input[type="password"]::-ms-reveal{display:none;}
+button{cursor: pointer;border:none;background:none;}
+textarea{ resize:none;padding:5px!important;line-height:24px; }
+/*清除浮动*/
+.clearfix:after {visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.clearfix{*zoom: 1;}
+.clear{clear:both;}
+/*内容溢出*/
+.text-ellipsis{overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+/*常用样式*/
+.posr{position:relative;}
+.posa{position:absolute;}
+.posf{position: fixed;}
+.float-l{float:left;}
+.float-r{float:right;}
+.inline-block{display:inline-block;*display: inline;zoom:1;}
+.block{display: block;}
+.hide{display: none;}
+.vam{vertical-align: middle;}
+.text-center{text-align:center;}
+.text-right{text-align: right}
+.text-left{text-align:left;}
+.cp{cursor: pointer;}
+.fwb{font-weight: bold}
+/*颜色样式*/
+.color-9{color:#999;}
+.color-6{color:#666;}
+.color-23{color:#2389d8;}
+.color-26{color:#26c601;}
+.color-f4{color:#f40101;}
+.color-f6{color:#f69701;}
+.cr{color:#eb0707;}
+.color-f0{color:#f02f2f!important;}
+/*间距样式*/
+.mr10{margin-right: 10px;}
+.ml10{margin-left: 10px;}
+.mr20{margin-right: 20px;}
+.mr05{margin-right: 5px;}
+.mt30{margin-top: 30px;}
+.mt10{margin-top: 10px;}
+.mbt10{margin:10px 0;}
+.mt85{margin-top: 85px;}
+.mb20{margin-bottom: 20px;}
+.lineh24{line-height: 24px;}
+.mt25{margin-top: 25px;}
+/*字体*/
+.font-s12{font-size: 12px}
+.font-s16{font-size: 16px}
+/*placeholder颜色*/
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #999; 
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #999;
+}
+input:-ms-input-placeholder{
+    color: #999;
+}
+input::-webkit-input-placeholder{
+    color: #999;
+}
+.el-input__inner::-webkit-input-placeholder {
+     color: #999;
+}
+/*滚动条*/
+/*::-webkit-scrollbar-track-piece{width:10px;background-color:transparent;}*/
+::-webkit-scrollbar{width:6px;height:6px ; }
+::-webkit-scrollbar-thumb{background:#ddd;cursor:pointer;border-radius:3px; }
+.el-scrollbar__wrap{overflow-x:hidden;}
+/*.el-scrollbar__thumb{height: 30%!important}*/
+/*.el-scrollbar__bar.is-vertical{opacity:1;background-color: 	#ddd}*/
+
+/*头像尺寸*/
+.head-img{width:92px;height:92px;border-radius: 50%;}
+.head-simg{width:30px;height:30px;border-radius: 50%;}
+.head-ssimg{width:40px;height:40px;border-radius: 50%;}
+.head-mimg{width:50px;height: 50px;border-radius:50%;}
+.head-ximg{width:120px;height: 120px;border-radius:6px;}
+/*删除增加组件按钮*/
+.search-panel .el-dropdown{right:20px;top:20px;}
+.el-dialog__footer .el-button, .btn-group .el-button {width: 78px;padding: 9px 0 !important}
+/*element ui 样式reset-首页标签切换*/
+.list-panel .el-tabs__active-bar{height: 0;}
+.list-panel .el-tabs__nav{z-index:0;}
+.list-panel .el-tabs__item{height:auto;}
+.list-panel .el-tabs__nav-wrap::after{height:0;}
+.list-panel .el-tabs{margin-top:7px;}
+.list-panel .el-tabs .el-button{padding:8px 15px;}
+.list-panel .el-tabs__nav-wrap{padding:0 20px;}
+.list-panel-top .el-form{display: inline-block;vertical-align: top;}
+.form-input,.form-select{display: inline-block;}
+.list-panel-top .el-input,.form-select .el-input{width:100px;}
+.list-panel-top  .el-form-item{margin-bottom: 0!important}
+.form-input .el-input{width:150px;}
+.el-textarea__inner{min-height: 133px!important;}
+/*弹窗基本样式统一*/
+.el-dialog{border-radius: 10px;width: 641px;min-width: 300px;}
+.fqyw-dialog .el-dialog{width: 1008px;height: 567px;}
+.el-dialog__header{padding:15px 20px;border-bottom: 1px solid #ddd}
+.el-dialog__body{padding: 10px 20px;}
+.el-dialog__footer{text-align: center}
+.dialog-choose .el-dialog__body{padding:25px 35px;}

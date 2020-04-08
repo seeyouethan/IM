@@ -1,0 +1,1157 @@
+﻿@using Edu.Tools
+@*这个页面是我的工作->工作交办里的todolist*@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>日历日程</title>
+    <link href="~/Tookit/calendar/calendar.css" rel="stylesheet"/>
+    <link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet"/>
+    <link href="~/Content/Web/css/iconfont.css" rel="stylesheet"/>
+    <link href="~/Content/Web/css/style.css" rel="stylesheet"/>
+    <link href="~/Content/Web/css/todolist_main.css" rel="stylesheet"/>
+    <link href='~/Tookit/fullcalendar-3.9.0/fullcalendar.min.css' rel='stylesheet'/>
+    <link href='~/Tookit/fullcalendar-3.9.0/fullcalendar.print.min.css' rel='stylesheet' media='print'/>
+    <link href="~/Tookit/fullcalendar-3.9.0/myfullcalendar.css" rel="stylesheet"/>
+    <script src='~/Tookit/fullcalendar-3.9.0/lib/moment.min.js'></script>
+    <script src='~/Tookit/fullcalendar-3.9.0/lib/jquery.min.js'></script>
+    <script src='~/Tookit/fullcalendar-3.9.0/fullcalendar.js'></script>
+    <script src='~/Tookit/fullcalendar-3.9.0/locale/zh-cn.js'></script>
+    <script src="~/Scripts/data.js"></script>
+    <script src="~/Content/Web/js/vue.js"></script>
+    <script src="~/Content/Web/js/index.js"></script>
+    <script src="~/Tookit/layer/layer.js"></script>
+    <link href="~/Tookit/layer/skin/layer.css" rel="stylesheet"/>
+    <link href="~/Content/Web/css/mystyle-icon.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div id="app">
+    <el-container class="container-panel" style="height: 94%">
+        <el-main>
+            <div class="skdcal-panel" style="height: 100%">
+                <el-row>
+                    <el-col :span="24">
+                        <div class="skd-panel">
+                            <div class="clearfix">
+                                <el-button id="createT" type="primary" class="btn-okx float-l mb10">新建任务</el-button>
+                                <div class="tab-group float-r ck tab-group-big">
+                                    <span v-bind:class="{'cur': timeType == 'month'}" @@click="changetype('month')">月</span>
+                                    <span v-bind:class="{'cur': timeType == 'week'}" @@click="changetype('week')">周</span>
+                                    <span v-bind:class="{'cur': timeType == 'day'}" @@click="changetype('day')">日</span>
+                                </div>
+                            </div>
+                            <div style="height: 100%" v-loading="loading" element-loading-text="拼命加载中">
+                                <div style="width: 35%; float: left; height: 100%;">
+                                    <div style="height: 100%">
+                                        <p class="skd-top">
+                                            <span>
+                                                <i class="iconfont icon-left-copy color-9 cp" @@click="minusDay()"></i>
+                                                <span class="link01">{{ixingqi}}&nbsp;&nbsp;&nbsp;&nbsp;{{itimespan}}</span>
+                                                <i class="iconfont icon-right-copy color-9 cp" @@click="addDay()"></i>
+                                            </span>
+                                        </p>
+                                        <div class='cal' style="margin-top: -34px;"><span class='todaybtn'>今天</span></div>
+                                        <el-scrollbar style="width: 100%;">
+                                            <ul class="skd-bot" id="todolistul"></ul>
+                                            <p class="more-p"></p>
+                                        </el-scrollbar>
+                                        <div class="nodata-tip isHidden nodata-tipL">
+                                            <i class="iconfont icon-none"></i>
+                                            <span class="text-none">暂无内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="width: 65%; float: left; height: 100%;">
+                                    <iframe border="0" marginwidth="0" marginheight="0" src="/im/todolist/fullcalendar" id="imonth" width="100%" height="100%" frameborder="no"></iframe>
+                                </div>
+                            </div>
+
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <div id="rightPanel" class="task-panel posr" v-bind:class="{'r0': showdetail}" v-loading="detailloading" element-loading-text="拼命加载中">
+                <i class="iconfont icon-delte close-btnt cp"></i>
+                <span class="task-arrow"></span>
+                <el-scrollbar>
+                    <div class="task-panel-con">
+                        <!-- 外层动画div -->
+                        <div class="tasklist-top posr">
+                            <i class="iconfont" v-bind:class="{'icon-bottomDouble': spread,'icon-topDouble': !spread,}" @@click="dospread()"></i>
+                            <el-form label-width="100px">
+                                <el-form-item label="任务名称：">
+                                    {{formData.Title}}
+                                </el-form-item>
+                                <div v-bind:class="{'form-hide': !spread}">
+                                    <el-form-item label="上级任务：">
+                                        {{fatherTitle}}
+                                    </el-form-item>
+                                    <el-form-item label="完成进度：">
+                                        <el-progress v-bind:percentage="formData.Completing"></el-progress><!-- 进度条 -->
+                                    </el-form-item>
+                                    <el-form-item label="创建人：">
+                                        <span class="mr20">
+                                                <img v-bind:src="creator.photo" class="head-simg mr10 vam">{{creator.realname}}
+                                            </span>
+                                    </el-form-item>
+                                    <el-form-item label="时间：">
+                                        <i class="iconfont icon-date"></i>
+                                        {{formData.StartDate}}
+                                        <span> —— </span>
+                                        <i class="iconfont icon-date"></i>
+                                        {{formData.EndDate}}
+                                    </el-form-item>
+                                    <el-form-item label="优先级：">{{priorityText[formData.Priority]}}</el-form-item>
+                                    <el-form-item label="提醒：">{{callDateText[formData.CallDate]}}</el-form-item>
+                                    <el-form-item label="抄送人：">
+                                        <span v-for="item in copyToUsers" class="mr20">
+                                                <img v-bind:src="item.photo" class="head-simg mr10 vam">{{item.name}}
+                                            </span>
+                                    </el-form-item>
+                                    <el-form-item label="执行人：">
+                                        <span class="mr20">
+                                                <img v-bind:src="doUser.photo" class="head-simg mr10 vam">{{doUser.name}}
+                                            </span>
+                                    </el-form-item>
+                                    <el-form-item label="任务描述：">
+                                        {{formData.Content}}
+                                    </el-form-item>
+                                </div>
+                            </el-form>
+                        </div>
+                        <div class="tasklist-mid">
+                            <h2 class="mb20">
+                                <span class="color-4a font-s16 mr10">过程协同</span>
+                                <el-popover placement="right-start" width="170" trigger="click" id="el-popover-menu">
+                                    <i class="iconfont icon-addSolid cp" slot="reference"></i>
+                                    <ul class="popover-ul">
+                                        <li class="small-circle"><a href="javascript:;" @@click="OpenDialog3()">新建协同研究</a></li>
+                                        <li class="small-circle"><a href="javascript:;" @@click="OpenDialog1()">新建协同研讨</a></li>
+                                        <li class="small-circle"><a href="javascript:;" @@click="OpenDialog2()">新建协作文档</a></li>
+                                    </ul>
+                                </el-popover>
+                            </h2>
+                            <el-row class="taskul-list" :gutter="20">
+                                <el-col class="small-circle" :span="12" v-for="item in plandiscusslist">
+                                    <a v-bind:href="item.Url" target="_blank">{{item.DiscussTitle}}</a>
+                                </el-col>
+
+                            </el-row>
+                        </div>
+                        <div class="tasklist-bot">
+                            <h2 class="mb20">
+                                <span class="color-4a font-s16 mr10">工作日志</span>
+                                <i class="iconfont icon-addSolid cp addlog2"></i>
+                            </h2>
+                            <div class="step-panel">
+                                <div class="step-list posr step-list-finish" v-for="log in planlogs">
+                                    <span class="step-list-l float-l"></span>
+                                    <div class="step-list-r">
+                                        <div class="mb10">
+                                            <span class="color-4a">{{log.Planlog.CreateDate.ToString("yyyy/MM/dd")}}</span>
+                                            <el-progress v-bind:percentage="log.Planlog.CurProgress"></el-progress>
+                                            <i class="iconfont icon-del float-r" v-bind:class="{'displaynone': !canCreateWorkLog}" @@click="DeleteWorkLog(log.Planlog.Guid)"></i>
+                                        </div>
+                                        <p class="mb10" v-html="log.Planlog.Content">{{log.Planlog.Content}}</p>
+                                        @*<a v-bind:href="logfile.FileUrl" class="i-type block" v-for="logfile in log.PlanFiles" target="_blank">
+                                            <i class="other" v-bind:class="[logfile.FileExtension]"></i>
+                                            <span class="color-4a">{{logfile.FileName}}</span>
+                                        </a>*@
+                                        <p class="i-type block" v-for="logfile in log.PlanHfsFiles">
+                                        <i class="other" v-bind:class="[logfile.FileExtension]"></i>
+                                        <span class="color-4a"  @@click="ReadOnline(logfile)">{{logfile.Title}}</span>
+                                        <p/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-scrollbar>
+            </div>
+        </el-main>
+        <el-dialog title="新建协同研讨"
+                   :visible.sync="dialogVisible0"
+                   width="750px">
+            <iframe id="discussIframe" border="0" marginwidth="0" marginheight="0" height="600" src="/discuss/discussadd/new?type=create&disid" width="100%" height="100%" frameborder="no"></iframe>
+        </el-dialog>
+
+        <el-dialog title="新建协作文档"
+                   :visible.sync="dialogVisible1"
+                   width="750px">
+            <iframe id="CooperationIframe" border="0" marginwidth="0" marginheight="0" height="600" src="/Creation/Outer/AddCooperation?sourceType=2&sourceID=" width="100%" height="100%" frameborder="no"></iframe>
+        </el-dialog>
+
+        <el-dialog title="新建协同研究"
+                   :visible.sync="dialogVisible2"
+                   width="750px">
+            <iframe id="rpmsprojectIframe" border="0" marginwidth="0" marginheight="0" height="600" src="/rpms/project/add" width="100%" height="100%" frameborder="no"></iframe>
+        </el-dialog>
+    </el-container>
+</div>
+<script>
+    var type = "day";
+    var today = new Date();
+    var pageNo = 1;
+    var fday0;
+    var fday1;
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                dialogVisible0: false,
+                dialogVisible1: false,
+                dialogVisible2: false,
+                timeType: 'month',
+                loading: false,
+                detailloading: false,
+                canCreateWorkLog: false,
+                showdetail: false,
+                itimespan: timeFormat(today),
+                ixingqi: geWeekString(today),
+                creator: { photo: '', realname: '' },
+                formData: {},
+                copyToUsers: {},
+                doUser: {},
+                priorityText: ['一般', '紧急', '特急'],
+                callDateText: ['不提醒', '提前5分钟', '提前10分钟', '提前15分钟', '提前30分钟', '提前1小时', '提前1天'],
+                fatherTitle: "无",
+                spread: true,
+                planlogs: {},
+                plandiscusslist: {}, //群组中的系统研讨
+            };
+        },
+        created () {
+            //this.getListMonth();
+            //左侧数据
+            this.changetype('month');
+            var self = this;
+            //展开明细
+            window.showplandetail = function(uid) {
+                self.showdetail = true;
+                self.detailloading = true;
+                $.post('/im/ToDoList/GetPlanDetail', { uid: uid }, function(result) {
+                    if (result.r) {
+                        self.loading = false;
+                        self.formData = result.data;
+                        self.canCreateWorkLog = result.canCreateWorkLog;
+                        self.formData.StartDate = self.formData.StartDate.ToString("yyyy/MM/dd hh:mm");
+                        self.formData.EndDate = self.formData.EndDate.ToString("yyyy/MM/dd hh:mm");
+                        self.fatherTitle = result.fatherTitle;
+                        //创建者
+                        self.creator.photo = result.creatorPhoto;
+                        self.creator.realname = self.formData.CreatorTrueName;
+                        //抄送人
+                        $.post("/im/ToDoList/GetCopyToUsers", { uids: result.data.ManagerPerson }, function(data0) {
+                            self.copyToUsers = data0.data;
+                        });
+                        //执行人
+                        $.post('/im/ToDoList/GetDoUsers', { uid: result.data.ExecutivesPerson }, function(data1) {
+                            self.doUser = data1.data;
+                        });
+                        //任务日志
+                        $.post('/im/ToDoList/GetPlanLogs', { uid: result.data.Guid }, function(data) {
+                            if (data.r) {
+                                self.planlogs = data.data;
+                            }
+                        });
+                        //工作任务
+                        $.post('/im/ToDoList/GetPlanDiscusses', { planid: uid }, function(data) {
+                            self.plandiscusslist = data.data;
+                        });
+
+
+                    } else {
+                        self.$message.error('请求失败');
+                        console.log(result.m);
+                    }
+                    self.detailloading = false;
+                });
+            }
+            //收起明细
+            window.hideplandetail = function() {
+                self.showdetail = false;
+            }
+            //协同研讨 创建成功后调用
+            window.addDiscussSuccess = function(data) {
+                $.ajax({
+                    type: "Post",
+                    url: "/discuss/DiscussAdd/GetDisInfo?disId=" + data,
+                    dataType: "json",
+                    success: function(result) {
+                        $.post('/im/ToDoList/AddPlanDiscuss', { uid: data, planid: self.formData.Guid, title: result.Data.DisInfo.Title }, function(result0) {
+                            if (result0.r) {
+                                $.post('/im/ToDoList/GetPlanDiscusses', { planid: auid }, function(data) {
+                                    self.plandiscusslist = data.data;
+                                });
+                                self.dialogVisible0 = false;
+                                $("#discussIframe").attr('src', '/discuss/discussadd/new?type=create&disid');
+                            }
+                        });
+                    }
+                });
+            }
+            //协同研究 创建成功后调用
+            window.submitAddProject = (resId) => {
+                $.post('/pmc/Project/Add', { projectId: resId }, function(res) {
+                    var data = res;
+                    if (data.Code === 200) {
+                        if (data.Data) {
+                            $.post('/im/todolist/GetPlanProject', { projectid: resId }, function(data) {
+                                $.post('/im/todolist/AddPlanProject', { uid: resId, planid: self.formData.Guid, title: data.data.ProjectName }, function(result) {
+                                    $.post('/im/ToDoList/GetPlanDiscusses', { planid: auid }, function(data) {
+                                        self.plandiscusslist = data.data;
+                                    });
+
+                                }, 'json');
+                            }, 'json');
+
+                            self.$message({ message: '添加成功！', type: 'success' });
+                            self.$emit('success');
+                            self.dialogVisible2 = false;
+                            $("#rpmsprojectIframe").attr('src', '/rpms/project/add');
+                        } else {
+                            self.$message({ message: '添加失败！', type: 'error' });
+                        }
+                    } else {
+                        self.$message({ message: '请求出错！', type: 'error' });
+                    }
+                }, 'json');
+            };
+            //协作文档 需要传入当前用户
+            window.CurrentUser = {
+                realName: '@ViewBag.realName',
+                userId: '@ViewBag.userId',
+                logo: '@ViewBag.logo',
+            };
+            //协作文档 创建成功后调用
+            window.SubmitAddCooperation = () => {
+                $.ajax({
+                    type: "Post",
+                    url: "/PMC/creative/getList",
+                    data: { projectState: 0, creationType: 0, searchKey: "", pageIndex: 1, pageSize: 1 },
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.Code === 200) {
+                            $.post('/im/ToDoList/AddPlanCooperation', { uid: result.Data[0].CategoryId, planid: self.formData.Guid, title: result.Data[0].CategoryName }, function(result0) {
+                                if (result0.r) {
+                                    $.post('/im/ToDoList/GetPlanDiscusses', { planid: auid }, function(data) {
+                                        self.plandiscusslist = data.data;
+                                    });
+                                    self.dialogVisible1 = false;
+                                    $("#CooperationIframe").attr('src', '/Creation/Outer/AddCooperation?sourceType=2&sourceID=');
+                                }
+                            });
+                        }
+                    }
+                });
+
+                self.$message({ message: '添加成功！', type: 'success' });
+                self.$emit('success');
+                self.dialogVisible1 = false;
+                //self.$route.push('/creationlist');
+            };
+            //在弹出的窗口点击取消按钮后调用
+            window.CancelIframe = function() {
+                self.dialogVisible0 = false;
+                self.dialogVisible1 = false;
+                self.dialogVisible2 = false;
+                $("#discussIframe").attr('src', '/discuss/discussadd/new?type=create&disid');
+                $("#CooperationIframe").attr('src', '/Creation/Outer/AddCooperation?sourceType=2&sourceID=');
+                $("#rpmsprojectIframe").attr('src', '/rpms/project/add');
+            }
+
+            window.getPlanLogs = function () {
+                $.post('/im/ToDoList/GetPlanLogs', { uid: auid }, function(data) {
+                    if (data.r) {
+                        self.planlogs = data.data;
+                        if (data.data.length !== 0) {
+                            self.formData.Completing = data.data[0].Planlog.CurProgress;
+                        } else {
+                            self.formData.Completing = 0;
+                        }
+                    }
+                });
+            }
+
+            /*创建完工作日志回调
+                根据todoay这个日期变量查询任务   左侧列表数据和右侧日历数据*/
+            window.searchworkNew = function() {
+                $(".more-p").empty();
+                pageNo = 1;
+                $("#todolistul").empty();
+
+                $.post("/im/ToDoList/GetListByUid", { dt0: today.toLocaleDateString(), dt1: today.toLocaleDateString() }, function(data) {
+                    if (data.list == null || data.list.length == 0) {
+                        $(".nodata-tip").removeClass('isHidden');
+                        return;
+                    }
+                    $(".nodata-tip").addClass('isHidden');
+                    //if (data.list.length === 1 && data.list[0].subworks.length >= 13) {
+                    //    $(".more-p").html("加载更多");
+                    //}
+                    //else if (data.list.length >= 15) {
+                    //    $(".more-p").html("加载更多");
+                    //}
+                    $.each(data.list, function(n, value) {
+                        if (value.Level === 0) {
+                            addworknew(value);
+                        }
+                    });
+                    $.each(data.list, function(n, value) {
+                        if (value.Level != 0) {
+                            addworknew(value);
+                        }
+                    });
+                });
+                //右侧日历数据 设置为日为选中状态
+                self.timeType = 'day';
+                $(".link01").html(geWeekString(today) +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;" + timeFormat(today));
+                var iframeFullCalendar = window.document.getElementById("imonth");
+                iframeFullCalendar.contentWindow.ChangeToDayView && iframeFullCalendar.contentWindow.ChangeToDayView(today, today);
+            }
+            //更新列表中对应的工作任务的完成度
+            window.UpdatePlanList = function (planid, completing) {
+                var ele0 = $("#todolistul li[data-id='" + planid + "']");
+                if (ele0) {
+                    ele0.children().children("p").eq(1).children("span").eq(2).html(completing + "%");
+                    if (completing === 100) {
+                        ele0.addClass("skdb-finished");
+                    } else {
+                        ele0.removeClass("skdb-finished");
+                    }
+                }
+            }
+        },
+        methods: {
+            OpenDialog1: function() {
+                this.dialogVisible0 = true;
+                $(".el-popover").hide();
+            },
+            OpenDialog2: function() {
+                this.dialogVisible1 = true;
+                $(".el-popover").hide();
+            },
+            OpenDialog3: function() {
+                this.dialogVisible2 = true;
+                $(".el-popover").hide();
+            },
+
+
+            //阅读文档 
+            ReadOnline: function(file) {
+                console.log(file);
+                window.parent.window.parent.openWorkFlatRead && window.parent.openWorkFlatRead(file);
+            },
+            //删除工作日志
+            DeleteWorkLog: function(uid) {
+                var self = this;
+                $.post('/im/todolist/DeleteWorkLog', { uid: uid }, function(result) {
+                    if (result.r) {
+                        $.post('/im/ToDoList/GetPlanLogs', { uid: auid }, function(data) {
+                            if (data.r) {
+                                self.planlogs = data.data;
+                                if (data.data.length !== 0) {
+                                    self.formData.Completing = data.data[0].Planlog.CurProgress;
+                                } else {
+                                    self.formData.Completing = 0;
+                                }
+                                //修改页面上列表中的任务的完成度百分比
+                                UpdatePlanList(auid, self.formData.Completing);
+                            }
+                        });
+                        self.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message.error('请求失败' + result.m);
+                        console.log(result.m);
+
+                    }
+                });
+            },
+            //展开收起
+            dospread: function() {
+                this.spread = !this.spread;
+            },
+            //周和日 模式下的视图
+            getList: function(data0, data1) {
+                $(".more-p").empty();
+                var self = this;
+                $("#todolistul").empty();
+                this.loading = true;
+                $.post("/im/ToDoList/GetListByUid", { dt0: data0.toLocaleDateString(), dt1: data1.toLocaleDateString() }, function(data) {
+                    self.loading = false;
+                    if (data.list == null || data.list.length == 0) {
+                        $(".nodata-tip").removeClass('isHidden');
+                        return;
+                    }
+                    $(".nodata-tip").addClass('isHidden');
+                    //if (data.list.length === 1 && data.list[0].subworks.length >= 13) {
+                    //    $(".more-p").html("加载更多");
+                    //}
+                    //else if (data.list.length >= 15) {
+                    //    $(".more-p").html("加载更多");
+                    //}
+                    $.each(data.list, function(n, value) {
+                        //addwork(value, value.subworks, $("#todolistul"));
+                        if (value.Level === 0) {
+                            //先添加1级节点
+                            addworknew(value);
+                        }
+                    });
+                    $.each(data.list, function(n, value) {
+                        if (value.Level != 0) {
+                            addworknew(value);
+                        }
+                    });
+
+                });
+            },
+            addDay: function() {
+                var iframeFullCalendar = window.document.getElementById("imonth");
+                if (this.timeType === 'day') {
+                    today.setDate(today.getDate() + 1);
+                    this.itimespan = timeFormat(today);
+                    $(".link01").html(geWeekString(today) +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;" + timeFormat(today));
+                    this.getList(today, today);
+                    iframeFullCalendar.contentWindow.ChangeToNext && iframeFullCalendar.contentWindow.ChangeToNext(today, today, 'day');
+                } else if (this.timeType === 'week') {
+                    today.setDate(today.getDate() + 7);
+                    this.itimespan = getFirstDayOfWeekString(today) + " — " + getLastDayOfWeekString(today);
+                    $(".link01").html(getFirstDayOfWeekString(today) + " — " + getLastDayOfWeekString(today));
+                    this.getList(getFirstDayOfWeek(today), getLastDayOfWeek(today));
+                    iframeFullCalendar.contentWindow.ChangeToNext && iframeFullCalendar.contentWindow.ChangeToNext(getFirstDayOfWeek(today), getLastDayOfWeek(today), 'week');
+                } else if (this.timeType === 'month') {
+                    today.setMonth(today.getMonth() + 1);
+                    this.itimespan = timeFormatGetYearMonth(today);
+                    $(".link01").html(timeFormatGetYearMonth(today));
+                    this.getList(getFirstDayOfMonth(today), getLastDayOfMonth(today));
+                    iframeFullCalendar.contentWindow.ChangeToNext && iframeFullCalendar.contentWindow.ChangeToNext(getFirstDayOfMonth(today), getLastDayOfMonth(today), 'month');
+                }
+            },
+            minusDay: function() {
+                var iframeFullCalendar = window.document.getElementById("imonth");
+                if (this.timeType === 'day') {
+                    today.setDate(today.getDate() - 1);
+                    this.itimespan = timeFormat(today);
+                    $(".link01").html(geWeekString(today) +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;" + timeFormat(today));
+                    this.getList(today, today);
+                    iframeFullCalendar.contentWindow.ChangeToPrev && iframeFullCalendar.contentWindow.ChangeToPrev(today, today, 'day');
+                }
+                if (this.timeType === 'week') {
+                    today.setDate(today.getDate() - 7);
+                    this.itimespan = getFirstDayOfWeekString(today) + " — " + getFirstDayOfWeekString(today);
+                    $(".link01").html(getFirstDayOfWeekString(today) + " — " + getLastDayOfWeekString(today));
+                    this.getList(getFirstDayOfWeek(today), getLastDayOfWeek(today));
+                    iframeFullCalendar.contentWindow.ChangeToPrev && iframeFullCalendar.contentWindow.ChangeToPrev(getFirstDayOfWeek(today), getLastDayOfWeek(today), 'week');
+                }
+                if (this.timeType === 'month') {
+                    today.setMonth(today.getMonth() - 1);
+                    this.itimespan = timeFormatGetYearMonth(today);
+                    $(".link01").html(timeFormatGetYearMonth(today));
+                    this.getList(getFirstDayOfMonth(today), getLastDayOfMonth(today));
+                    iframeFullCalendar.contentWindow.ChangeToPrev && iframeFullCalendar.contentWindow.ChangeToPrev(getFirstDayOfMonth(today), getLastDayOfMonth(today), 'month');
+                }
+            },
+            changetype: function(data) {
+                var iframeFullCalendar = window.document.getElementById("imonth");
+                type = data;
+                this.timeType = data;
+                today = new Date();
+                if (this.timeType === 'day') {
+                    this.itimespan = timeFormat(today);
+                    $(".link01").html(geWeekString(today) +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;" + timeFormat(today));
+                    fday0 = today;
+                    fday1 = today;
+                    this.getList(today, today);
+                    iframeFullCalendar.contentWindow.ChangeToDayView && iframeFullCalendar.contentWindow.ChangeToDayView(fday0, fday1);
+                }
+                if (this.timeType === 'week') {
+                    this.itimespan = getFirstDayOfWeekString(today) + " — " + getLastDayOfWeekString(today);
+                    $(".link01").html(getFirstDayOfWeekString(today) + " — " + getLastDayOfWeekString(today));
+                    fday0 = getFirstDayOfWeek(today);
+                    fday1 = getLastDayOfWeek(today);
+                    this.getList(getFirstDayOfWeek(today), getLastDayOfWeek(today));
+                    iframeFullCalendar.contentWindow.ChangeToWeekView && iframeFullCalendar.contentWindow.ChangeToWeekView(fday0, fday1);
+                }
+                if (this.timeType === 'month') {
+                    this.itimespan = timeFormatGetYearMonth(today);
+                    $(".link01").html(timeFormatGetYearMonth(today));
+                    fday0 = getFirstDayOfMonth(today);
+                    fday1 = getLastDayOfMonth(today);
+                    this.getList(getFirstDayOfMonth(today), getLastDayOfMonth(today));
+                    iframeFullCalendar.contentWindow.ChangeToMonthView && iframeFullCalendar.contentWindow.ChangeToMonthView(fday0, fday1);
+                }
+            }
+        },
+
+    });
+
+    /*0.设置任务完成*/ /*任务创建者和执行者才可以设置任务完成*/
+    $(document).on('click', '.finishwork', function() {
+        var ele = $(this);
+        finishwork(ele);
+    });
+    /*1.创建任务*/ /*只有群组管理员可以创建任务*/
+    $("#createT").click(function() {
+        creatwork();
+    });
+    /*2.创建子任务*/ /*任务的创建者与执行者都可以创建子任务*/
+    $(document).on('click', '.icon-subTask', function() {
+        var ele = $(this);
+        creatsubwork(ele);
+    });
+    /*3.删除任务*/ /*只有创建者才可以删除该任务*/
+    $(document).on('click', '.skdb-icon .icon-del', function() {
+        var ele = $(this);
+        deletework(ele);
+    });
+    /*4.1置顶任务*/ /*与该任务相关的成员才可以置顶该任务*/
+    $(document).on('click', '.skdb-icon .icon-totop', function() {
+        var ele = $(this);
+        setworktop(ele);
+    });
+    /*4.2取消置顶任务*/ /*与该任务相关的成员才可以取消置顶该任务*/
+    $(document).on('click', '.skdb-icon .icon-endtop', function() {
+        var ele = $(this);
+        deleteworktop(ele);
+    });
+    /*5.编辑任务*/ /*创建者可以编辑任务 编辑任务 修改为只能编辑任务本身的属性*/
+    $(document).on('click', '.icon-edit1', function() {
+        var ele = $(this);
+        editwork(ele);
+    });
+    /*8.展开任务 查询子任务*/
+    $(document).on('click', '.icon-right', function() {
+        var ele = $(this);
+        getsubwork(ele);
+        //expandsubwork(ele);
+    });
+    /*10.点击加载更多按钮*/
+    //$(document).on('click', '.more-p', function () {
+    //    var ele = $(this);
+    //    pageNo = pageNo + 1;
+    //    searchmorework(ele);
+    //});
+    /*12.点击添加任务日志 创建者、执行者可以添加任务日志*/
+    $(document).on('click', '.addlog', function() {
+        var ele = $(this);
+        var uid = $(ele).parent().parent().parent().attr('data-id');
+        addworklog(uid);
+    });
+    var auid = '';
+    /*13.点击右侧弹出*/
+    $(document).on('click', '.skdb-txt', function() {
+        var ele = $(this).parent().parent();
+        var uid = ele.attr("data-id");
+        var height = ele.offset().top + 10;
+        auid = uid;
+        $(".task-arrow").css('top', height + 'px');
+        showplandetail(uid);
+    });
+    /*15. 点击关闭右侧弹出*/
+    $(document).on('click', '.close-btnt', function() {
+        hideplandetail();
+    });
+    /*16. 点击新建工作日志*/
+    $(document).on('click', '.addlog2', function() {
+        addworklog(auid);
+    });
+
+    /*11.点击今天按钮*/
+    $(document).on('click', '.todaybtn', function() {
+        //var eleparent = $("#schedule-box").parent();
+        //$("#schedule-box").remove();
+        //eleparent.append("<div id='schedule-box'' class='boxshaw'></div>");
+        //var mySchedule = new Schedule({
+        //    el: '#schedule-box',
+        //    clickCb: function (y, m, d) {
+        //        today.setDate(d);
+        //        today.setMonth(m - 1);
+        //        today.setYear(y);
+
+        //        searchworkNew();
+        //        $(".link01").html(geWeekString(today) +
+        //            "&nbsp;&nbsp;&nbsp;&nbsp;" + timeFormat(today));
+        //    }
+        //});
+        //var elestr = "<div class='cal' ><span class='todaybtn'>今天</span></div>";
+
+        $(".link01").html(geWeekString(today) +
+            "&nbsp;&nbsp;&nbsp;&nbsp;" + timeFormat(today));
+        today = new Date();
+        searchworkNew();
+    });
+
+
+    /*9.查询更多的任务 暂时没用到*/
+    var searchmorework = function(ele) {
+        if ($(ele).html() === "没有更多内容了") return;
+        //根据视图类型来确定查找的时间范围
+        $.post("/im/ToDoList/GetListByUid", { dt0: fday0.format("yyyy-MM-dd"), dt1: fday1.format("yyyy-MM-dd"), pageNo: pageNo }, function(data) {
+            if (data.list == null || data.list.length == 0) {
+                pageNo = pageNo - 1;
+                $(ele).html("没有更多内容了");
+                setTimeout(function() {
+                    $(ele).html("加载更多");
+                }, 1000);
+                return;
+            } else {
+                $.each(data.list, function(n, value) {
+                    addwork(value, null, $("#todolistul"));
+                });
+            }
+        });
+    }
+    /*7.添加任务*/
+    var addwork = function(item, ele) {
+        var isexpand = "expand";
+        var class0 = "";
+        var class1 = "";
+        var top = 0; //li中置顶的标记
+        if (item.Completing === "100%") class0 = "skdb-finished";
+        if (item.Priority === "紧急") class1 = "skdb-txt-j";
+        if (item.Priority === "特急") class1 = "skdb-txt-tj";
+        var relationship = "";
+        if (item.Tag === "发起者") {
+            relationship = "<i class=\"skdb-txt-fb\"></i>"
+        }
+        if (item.Tag === "抄送者") {
+            relationship = "<i class=\"skdb-txt-cs\"></i>"
+        }
+        if (item.Tag === "执行者") {
+            relationship = "<i class=\"skdb-txt-zx\"></i>"
+        }
+        if (item.IsTop) {
+            relationship += "<i class=\"skdb-txt-zd\"></i>";
+            top = 1
+        } //置顶
+        var tooltip = "";
+        if (item.CanEdit) {
+            tooltip += "<i class=\"tooltip iconfont icon-edit1\" title=\"编辑\"></i>"
+        }
+        if (item.CanCreateWorkLog) {
+            tooltip += "<i class=\"tooltip iconfont icon-daily addlog\" title=\"工作反馈\"></i>"
+        }
+        if (item.CanCreateSub) {
+            tooltip += "<i class=\"tooltip iconfont icon-subTask\" title=\"创建子任务\"></i>"
+        }
+        if (item.CanTop) {
+            if (item.IsTop) {
+                tooltip += "<i class=\"tooltip iconfont icon-endtop\" title=\"取消置顶\"></i>"
+            } else {
+                tooltip += "<i class=\"tooltip iconfont icon-totop\" title=\"置顶\"></i>"
+            }
+        }
+        if (item.CanDelete) {
+            tooltip += "<i class=\"tooltip iconfont icon-del\" title=\"删除\"></i>"
+        }
+
+        var elestr = "<li data-id='" + item.ID + "' data-top='" + top + "' data-fid='" + item.Fid + "' class='" + class0 + "'><div class='" + isexpand + "'><i class=\"skd finishwork\"></i><i class=\"el-icon-caret-right icon-right\"></i><p class=\"skdb-txt\"><span>" + item.Title + "</span><i class=\"" + class1 + "\"></i>" + relationship + "</p><span class=\"skdb-icon float-r\">" + tooltip + "</span><p class=\"color-9 inline-block float-r skdb-infor\"><span class=\"mr10\">" + item.DoUserTrueName + "</span><span class=\"mr10\">" + "" + "</span><span class=\"mr10\">" + item.Completing + "</span></p></div></li>";
+        $(ele).append(elestr);
+    }
+    /*7.添加任务*/
+    var addworknew = function(item) {
+        var isexpand = "expand";
+        var class0 = "";
+        var class1 = "";
+        var top = 0; //li中置顶的标记
+        if (item.Completing === "100%") class0 = "skdb-finished";
+        if (item.Priority === "紧急") class1 = "skdb-txt-j";
+        if (item.Priority === "特急") class1 = "skdb-txt-tj";
+        var relationship = "";
+        if (item.Tag === "发起者") {
+            relationship = "<i class=\"skdb-txt-fb\"></i>";
+        }
+        if (item.Tag === "抄送者") {
+            relationship = "<i class=\"skdb-txt-cs\"></i>";
+        }
+        if (item.Tag === "执行者") {
+            relationship = "<i class=\"skdb-txt-zx\"></i>";
+        }
+        if (item.IsTop) {
+            relationship += "<i class=\"skdb-txt-zd\"></i>";
+            top = 1;
+        } //置顶
+        var tooltip = "";
+        if (item.CanEdit) {
+            tooltip += "<i class=\"tooltip iconfont icon-edit1\" title=\"编辑\"></i>";
+        }
+        if (item.CanCreateWorkLog) {
+            tooltip += "<i class=\"tooltip iconfont icon-daily addlog\" title=\"工作反馈\"></i>";
+        }
+        if (item.CanCreateSub) {
+            tooltip += "<i class=\"tooltip iconfont icon-subTask\" title=\"创建子任务\"></i>";
+        }
+        if (item.CanTop) {
+            if (item.IsTop) {
+                tooltip += "<i class=\"tooltip iconfont icon-endtop\" title=\"取消置顶\"></i>";
+            } else {
+                tooltip += "<i class=\"tooltip iconfont icon-totop\" title=\"置顶\"></i>";
+            }
+        }
+        if (item.CanDelete) {
+            tooltip += "<i class=\"tooltip iconfont icon-del\" title=\"删除\"></i>";
+        }
+        var elestr = "<li data-id='" + item.ID + "' data-top='" + top + "' data-fid='" + item.Fid + "' class='" + class0 + "'><div class='" + isexpand + "'><i class=\"skd finishwork\"></i><i class=\"el-icon-caret-right icon-right displaynone\"></i><p class=\"skdb-txt\"><span>" + item.Title + "</span><i class=\"" + class1 + "\"></i>" + relationship + "</p><span class=\"skdb-icon float-r\">" + tooltip + "</span><p class=\"color-9 inline-block float-r skdb-infor\"><span class=\"mr10\">" + item.DoUserTrueName + "</span><span class=\"mr10\">" + "" + "</span><span class=\"mr10\">" + item.Completing + "</span></p></div></li>";
+        if (item.Level === 0) {
+            //如果是一级节点则直接添加上去
+            $("#todolistul").append(elestr);
+        } else {
+            var doappend = false;
+            //如果不是一级节点则根据fid查找，有没有其父节点，如果有则添加到其下一级，如果没有则添加到一级节点
+            var fatherfid = item.Fid.substring(0, (item.Fid.length - 3));
+            while (fatherfid.length > 2) {
+                var fathernode = $("#todolistul li[data-fid='" + fatherfid + "']");
+                if (fathernode.length !== 0) {
+                    fathernode.children("div").children('.el-icon-caret-right').removeClass('displaynone');
+                    return true;
+                } else {
+                    fatherfid = fatherfid.substring(0, fatherfid.length - 3);
+                }
+            }
+            if (!doappend) {
+                $("#todolistul").append(elestr);
+            }
+        }
+    }
+
+
+    /*点击查询相关子任务*/
+    var getsubwork = function(ele) {
+        var uid = $(ele).parent().parent().attr('data-id');
+        if ($(ele).parent().hasClass('expand')) {
+            $(ele).parent().removeClass('expand');
+        } else {
+            $(ele).parent().addClass('expand');
+        }
+        if ($(ele).parent().parent().children().length !== 1) {
+            return;
+        }
+        $.post('/im/ToDoList/GetSubPlanByUid', { uid: uid }, function(data) {
+            if (data.list.length !== 0) {
+                $("#todolistul li[data-id='" + uid + "']").append('<ul class=\'skd-bot skd-top01\'></ul>');
+                $.each(data.list, function(n, value) {
+                    addwork(value, $("#todolistul li[data-id='" + uid + "'] ul:eq(0)"));
+                    
+                });
+            } else {
+                $(ele).remove();
+            }
+        });
+    }
+
+    var expandsubwork = function(ele) {
+        var eleul = $(ele).parent().parent().children("ul:eq(0)");
+        if ($(ele).parent().hasClass('expand')) {
+            //展开
+            $(ele).parent().removeClass('expand');
+            if (eleul.length !== 0) {
+                eleul.show();
+            }
+        } else {
+            $(ele).parent().addClass('expand');
+            //收起
+            if (eleul.length !== 0) {
+                eleul.hide();
+            }
+        }
+    }
+
+
+    /*设置任务为完成状态*/
+    var finishwork = function(ele) {
+        var uid = $(ele).parent().parent().attr('data-id');
+        $.post('/im/ToDoList/CheckCanSetWorkFinished', { uid: uid }, function(result) {
+            if (result.r) {
+                if ($(ele).parent().parent().hasClass('skdb-finished')) {
+                    //取消完成
+                    unfinishwork(ele);
+                    return;
+                }
+                var temp = $(ele).next().next().next().next().children('span:eq(2)').html();
+                $(ele).parent().parent().addClass('skdb-finished');
+                $(ele).next().next().next().next().children('span:eq(2)').html('100%');
+                $.post("/im/ToDoList/SetWorkFinished", { uid: uid }, function(data) {
+                    if (data.r) {
+                    } else {
+                        $(ele).parent().parent().removeClass('skdb-finished');
+                        $(ele).next().next().next().next().children('span:eq(2)').html(temp);
+                    }
+                });
+            } else {
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+    /*设置任务为非完成状态*/
+    var unfinishwork = function(ele) {
+        var uid = $(ele).parent().parent().attr('data-id');
+        $(ele).parent().parent().removeClass('skdb-finished');
+        $.post("/im/ToDoList/SetWorkUnfinished", { uid: uid }, function(data) {
+            if (data.r) {
+                $(ele).next().next().next().next().children('span:eq(2)').html(data.completing + '%');
+            } else {
+                $(ele).parent().parent().addClass('skdb-finished');
+                $(ele).next().next().next().next().children('span:eq(2)').html('100%');
+            }
+        });
+    }
+    /*创建任务*/
+    var creatwork = function() {
+        //先判断权限
+        parent.layer.open({
+            id: 'ctWindow',
+            type: 2,
+            skin: 'okcsclass',
+            title: '新建任务',
+            closeBtn: 1,
+            shade: 0.3,
+            shadeClose: true,
+            area: ['750px', '710px'],
+            offset: 'auto',
+            content: ["/im/ToDoList/Create", 'no'],
+            success: function(layero, index) {
+            }
+        });
+    }
+    /*创建子任务*/
+    var creatsubwork = function(ele) {
+        var fatherid = $(ele).parent().parent().parent().attr('data-id');
+        $.post('/im/ToDoList/CheckCanCreateSubWork', { uid: fatherid }, function(result) {
+            if (result.r) {
+                if ($(ele).parent().parent().parent().hasClass('skdb-finished')) return;
+                parent.layer.open({
+                    id: 'ctWindow',
+                    type: 2,
+                    skin: 'okcsclass',
+                    title: '新建子任务',
+                    closeBtn: 1,
+                    shade: 0.3,
+                    shadeClose: true,
+                    area: ['750px', '710px'],
+                    offset: 'auto',
+                    content: ["/im/ToDoList/Create?fatherId=" + fatherid, 'no'],
+                    success: function(layero, index) {
+
+                    }
+                });
+            } else {
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+
+    var addworklog = function(uid) {
+        //先判断权限
+        $.post('/im/ToDoList/CheckCanAddWorkLog', { uid: uid }, function(result) {
+            if (result.r) {
+                parent.layer.open({
+                    id: 'addworklog',
+                    type: 2,
+                    title: '工作反馈',
+                    closeBtn: 1,
+                    skin: 'okcsclass',
+                    shade: 0.3,
+                    shadeClose: true,
+                    area: ['750px', '710px'],
+                    offset: 'auto',
+                    content: ["/im/ToDoList/CreateWorkLog?uid=" + uid, 'no'],
+                    success: function(layero, index) {
+                    }
+                });
+
+            } else {
+                console.log(result);
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+
+    var editworklog = function (uid) {
+        //先判断权限
+        $.post('/im/ToDoList/CheckCanAddWorkLog', { uid: uid }, function (result) {
+            if (result.r) {
+                parent.layer.open({
+                    id: 'addworklog',
+                    type: 2,
+                    title: '工作反馈',
+                    closeBtn: 1,
+                    skin: 'okcsclass',
+                    shade: 0.3,
+                    shadeClose: true,
+                    area: ['750px', '710px'],
+                    offset: 'auto',
+                    content: ["/im/ToDoList/CreateWorkLog?uid=" + uid, 'no'],
+                    success: function (layero, index) {
+                    }
+                });
+
+            } else {
+                console.log(result);
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+    /*删除任务*/
+    var deletework = function(ele) {
+        var uid = $(ele).parent().parent().parent().attr('data-id');
+        $.post('/im/ToDoList/CheckCanDeleteWork', { uid: uid }, function(result) {
+            if (result.r) {
+                parent.layer.confirm('确定要删除该任务？（若包含子任务则将子任务一并删除）', {
+                    btn: ['确定', '取消'],
+                    skin: 'okcsclass'
+                }, function() {
+                    var load = parent.layer.load();
+                    $.post("/im/ToDoList/Delete", { id: uid }, function(data) {
+                        if (data.r) {
+                            parent.layer.msg("删除成功！");
+                            $(ele).parent().parent().parent().remove();
+                            parent.layer.close(load);
+                        } else {
+                            parent.layer.msg("请求错误");
+                            console.log(msg);
+                            parent.layer.close(load);
+                        }
+                    });
+                }, function() {
+                });
+            } else {
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+    /*置顶任务*/
+    var setworktop = function(ele) {
+        var eleli = $(ele).parent().parent().parent();
+        var uid = $(eleli).attr('data-id');
+        var load = parent.layer.load();
+        //置顶操作
+        $.post("/im/ToDoList/SetWorkTop", { planid: uid }, function(data) {
+            if (data.status == 0) {
+                //同级置顶操作
+                eleli.attr("o-index", eleli.index());
+                eleli.attr("data-top", "1");
+                while (eleli.index() != 0) {
+                    eleli.prev().before(eleli);
+                }
+                ele.removeClass("icon-totop");
+                ele.addClass("icon-endtop");
+                ele.attr("title", "取消置顶");
+                var elezd = "<i class=\"skdb-txt-zd\"></i>";
+                $(ele).parent().prev().append(elezd);
+                //parent.layer.msg("操作成功！");
+                parent.layer.close(load);
+            } else {
+                parent.layer.msg(data.msg);
+                console.log(msg);
+                parent.layer.close(load);
+            }
+        });
+    }
+    //取消置顶操作
+    var deleteworktop = function(ele) {
+        var eleli = $(ele).parent().parent().parent();
+        var uid = $(eleli).attr('data-id');
+        var load = parent.layer.load();
+        $.post("/im/ToDoList/DeleteWorkTop", { planid: uid }, function(data) {
+            if (data.status == 0) {
+                //同级取消置顶操作
+                eleli.attr("data-top", "0");
+                var oindex = eleli.attr("o-index");
+                var templi;
+                if (oindex == undefined) {
+                    templi = $(eleli).parent().children("li[data-top='1']:last");
+                } else {
+                    templi = $(eleli).parent().children("li:eq(" + oindex + ")");
+                }
+                templi.after(eleli);
+                ele.removeClass("icon-endtop");
+                ele.addClass("icon-totop");
+                ele.attr("title", "置顶");
+                $(ele).parent().prev().find(".skdb-txt-zd").remove();
+                //parent.layer.msg("操作成功！");
+                parent.layer.close(load);
+            } else {
+                parent.layer.msg(data.msg);
+                console.log(msg);
+                parent.layer.close(load);
+            }
+        });
+    }
+
+    /*编辑任务*/
+    var editwork = function(ele) {
+        if ($(ele).parent().parent().parent().hasClass('skdb-finished')) return;
+        var uid = $(ele).parent().parent().parent().attr('data-id');
+        $.post('/im/ToDoList/CheckCanEditWork', { uid: uid }, function(result) {
+            if (result.r) {
+                parent.layer.open({
+                    id: 'ctWindow',
+                    type: 2,
+                    title: '编辑任务',
+                    closeBtn: 1,
+                    skin: 'okcsclass',
+                    shade: 0.3,
+                    shadeClose: true,
+                    area: ['750px', '710px'],
+                    offset: 'auto',
+                    content: ["/im/ToDoList/Edit?uid=" + uid, 'no'],
+                    success: function(layero, index) {
+
+                    }
+                });
+            } else {
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+
+    /*查看任务详细信息*/
+    var showwork = function(ele) {
+        //if ($(ele).parent().parent().parent().hasClass('skdb-finished')) return;
+        var uid = $(ele).parent().parent().parent().attr('data-id');
+        parent.layer.open({
+            id: 'detailWindow',
+            type: 2,
+            title: '查看任务',
+            closeBtn: 1,
+            skin: 'okcsclass',
+            shade: 0.3,
+            shadeClose: true,
+            area: ['750px', '710px'],
+            offset: 'auto',
+            content: ["/im/ToDoList/Detail?uid=" + uid, 'no'],
+            success: function(layero, index) {
+
+            }
+        });
+    }
+
+    /*更新修改的任务内容 只更新这一条数据 这里传过来的data是一个Plan实体*/
+    var updatework = function(data, managerPersonTrueName) {
+        var ele = $("#todolistul li[data-id='" + data.Guid + "']");
+        if (ele.length === 1) {
+            //标题
+            ele.children('div').eq(0).children('p').eq(0).children('span').eq(0).html(data.Title);
+            //时间
+            //ele.children('div').eq(0).children('p').eq(1).children('span').eq(2).html(data.StartDate.format("MM/dd") + "-" + data.EndDate.format("MM/dd"));
+            //执行人
+            ele.children('div').eq(0).children('p').eq(1).children('span').eq(0).html(managerPersonTrueName);
+            //百分比
+
+        }
+    }
+</script>
+</body>
+</html>

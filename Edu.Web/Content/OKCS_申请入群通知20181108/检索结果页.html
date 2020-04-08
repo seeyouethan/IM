@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>检索结果页</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">  
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+    <!-- 即时聊天界面 -->
+    <div class="chat-wrap r0"><!-- 默认隐藏，显示时给此部分加上类名r0 -->
+        <span class="chat-close"><i class="iconfont icon-delte"></i></span>
+        <el-tabs value="first">
+           <el-tab-pane label="聊天" name="first">
+              <div class="tab-pane">
+                <div class="tab-search is-focused "><input type="text" placeholder="邱菊" /><i class="iconfont icon-searchBtn"></i></div>
+                 <div class="tab-con">
+                  <h6 class="tab-h6">检索结果</h6> 
+                  <ul> 
+                    <!-- 检索时列表展示 -->
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <span class="tab-status"></span>
+                            <i class="iconfont icon-addPerson2"></i>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <span class="tab-status"></span>
+                            <i class="iconfont icon-addPerson2"></i>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <!-- 提交好友申请的提示 -->
+                  <div class="apply-tip2">已提交加好友申请</div>
+                  </div>
+              </div>
+           </el-tab-pane>
+           <el-tab-pane label="群组" name="second">
+             <div class="tab-pane">
+                <div class="tab-search is-focused"><input type="text" placeholder="搜索" /></div>
+                <div class="tab-con tab-con2">
+                  <ul> 
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>协同开发群聊</p>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>协同开发群聊</p>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊协同开发群聊</p>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊协同开发群聊</p>
+                         </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+           </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+   <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>弹窗</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">   
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+    <!-- 新建任务 -->
+    <el-dialog title="新建任务" visible width="750px"  class="group-dialog">
+       <el-scrollbar  class="group-dialog">
+         <div class="dialog-con">
+           <el-form label-width="100px">
+                <el-form-item label="任务名称：" required>
+                  <el-input></el-input>
+                </el-form-item>
+                <el-form-item label="创建人：">
+                  <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼海棠</span>
+                </el-form-item>
+                <el-form-item label="时间：" required>
+                    <el-col :span="11">
+                            <el-date-picker type="date" placeholder="2017/05/12" style="width: 100%;"></el-date-picker>
+                     </el-col>
+                     <el-col class="line" :span="2"> ——- </el-col>
+                     <el-col :span="11">
+                            <el-date-picker type="date" placeholder="2017/05/12" style="width: 100%;"></el-date-picker>
+                     </el-col>
+                </el-form-item>
+                <el-form-item label="优先级：">
+                     <el-select>
+                          <!-- <el-option label="一般" value="wendang"></el-option>
+                          <el-option label="特急" value="qita"></el-option>
+                          <el-option label="紧急" value="qita"></el-option> -->
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="提醒：">
+                     <el-select>
+                          <!-- <el-option label="不提醒" value="wendang"></el-option>
+                          <el-option label="提前5分钟" value="qita"></el-option>
+                          <el-option label="提前10分钟" value="qita"></el-option>
+                          <el-option label="提前15分钟" value="qita"></el-option>
+                          <el-option label="提前30分钟" value="qita"></el-option>
+                          <el-option label="提前1小时" value="qita"></el-option>
+                          <el-option label="提前1天" value="qita"></el-option> -->
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="抄送人：" >
+                    <i class="iconfont icon-addT"></i>
+                </el-form-item>
+                <el-form-item label="执行人：">
+                  <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼海棠</span>
+                </el-form-item>
+                <el-form-item label="任务描述：">
+                  <el-input type="textarea"></el-input>
+                </el-form-item>
+           </el-form>
+         </div>
+       </el-scrollbar>
+       <span slot="footer">
+         <el-button type="primary" >确 定</el-button>
+         <el-button >取 消</el-button>
+       </span>
+    </el-dialog>
+    <!-- 新建任务 -->
+    <el-dialog title="创建子任务" visible width="750px"  class="group-dialog">
+       <el-scrollbar>
+         <div class="dialog-con">
+           <el-form label-width="100px">
+                <el-form-item label="任务名称：" required>
+                  <el-input></el-input>
+                </el-form-item>
+                <el-form-item label="上级任务：">
+                  okcs工作台组件日历日程组件设计
+                </el-form-item>
+                <el-form-item label="创建人：">
+                  <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼海棠</span>
+                </el-form-item>
+                <el-form-item label="时间：" required>
+                    <el-col :span="11">
+                            <el-date-picker type="date" placeholder="2017/05/12" style="width: 100%;"></el-date-picker>
+                     </el-col>
+                     <el-col class="line" :span="2"> ——- </el-col>
+                     <el-col :span="11">
+                            <el-date-picker type="date" placeholder="2017/05/12" style="width: 100%;"></el-date-picker>
+                     </el-col>
+                </el-form-item>
+                <el-form-item label="优先级：">
+                     <el-select>
+                          <!-- <el-option label="一般" value="wendang"></el-option>
+                          <el-option label="特急" value="qita"></el-option>
+                          <el-option label="紧急" value="qita"></el-option> -->
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="提醒：">
+                     <el-select>
+                          <!-- <el-option label="不提醒" value="wendang"></el-option>
+                          <el-option label="提前5分钟" value="qita"></el-option>
+                          <el-option label="提前10分钟" value="qita"></el-option>
+                          <el-option label="提前15分钟" value="qita"></el-option>
+                          <el-option label="提前30分钟" value="qita"></el-option>
+                          <el-option label="提前1小时" value="qita"></el-option>
+                          <el-option label="提前1天" value="qita"></el-option> -->
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="抄送人：" >
+                    <i class="iconfont icon-addT"></i>
+                </el-form-item>
+                <el-form-item label="执行人：" >
+                    <i class="iconfont icon-addT"></i>
+                </el-form-item>
+                <el-form-item label="任务描述：">
+                  <el-input type="textarea"></el-input>
+                </el-form-item>
+           </el-form>
+         </div>
+       </el-scrollbar>
+       <span slot="footer">
+         <el-button type="primary" >确 定</el-button>
+         <el-button >取 消</el-button>
+       </span>
+    </el-dialog>
+    <!-- 编辑任务 -->
+    <el-dialog title="编辑任务" visible width="750px"  class="group-dialog">
+       <el-scrollbar>
+         <div class="dialog-con">
+           <el-form label-width="100px">
+                <el-form-item label="任务名称：" required>
+                  <el-input></el-input>
+                </el-form-item>
+                <el-form-item label="上级任务：">
+                  okcs工作台组件日历日程组件设计
+                </el-form-item>
+                <el-form-item label="创建人：">
+                  <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼海棠</span>
+                </el-form-item>
+                <el-form-item label="时间：" required>
+                    <el-col :span="11">
+                            <el-date-picker type="date" placeholder="2017/05/12" style="width: 100%;"></el-date-picker>
+                     </el-col>
+                     <el-col class="line" :span="2"> ——- </el-col>
+                     <el-col :span="11">
+                            <el-date-picker type="date" placeholder="2017/05/12" style="width: 100%;"></el-date-picker>
+                     </el-col>
+                </el-form-item>
+                <el-form-item label="优先级：">
+                     <el-select>
+                          <!-- <el-option label="一般" value="wendang"></el-option>
+                          <el-option label="特急" value="qita"></el-option>
+                          <el-option label="紧急" value="qita"></el-option> -->
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="提醒：">
+                     <el-select>
+                          <!-- <el-option label="不提醒" value="wendang"></el-option>
+                          <el-option label="提前5分钟" value="qita"></el-option>
+                          <el-option label="提前10分钟" value="qita"></el-option>
+                          <el-option label="提前15分钟" value="qita"></el-option>
+                          <el-option label="提前30分钟" value="qita"></el-option>
+                          <el-option label="提前1小时" value="qita"></el-option>
+                          <el-option label="提前1天" value="qita"></el-option> -->
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="抄送人：" >
+                    <i class="iconfont icon-addT"></i>
+                </el-form-item>
+                <el-form-item label="执行人：" >
+                    <i class="iconfont icon-addT"></i>
+                </el-form-item>
+                <el-form-item label="任务描述：">
+                  <el-input type="textarea"></el-input>
+                </el-form-item>
+                <el-form-item label="完成进度：">
+                  <el-progress :percentage="70"></el-progress>
+                  <p class="color-4a small-circle">任务日志</p>
+                  <el-input type="textarea"></el-input>
+                </el-form-item>
+           </el-form>
+         </div>
+       </el-scrollbar>
+       <span slot="footer">
+         <el-button type="primary" >保 存</el-button>
+         <el-button >取 消</el-button>
+       </span>
+    </el-dialog>
+    <!-- 编辑任务 -->
+    <el-dialog title="任务详情" visible width="750px"  class="group-dialog">
+       <el-scrollbar>
+         <div class="dialog-con posr">
+           <!-- 展开收起按钮 -->
+           <p class="font-s12 toggle-btn"><a href="#" class="link">收起任务详情</a> / <a href="#" class="link">展开任务详情</a></p>
+           <el-form label-width="100px">
+                <el-form-item label="任务名称：" class="item-right">
+                   okcs工作台组件日历日程组件设计
+                </el-form-item>
+                <div class="task-panel">
+                    <el-form-item label="上级任务：">
+                      okcs工作台组件日历日程组件设计
+                    </el-form-item>
+                    <el-form-item label="子任务：">
+                      okcs工作台组件日历日程组件设计
+                    </el-form-item>
+                    <el-form-item label="创建人：">
+                      <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼海棠</span>
+                    </el-form-item>
+                    <el-form-item label="时间：">
+                            <i class="iconfont icon-date"></i>
+                            2018/05/28 00:00
+                         <span> —— </span>
+                             <i class="iconfont icon-date"></i>
+                             2018/05/28 00:01
+                    </el-form-item>
+                    <el-form-item label="优先级：">一般</el-form-item>
+                    <el-form-item label="提醒：">提前5分钟 </el-form-item>
+                    <el-form-item label="抄送人：" >
+                        <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">海棠</span>
+                        <span class="mr20"><img src="images/defaultHeadImg.png" class="head-simg mr10 vam">大鱼</span>
+                    </el-form-item>
+                    <el-form-item label="执行人：" >
+                        <span class="mr20">大鱼海棠</span>
+                    </el-form-item>
+                    <el-form-item label="任务描述：">
+                      okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计
+                    </el-form-item>
+                    <el-form-item label="完成进度：">
+                      <el-progress :percentage="70"></el-progress><!-- 进度条 -->
+                      <p class="color-4a small-circle">任务日志</p>
+                      <div class="task-item">
+                         <p><span>2018/08/05</span><el-progress :percentage="70"></el-progress></p>
+                         <p>okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计</p>
+                      </div>
+                      <p class="font-s12 link">查看历史日志记录</p>
+                      <!-- 历史日志 -->
+                      <div class="task-his-panel">
+                        <ul>
+                          <li>
+                            <div class="task-item">
+                               <p><span>2018/08/05</span><el-progress :percentage="70"></el-progress></p>
+                               <p>okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计</p>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="task-item">
+                               <p><span>2018/08/05</span><el-progress :percentage="70"></el-progress></p>
+                               <p>okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计okcs工作台组件日历日程组件设计</p>
+                            </div>
+                          </li>
+                        </ul>
+                        <!-- 收起 -->
+                        <p class="font-s12 link text-right">收起</p>
+                      </div>
+                    </el-form-item>
+                </div>
+           </el-form>
+         </div>
+       </el-scrollbar>
+       <span slot="footer">
+         <el-button type="primary" >确 定</el-button>
+         <el-button >取 消</el-button>
+       </span>
+    </el-dialog>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+  <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false,currentDate: new Date() }
+      }
+    })
+  </script>
+</body>
+</html>

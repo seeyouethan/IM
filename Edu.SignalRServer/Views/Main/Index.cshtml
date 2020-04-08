@@ -1,0 +1,303 @@
+﻿@using Edu.Models.Models
+@{
+    Layout = null;
+    var list0 = (List<UserOnLine>)ViewBag.list0;
+    var list1 = (List<UserOnLine>)ViewBag.list1; ;
+}
+
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SignalR后台监控</title>
+    <meta name="description" content="Ela Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/normalize.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/themify-icons.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/pe-icon-7-filled.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/flag-icon.min.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="~/Content/ElaAdmin/assets/css/style.css">
+
+    <link href="~/Content/ElaAdmin/assets/css/lib/vector-map/jqvmap.min.css" rel="stylesheet">
+
+    <style>
+        #weatherWidget .currentDesc {
+            color: #ffffff !important;
+        }
+
+        .traffic-chart {
+            min-height: 335px;
+        }
+
+        #flotPie1 {
+            height: 150px;
+        }
+
+            #flotPie1 td {
+                padding: 3px;
+            }
+
+            #flotPie1 table {
+                top: 20px !important;
+                right: -10px !important;
+            }
+
+        .chart-container {
+            display: table;
+            min-width: 270px;
+            text-align: left;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #flotLine5 {
+            height: 105px;
+        }
+
+        #flotBarChart {
+            height: 150px;
+        }
+
+        #cellPaiChart {
+            height: 160px;
+        }
+        .jumbotron {
+            padding: 0.5rem;
+        }.jumbotron .p3 {
+    color: green;
+    font-size: 16px;
+}
+.jumbotron .p5 {
+    color: red;
+    font-size: 16px;
+}.card-body {
+     font-size: 0.75rem;
+ }
+    </style>
+</head>
+
+<body>
+    <!-- Left Panel -->
+    <aside id="left-panel" class="left-panel">
+        <nav class="navbar navbar-expand-sm navbar-default">
+            <div id="main-menu" class="main-menu collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="@Url.Action("Index","Main")"><i class="menu-icon fa fa-laptop"></i>在线统计 </a>
+                    </li>
+                    <li>
+                        <a href="#"> <i class="menu-icon fa fa-laptop"></i>日志文件 </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </aside>
+    <!-- /#left-panel -->
+    <!-- Right Panel -->
+    <div id="right-panel" class="right-panel">
+        <!-- Header-->
+        <header id="header" class="header">
+            <div class="top-left">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="./"><img src="~/Content/ElaAdmin/images/logo.png" alt="Logo"></a>
+                    <a class="navbar-brand hidden" href="./"><img src="~/Content/ElaAdmin/images/logo2.png" alt="Logo"></a>
+                    <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+                </div>
+            </div>
+            <div class="top-right">
+                <div class="header-menu">
+                </div>
+            </div>
+        </header>
+        <!-- /#header -->
+        <!-- Content -->
+        <div class="content">
+            <div class="animated fadeIn">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong class="card-title">Web端在线用户</strong>
+                            </div>
+                            <div class="card-body" style="max-height: 300px;overflow-y: scroll;font-size: 0.5rem;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">用户ID</th>
+                                            <th scope="col">上线时间</th>
+                                            <th scope="col">DeviceID</th>
+                                            <th scope="col">DeviceToken</th>
+                                            <th scope="col">设备类型</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listul0">
+                                        @{
+                                            foreach (var item in list0)
+                                            {
+                                                <tr data-id="@item.uid">
+                                                    <td>@item.uid</td>
+                                                    <td>@item.CreateDate</td>
+                                                    <td>@item.deviceid</td>
+                                                    <td>@item.deviceToken</td>
+                                                    <td>@item.devicetype</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong class="card-title">移动端在线用户</strong>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">用户ID</th>
+                                        <th scope="col">上线时间</th>
+                                        <th scope="col">DeviceID</th>
+                                        <th scope="col">DeviceToken</th>
+                                        <th scope="col">设备类型</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="listul1">
+                                    @{
+                                        foreach (var item in list1)
+                                        {
+                                            <tr data-id="@item.uid">
+                                                <td>@item.uid</td>
+                                                <td>@item.CreateDate</td>
+                                                <td>@item.deviceid</td>
+                                                <td>@item.deviceToken</td>
+                                                <td>@item.devicetype</td>
+                                            </tr>
+                                        }
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong class="card-title">实时日志</strong>
+                            </div>
+
+                            <div class="card-body jumbotron" id="logtext">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                    </div>
+                </div>
+        <!-- /.content -->
+        <div class="clearfix"></div>
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-inner bg-white">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Copyright &copy; 2019 CNKI - 知识管理 - <a href="http://oaokcs.cnki.net/" target="_blank" title="OKMS机构知识管理和知识服务平台">OKMS机构知识管理和知识服务平台</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- /.site-footer -->
+    </div>
+    <!-- /#right-panel -->
+
+    <script src="~/Content/ElaAdmin/assets/js/vendor/jquery-2.1.4.min.js"></script>
+    <script src="~/Content/ElaAdmin/assets/js/popper.min.js"></script>
+    <script src="~/Content/ElaAdmin/assets/js/plugins.js"></script>
+    <script src="~/Content/ElaAdmin/assets/js/main.js"></script>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function () {
+            var chat = $.connection.chatHub;
+            $.connection.hub.start().done(function () {
+                //用log4net作为监听日志的UserID
+                chat.server.connect("03logger", false);
+            });
+            chat.client.loginlog = function (jsonData) {
+
+                var elestr = "<tr data-id='" + jsonData.uid + "'>" +
+                    "<td>" + jsonData.uid + "</td>" +
+                    "<td>" + jsonData.CreateDate + "</td>" +
+                    "<td>" + jsonData.deviceid + "</td>" +
+                    "<td>" + jsonData.deviceToken + "</td>" +
+                    "<td>" + jsonData.devicetype + "</td>" +
+                    "</tr>";
+                var textstr = "";
+                if (jsonData.devicetype === "web") {
+                    if ($("#listul0  tr[data-id='" + jsonData.uid + "']").length !== 0) {
+                        $("#listul0  tr[data-id='" + jsonData.uid + "']").remove();
+                        //重新登录
+                        textstr = "<p class=\"p3\">【(web端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线（重新登录）</p>";
+                    } else {
+                        textstr = "<p class=\"p3\">【(web端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线</p>";
+                    }
+                    $("#listul0").prepend(elestr);
+                } else {
+                    if ($("#listul1  tr[data-id='" + jsonData.uid + "']") != null) {
+                        $("#listul1  tr[data-id='" + jsonData.uid + "']").remove();
+                        //重新登录
+                        textstr = "<p class=\"p3\">【(移动端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线（重新登录）</p>";
+                    } else {
+                        textstr = "<p class=\"p3\">【(移动端)" + jsonData.uid + "】在  " + jsonData.CreateDate + "  上线</p>";
+                    }
+                    $("#listul1").prepend(elestr);
+                }
+                $("#logtext").prepend(textstr);
+            };
+
+            chat.client.logoutlog = function (jsonData) {
+                var textstr = "";
+                if (jsonData.devicetype === "web") {
+                    textstr = "<p class=\"p5\">【(web端)" + jsonData.uid + "】在  " + showNow() + "  离线   上次登录时间 " + jsonData.CreateDate + " </p>";
+                    $("#listul0  tr[data-id='" + jsonData.uid + "']").remove();
+                } else {
+                    textstr = "<p class=\"p5\">【(移动端)" + jsonData.uid + "】在  " + showNow() + "  离线   上次登录时间 " + jsonData.CreateDate + " </p>";
+                    $("#listul1  tr[data-id='" + jsonData.uid + "']").remove();
+                }
+                $("#logtext").prepend(textstr);
+            };
+
+            function showNow() {
+                var myDate = new Date();
+                var year = myDate.getFullYear();        //获取当前年
+                var month = myDate.getMonth() + 1;   //获取当前月
+                var date = myDate.getDate();            //获取当前日
+                var h = myDate.getHours();              //获取当前小时数(0-23)
+                var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+                var s = myDate.getSeconds();
+
+                return (year + '-' + getNow(month) + "-" + getNow(date) + " " + getNow(h) + ':' + getNow(m) + ":" + getNow(s));
+            }
+
+            function getNow(s) {
+                return s < 10 ? '0' + s : s;
+            }
+
+
+
+        });
+
+    </script>
+</body>
+</html>

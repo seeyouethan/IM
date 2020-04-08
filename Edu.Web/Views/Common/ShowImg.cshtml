@@ -1,0 +1,46 @@
+﻿@*<img src="@ViewBag.imgurl" id="img0" draggable="true"/>
+<script type="text/javascript">
+
+
+</script>*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>event</title>
+    <style>
+        #box {
+            width: 100px;
+            height: 100px;
+            background-color: aquamarine;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+    <script type="text/javascript">
+        var oDiv = document.getElementById("box");
+        oDiv.onmousedown=function(ev)
+        {
+            var oEvent = ev;
+            var disX = oEvent.clientX - oDiv.offsetLeft;
+            var disY = oEvent.clientY - oDiv.offsetTop;
+            document.onmousemove=function (ev)
+            {
+                oEvent = ev;
+                oDiv.style.left = oEvent.clientX -disX+"px";
+                oDiv.style.top = oEvent.clientY -disY+"px";
+            }
+            document.onmouseup=function()
+            {
+               document.onmousemove=null;
+               document.onmouseup=null;
+            }
+
+        }
+
+    </script>
+</body>
+</html>

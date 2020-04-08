@@ -1,0 +1,1462 @@
+﻿@using Edu.Tools
+<link href="~/Tookit/layui2.1.5/css/layui.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/Web/css/k-style.css" rel="stylesheet" />
+<div id="app">
+    <!-- 即时聊天界面 -->
+    <div class="chat-wrap">
+        <!-- 默认隐藏，显示时给此部分加上类名r0 -->
+        <span class="chat-close" id="closeIm"><i class="iconfont icon-delte"></i></span>
+        <el-tabs value="first" @@tab-click="tabClick">
+            <el-tab-pane label="联系人" name="first">
+                <div class="tab-pane">
+                    <!--搜索用户-->
+                    <div class="tab-search is-focused">
+                        <input id="searchUserInput" type="text" placeholder="搜索" AutoCompleteType="Disabled" autocomplete="off" maxlength="10" />
+                        <i class="iconfont icon-searchBtn" id="iconFriendSearch"></i>
+                    </div>
+                    <div class="tab-con height92p" id="divUserList">
+                        <el-scrollbar class="k-height100p">
+                            <div id="friendDiv" class="k-height100p">
+                                <h6 class="tab-h6" onclick="Collaspse(this)">最近联系人 <i class="iconfont icon-up"></i></h6>
+                                @Html.Action("RecentlyChatUser", "Main", new { })
+
+                                <h6 class="tab-h6" onclick="Collaspse(this)">常用联系人 <i class="iconfont icon-up"></i></h6>
+                                <ul id="divUserListTop" class="height50p">
+                                    @Html.Action("TopChatUser", "Main", new { })
+                                </ul>
+                            </div>
+                        </el-scrollbar>
+                    </div>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="群组" name="second">
+                <div class="tab-pane" v-loading="grouploading" element-loading-text="拼命加载中">
+                    <div class="tab-search is-focused">
+                        <input id="searchGroupInput" type="text" placeholder="搜索" AutoCompleteType="Disabled" autocomplete="off" maxlength="10" />
+                        <i class="iconfont icon-searchBtn" id="iconGroupSearch"></i>
+                    </div>
+                    <div class="tab-con tab-con2 height92p" id="divGroupList">
+                        <el-scrollbar class="k-height100p">
+                            <div id="groupDiv" class="k-height100p">
+                                @*<h6 class="tab-h6" onclick="Collaspse(this)">工作群 <i class="iconfont icon-up"></i></h6>*@
+                                <ul id="ulWorkChatGroupList">
+                                    @Html.Action("WorkChatGroupView", "Main", new { })
+                                </ul>
+                                @*<h6 class="tab-h6" onclick="Collaspse(this)">自建群 <i class="iconfont icon-up"></i></h6>
+                                <ul id="ulGroupList">
+                                    @Html.Action("SelfChatGroup", "Main", new { })
+                                </ul>*@
+                                <!-- 添加群组按钮 -->
+                                <a href="javascript:CreatChatGroup();" class="add-group"><i class="iconfont icon-add" title="新建群组"></i></a>
+                            </div>
+                        </el-scrollbar>
+                    </div>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="收藏" name="third">
+                <div class="tab-pane tab-pane-fav" v-loading="userfavoriteloading" element-loading-text="拼命加载中">
+                    <div class="tab-con k-height100p">
+                        <el-scrollbar class="k-height100p" ref="favoritesPanel">
+                            <div class="k-height100p">                                
+                                <ul>
+                                    <div>
+                                        <div class="nodata-tip text-center" v-if="userFavorites.length==0" style="top:200px"><i class="iconfont icon-none"></i> <span>暂无内容</span></div>
+                                    </div>
+                                    <!--item.content中存放的是List<Msg>格式的Json字符串-->
+                                    <li class="fav-li" v-for="(item, index) in userFavorites" v-bind:data-id="item.id">
+                                        <div v-for="(msg,msgindex) in JSON.parse(item.content)">
+                                            <!--文字类消息-->
+                                            <div v-if="msg.msgtype == 0">
+                                                <p class="main-content-p" v-bind:title="msg.msg" v-on:click="ShowText(msg)">{{msg.msg}}</p>
+                                                <p class="sub-content-p">
+                                                    <span class="sub-content-span" v-if="msg.isgroup == 1">{{msg.torealname}}</span>
+                                                    <span class="sub-content-span" v-if="msg.isgroup == 0">{{msg.fromrealname}}</span>
+                                                    <span class="sub-content-span">{{item.createtime}}</span>
+                                                </p>
+                                            </div>
+                                            <!--图片类消息-->
+                                            <div v-if="msg.msgtype == 1">
+                                                <p class="main-content-p">
+                                                    <img v-bind:src="msg.msg" class="img-fav mr10" v-cloak v-on:click="ShowImage(msg.msg)">
+                                                </p>
+                                                <p class="sub-content-p">
+                                                    <span class="sub-content-span" v-if="msg.isgroup == 1">{{msg.torealname}}</span>
+                                                    <span class="sub-content-span" v-if="msg.isgroup == 0">{{msg.fromrealname}}</span>
+                                                    <span class="sub-content-span">{{item.createtime}}</span>
+                                                </p>
+                                            </div>
+                                            <!--文件类消息-->
+                                            <div v-if="msg.msgtype == 2">
+                                                <p class="main-content-p mb-filetxt">
+                                                    <a class="layui-layim-file" v-bind:href="msg.msg" target="_blank"><i class="layui-icon"></i><cite>{{msg.filename}}</cite></a>
+                                                </p>
+                                                <p class="sub-content-p">
+                                                    <span class="sub-content-span" v-if="msg.isgroup == 1">{{msg.torealname}}</span>
+                                                    <span class="sub-content-span" v-if="msg.isgroup == 0">{{msg.fromrealname}}</span>
+                                                    <span class="sub-content-span">{{item.createtime}}</span>
+
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <i class="iconfont icon-delte fav-delete" v-on:click="DeleteUserFavorite(item)"></i>
+                                    </li>
+
+                                    <infinite-loading direction="bottom" @@infinite="infiniteHandler" spinner="spiral">
+                                        <div slot="no-more"></div>
+                                        <div slot="no-results"></div>
+                                    </infinite-loading>
+                                </ul>
+                            </div>
+                        </el-scrollbar>
+                    </div>
+                </div>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+@section Js{
+    <script src="~/Content/VideoConfenence/js/vue-infinite-loading.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="@ConfigHelper.GetConfigString("SignalRServerHubConnection")"></script>
+
+    <script src="~/Scripts/okcs_im.js"></script>
+    <script type="text/javascript">
+        //向父节点前端添加对应的js文件
+        parent.$('body').append($('<script src="/im/Scripts/okcs_im.js"><\/script>'))
+        //向父节点前端添加对应的Toastify的js和css文件
+        parent.$('body').append($('<script src="/im/Content/TRTC/js/toastify.js"><\/script>'))
+        parent.$('body').append($('<link rel="stylesheet" type="text/css" href="/im/Content/TRTC/css/toastify.min.css">'))
+        parent.$('body').append($('<link rel="stylesheet" type="text/css" href="/im/Content/Web/css/chat.css?v=2.1">'))
+
+        $(".tab-pane").height($(window).height() - 100);
+        //点击其他以外的地方，隐藏这个div
+        $('body').click(function (e) {
+            var target = $(e.target);
+            if (target.is('.icon-more')) {
+                if ($(target).parent().next().css('display') !== "none") {
+                    $('.tip-del').hide();
+                } else {
+                    $('.tip-del').hide();
+                    $(target).parent().next().show();
+                }
+            } else {
+                $('.tip-del').hide();
+            }
+        });
+        //在父窗口点击其他以外的地方，隐藏这个div
+        parent.$('body').click(function (e) {
+            var target = $(e.target);
+            if (target.is('.icon-more')) {
+                if ($(target).parent().next().css('display') !== "none") {
+                    $('.tip-del').hide();
+                } else {
+                    $('.tip-del').hide();
+                    $(target).parent().next().show();
+                }
+            } else {
+                $('.tip-del').hide();
+            }
+        });
+
+
+        $(function () {
+            var vm = new Vue({
+                el: '#app',
+                data: function () {
+                    return {
+                        visible: false,
+                        grouploading: true,
+                        userfavoriteloading:true,
+                        userFavorites: [],//用户收藏数据
+                        userFavoritesPageNo: 1,//用户收藏数据页码
+                        groupList: [],//当前所在群组
+                    }
+                },
+                methods: {
+                    //切换面板
+                    tabClick: function (tab, event) {
+                        var self = this;
+                        if (tab.name === "second") {
+                            //群组聊天
+                            //获取群组
+                            UpdateWorkGroup(function () {
+                                self.grouploading = false;
+                            });
+                        }
+                        if (tab.name === "third") {
+                            self.userfavoriteloading = true;
+                            self.UpdateUserFavorites();
+                        }
+                    },
+                    //获取当前用户所在群组
+                    GetWorkGroups: function () {
+
+                    },
+
+                    //获取用户收藏数据
+                    UpdateUserFavorites: function () {
+                        var self = this;
+                        $.ajax({
+                            url:'/imwebapi/api/MainApi/GetUserFavorites',
+                            type: 'Get',
+                            headers: {
+                                'ignore-identity': "true"
+                            },
+                            data: { uid: '@LoginUserService.ssoUserID', type: 1, pageNo: 1,pageSize:20, },
+                            success: function (data) {
+                                if (data.Success) {
+                                    self.userfavoriteloading = false;
+                                    self.userFavoritesPageNo=2;
+                                    self.userFavorites = data.Content;
+                                } else {
+                                    this.$message.error('获取收藏数据出错');
+                                }
+                            },
+                            error: function (err) {
+                            },
+                        });
+                    },
+                    //点击查看大图
+                    ShowImage: function (url) {
+                        var re = new RegExp("&amp;", "g"); //定义正则表达式
+                        var imgulrResult = url.replace(re, "&");
+                        var resultJson = { "status": 1, "msg": "", "title": "", "id": 1, "start": 0, "data": [{ "alt": "", "pid": "", "src": imgulrResult, "thumb": "" }] };
+                        if (parent.ShowPhotos) {
+                            parent.ShowPhotos(resultJson);
+                        } else {
+                            parent.layerPhotosNew(resultJson);
+                        }
+                    },
+                    //点击查看聊天详细内容
+                    ShowText: function (msg) {
+                        parent.layer.open({ type: 1,
+                            title: false,
+                            closeBtn: 0,
+                            shadeClose: true,
+                            skin: 'chatWindow',
+                            content: "<div><i class=\"iconfont icon-delte showtext-close-icon\" onclick='parent.layer.close(parent.layer.index);'></i><p style='padding:20px;padding-bottom: 0;'>" + msg.fromrealname + "：</p><p style='padding:12px 20px;text-indent:28px;line-height: 22px;'>"+msg.msg+"</p></div>",
+                        });
+                    },
+                    infiniteHandler($state) {
+                        var self = this;
+                        $.ajax({
+                            url:'/imwebapi/api/MainApi/GetUserFavorites',
+                            type: 'Get',
+                            headers: {
+                                'ignore-identity': "true"
+                            },
+                            data: { uid: '@LoginUserService.ssoUserID', type: 1, pageNo: self.userFavoritesPageNo,pageSize:20, },
+                            success: function (data) {
+                                if (data.Success) {
+                                    self.userfavoriteloading = false;
+                                    if (data.Content.length > 0) {
+                                        data.Content.forEach(function (item) {
+                                            self.userFavorites.push(item);
+                                        });
+                                        self.userFavoritesPageNo++;                                        
+                                        $state.loaded();
+                                    } else {
+                                        $state.complete();
+                                    }
+                                } else {
+                                    this.$message.error('获取收藏数据出错');
+                                }
+                            },
+                            error: function (err) {
+                            },
+                        });
+                    },
+                    DeleteUserFavorite: function (item) {
+                        var self = this;
+                        $.ajax({
+                            url:'/imwebapi/api/MainApi/DeleteUserFavorites',
+                            type: 'Post',
+                            headers: {
+                                'ignore-identity': "true"
+                            },
+                            data: { userId: '@LoginUserService.ssoUserID', id:item.id },
+                            success: function (data) {
+                                if (data.Success) {
+                                    self.userFavorites.splice(self.userFavorites.indexOf(item),1);                              
+                                } else {
+                                    this.$message.error('删除收藏数据出错');
+                                }
+                            },
+                            error: function (err) {
+                            },
+                        });
+                    },
+                }
+            });
+            $.connection.hub.url = "@ConfigHelper.GetConfigString("SignalRServerUrl")" + "signalr";
+            $.connection.hub.logging = false;
+            //$.connection.hub.error(function(error) {
+            //    console.log("...$.connection.hub.eventSource.onerror...");
+            //    parent.$(".chat-disconnect").addClass("show");
+            //});
+
+
+            var reSendCount = 0;
+            var chat = $.connection.chatHub;
+            var chekSignalrInterval;
+            var messageSuccessCallBack;
+            var messageFailedCallBack;
+            var isReconnect = false;
+
+            $.connection.hub.start()
+                .done(function () {
+                    //第一个参数是用户id,第二个参数是终端标识
+                    chat.server.connectWithTerminal("@Edu.Service.LoginUserService.ssoUserID", "@ConfigHelper.GetConfigString("ImTerminal")");
+
+                    //添加自己的断线监听，每5s检测一次
+                    chekSignalrInterval = setInterval(function () {
+                        if ($.connection.hub.state != 1) {
+                            //重连
+                            console.log("state状态为："+$.connection.hub.state, " 正在重连...");
+                            parent.$(".chat-disconnect").addClass("show");
+                            isReconnect = true;
+                            $.connection.hub.start();
+
+                        } else {
+                            console.log("state状态为："+$.connection.hub.state,"连接正常");
+                        }
+                    },5000);
+
+                    ////添加断线监听
+                    //if ($.connection.hub.eventSource) {
+                    //    $.connection.hub.eventSource.onerror = function(error) {
+                    //        console.log("...$.connection.hub.eventSource.onerror...");
+                    //        parent.$(".chat-disconnect").addClass("show");
+                    //    }
+                    //}
+                })
+                .fail(function() {
+                    console.log("IM 聊天服务连接失败！");
+                });
+            /*拒绝视频聊天*/
+            window.RefuseVideoChat = function (fromuid, touid) {
+                chat.server.refuseVideoChat(fromuid, touid);
+            }
+            /*发起视频聊天者关闭视频聊天窗口*/
+            window.CloseVideoChatByFrom = function (fromuid, touid) {
+                chat.server.closeVideoChatByFrom(fromuid, touid);
+            }
+            /*
+                用户上线
+            */
+            chat.client.bsOnLine = function (uid, connid) {
+                /*
+                    修改uid用户在线状态
+                    注意两个地方：1.需要同时从两个面板中查找，同时修改状态
+                                 2.如果是用户自己 则直接return
+                */
+                if (uid === "@LoginUserService.ssoUserID") {
+                    return;
+                }
+                SetUserOnlie(uid, connid);
+            };
+            /*
+                用户离线 传的值为connid  而不是uid
+            */
+            chat.client.bsOffLine = function (connid) {
+                var eleR = $("#divUserListRecent li[data-id='" + connid + "']");
+                var eleStatus;
+                if (eleR.length !== 0) {
+                    eleStatus = eleR.children("div").eq(0).children().eq(1).children().eq(2);
+                    if (!eleStatus.hasClass("tab-status-no")) {
+                        eleStatus.addClass("tab-status-no");
+                        /*设置conid*/
+                        eleR.attr("data-connid", "");
+                    }
+                    //var lastli = $("#divUserListRecent li:last");
+                    //eleR.insertAfter(lastli);
+                }
+
+                var eleT = $("#divUserListTop li[data-id='" + connid + "']");
+
+                if (eleT.length !== 0) {
+                    eleStatus = eleT.children("div").eq(0).children().eq(1).children().eq(2);
+                    if (!eleStatus.hasClass("tab-status-no")) {
+                        eleStatus.addClass("tab-status-no");
+                        /*设置conid*/
+                        eleT.attr("data-connid", "");
+                    }
+                    var lastli1 = $("#divUserListTop li:last");
+                    eleT.insertAfter(lastli1);
+                }
+            }
+            @*
+                客户端的这个addMessage方法 应该写在这个页面中 写在弹出的聊天窗口的Index中并不会响应到
+                因为聊天客户端重新$.connection.chatHub; 就会生成一个新的connectionId 而不是原来的Id
+                2019年1月4日 新增功能，web端如果和移动端同时在线，那么需要同步自己发送的消息
+                ------参数中的touid是和聊天用户相关的用户的uid
+                *@
+            chat.client.receiveMessageA = function (data) {
+                var jsonData = JSON.parse(data);
+                AppendTalk(jsonData);
+            };
+
+            //收到群组动态方法(新建、加人、减人、解散)
+            chat.client.receiveGroupDynamic = function (data) {
+                var model = JSON.parse(data);
+
+                if (model && model.Type == 7) {
+                    //新建
+                    //在右侧群组列表中添加一行
+                }
+
+
+            };
+
+            chat.client.requestVideoChat = function (fromuid, fromusername, touid, connid, roomid) {
+                VideoChat(fromuid, fromusername, touid, connid, roomid);
+            }
+            chat.client.videoChatRefused = function (uid) {
+                VideoChatRefused(uid);
+            }
+            chat.client.videoChatClosedByFrom = function (uid) {
+                CloseVideoChatRequestWindow(uid);
+            }
+            chat.client.receiveMessage = function (model) {
+                console.log(model);
+                //重连成功
+                parent.$(".chat-disconnect").removeClass("show");
+                if (!isReconnect) {
+                    return;
+                }
+                $.connection.hub.start().done(function () {
+                    chat.server.connectWithTerminal("@Edu.Service.LoginUserService.ssoUserID", "@ConfigHelper.GetConfigString("ImTerminal")");
+                    //重连成功
+                    //parent.$(".chat-disconnect").removeClass("show");
+                    //抓取当前页面/tab页面未读的消息
+                    var tabCount = $("#chatWindow", parent.document).length;
+                    if (tabCount == 1) {
+                        var iframeid = $("#chatWindow", parent.document).children(0).attr("id");
+                        var ele = window.parent.document.getElementById(iframeid);
+                        $.each(ele.contentWindow.document.getElementById('chatpersonlist').getElementsByTagName('li'),
+                            function (index, value) {
+                                //每一个打开的窗口都需要请求一下
+                                var touid = $(value).attr('id');
+                                var length = parent.document.getElementById('chatWindow').getElementsByTagName("iframe")[0].contentWindow.document.getElementById('ulchat' + touid).contentWindow.document.getElementById('ulChat').getElementsByTagName('li').length;
+                                var kele = parent.document.getElementById('chatWindow').getElementsByTagName("iframe")[0].contentWindow.document.getElementById('ulchat' + touid).contentWindow.document.getElementById('ulChat').getElementsByTagName('li')[length - 1];
+                                var lastmsgid = $(kele).attr("data-msgid");
+                                $.get("/imwebapi/api/MainApi/GetMissedMessages", { uid: "@Edu.Service.LoginUserService.ssoUserID", touid: touid, lastmsgid: lastmsgid }, function (data) {
+                                    if (data.Success) {
+                                        $.each(data.Content, function (msgIndex, msgValue) {
+                                            AppendTalk(msgValue);
+                                        });
+                                    }
+                                });
+
+                            })
+                    }
+                });
+
+                //if ($.connection.hub.eventSource) {
+                //    $.connection.hub.eventSource.onerror = function(error) {
+                //        console.log("...$.connection.hub.eventSource.onerror...");
+                //        parent.$(".chat-disconnect").addClass("show");
+                //    }
+                //}
+            }
+            chat.client.msgFeedback = function (model) {
+                var jsonData = JSON.parse(model);
+                if (!jsonData.Success) {
+                    console.log(model);
+                    var msgModel = JSON.parse(jsonData.Content);
+                    //重连一下，然后重新发送消息
+                    $.connection.hub.start().done(function () {
+                        parent.$(".chat-disconnect").removeClass("show");
+                        //if ($.connection.hub.eventSource) {
+                        //    $.connection.hub.eventSource.onerror = function(error) {
+                        //        console.log("...$.connection.hub.eventSource.onerror...");
+                        //        parent.$(".chat-disconnect").addClass("show");
+                        //    }
+                        //}
+
+                        chat.server.connectWithTerminal("@Edu.Service.LoginUserService.ssoUserID", "@ConfigHelper.GetConfigString("ImTerminal")");
+
+                        if (reSendCount < 3) {
+                            reSendCount++;
+                            console.log("消息发送失败,重新发送 " + reSendCount +'...');
+                            setTimeout(function () {
+                                sendMessageNew(msgModel);
+                            }, 1000);
+                        } else {
+                            reSendCount = 0;
+                            parent.layer.msg("消息发送失败(错误代码02),请重新发送", { time: 2000 });
+                            messageFailedCallBack(msgModel.id1);
+
+                            //var length = parent.document.getElementById('chatWindow').getElementsByTagName("iframe")[0].contentWindow.document.getElementById('ulchat' + msgModel.touid).contentWindow.document.getElementById('ulChat').getElementsByTagName('li').length;
+
+                            //setTimeout(function () {
+                            //    if (length >= 2) {
+                            //        parent.document.getElementById('chatWindow').getElementsByTagName("iframe")[0].contentWindow.document.getElementById('ulchat' + msgModel.touid).contentWindow.document.getElementById('ulChat').getElementsByTagName('li')[length - 1].remove();
+                            //        parent.document.getElementById('chatWindow').getElementsByTagName("iframe")[0].contentWindow.document.getElementById('ulchat' + msgModel.touid).contentWindow.document.getElementById('ulChat').getElementsByTagName('li')[length - 2].remove();
+                            //    }
+                            //}, 1000);
+                        }
+                    });
+                } else {
+                    reSendCount = 0;
+                    var msgModel = JSON.parse(jsonData.Content);
+                    messageSuccessCallBack(msgModel.id0,msgModel.id1)
+                }
+            }
+            chat.client.disconnectMessage = function (model) {
+                console.log(model);
+                console.log("[断开连接]当前页面已经和SignalR断开连接！");
+                parent.$(".chat-disconnect").addClass("show");
+                setTimeout(function () {
+                    $.connection.hub.start().done(function () {
+                        parent.$(".chat-disconnect").removeClass("show");
+                        //if ($.connection.hub.eventSource) {
+                        //    $.connection.hub.eventSource.onerror = function(error) {
+                        //        console.log("...$.connection.hub.eventSource.onerror...");
+                        //        parent.$(".chat-disconnect").addClass("show");
+                        //    }
+                        //}
+
+                    });
+                }, 2000); // Restart connection after 1 seconds.
+            }
+            //收到工作交办(待办任务、日程)提醒
+            chat.client.receiveSchedule = function (json) {
+                var jsonData = JSON.parse(json);
+                console.log("收到工作交办(待办任务、日程)提醒");
+                console.log(jsonData);
+
+            };
+
+            window.sendMessageNew = function (json, Successcb, Failcb) {
+                if (Successcb) {
+                    messageSuccessCallBack = Successcb;
+                }
+                if (Failcb) {
+                    messageFailedCallBack = Failcb;
+                }
+                if ($.connection.hub.state == 1) {
+                    var strjson = JSON.stringify(json);
+                    chat.server.sendMessageFromWeb(strjson, "@ViewBag.terminal");
+                } else {
+                    parent.$(".chat-disconnect").addClass("show");
+                    parent.layer.msg("消息发送失败(错误代码03),请重新发送", { time: 2000 });
+                    this.setTimeout(function () {Failcb(json.id1) }, 1200);
+                }
+
+                try {
+
+                }
+                catch (err) {
+                    parent.$(".chat-disconnect").addClass("show");
+                    $.connection.hub.start().done(function () {
+                        parent.$(".chat-disconnect").removeClass("show");
+                        //if ($.connection.hub.eventSource) {
+                        //    $.connection.hub.eventSource.onerror = function(error) {
+                        //        console.log("...$.connection.hub.eventSource.onerror...");
+                        //        parent.$(".chat-disconnect").addClass("show");
+                        //    }
+                        //}
+
+                        var strjson = JSON.stringify(json);
+                        chat.server.sendMessageFromWeb(strjson, "@ViewBag.terminal").done(function () {
+                            Successcb && Successcb();
+                        })
+                        .fail(function () {
+                            Failcb && Failcb();
+                        });
+                    })
+                    .fail(function() {
+                        console.log("[断开连接]IM 聊天服务连接失败！");
+                    });
+                }
+
+
+
+            };
+            window.videoChat = function(uid, fromusername, touid, roomid) {
+                chat.server.videoChat(uid, fromusername, touid, roomid);
+            };
+
+
+
+            RemoveNewCircle();
+
+            /*用户检索框的响应*/
+            $('#searchUserInput').on({
+                keydown: function (e) {
+                    SearchUserEvent(e);
+                }
+            });
+            /*用户检索框中叉号按钮*/
+            $('#iconFriendSearch').click(function () {
+                var val = $('#searchUserInput').val();
+                if ($('#iconFriendSearch').hasClass("icon-delte")) {
+                    if (val === "") {
+                        $("#iconFriendSearch").removeClass("icon-delte").addClass("icon-searchBtn");
+                        return;
+                    }
+                    $('#searchUserInput').val("");
+                    $("#iconFriendSearch").removeClass("icon-delte").addClass("icon-searchBtn");
+                    InitUserList();
+                } else {
+                    $("#iconFriendSearch").removeClass("icon-searchBtn").addClass("icon-delte");
+                    SearchUser($.trim(val));
+                }
+            });
+            /*群组检索框的响应*/
+            $('#searchGroupInput').on({
+                keydown: function (e) {
+                    SearchGroupEvent(e);
+                }
+            });
+            /*群组检索框中叉号按钮*/
+            $('#iconGroupSearch').click(function () {
+                var val = $('#searchGroupInput').val();
+                if ($('#iconGroupSearch').hasClass("icon-delte")) {
+                    if (val === "") {
+                        $("#iconGroupSearch").removeClass("icon-delte").addClass("icon-searchBtn");
+                        return;
+                    }
+                    $('#searchGroupInput').val("");
+                    $("#iconGroupSearch").removeClass("icon-delte").addClass("icon-searchBtn");
+                    InitGroupList();
+                } else {
+                    $("#iconGroupSearch").removeClass("icon-searchBtn").addClass("icon-delte");
+                    SearchGroup($.trim(val));
+                }
+            });
+            /*获取所有在线成员 修改成员在线状态*/
+            //UpdateOnlineStatus();
+            /*隐藏聊天面板*/
+            $('#closeIm').click(function() {
+                var eleP = parent.$('#okcsimIcon');
+                var elePim = parent.$('#okcsim');
+                eleP.click();
+                $(eleP).on('click', '', function() {
+                    if (elePim.hasClass('r0')) {
+
+                    }
+                });
+            });
+            //UpdateWorkGroup();
+            GetGroupMsg();
+            var eleP0 = parent.$('#okcsimIcon');
+            var elePim0 = parent.$('#okcsim');
+            $(eleP0).on('click', '', function() {
+                if (!elePim0.hasClass('r0')) {
+                    //点击唤醒IM群组聊天的时候，获取我的相关群通知
+                    GetGroupMsg();
+                }
+            });
+        });
+
+        /*向下向上拉伸*/
+        function Collaspse(ele) {
+            var element = $(ele).children('i').eq(0);
+            if ($(element).hasClass("icon-down")) {
+                $(element).removeClass("icon-down");
+                $(element).addClass("icon-up");
+            } else {
+                $(element).removeClass("icon-up");
+                $(element).addClass("icon-down");
+            }
+            $(element).parent().next().slideToggle(500);
+        }
+
+        /*设置用户为在线状态 并且将其所在列表顺序添加到前面（放在第二个，因为第一个是通知）*/
+        function SetUserOnlie(uid, connid) {
+            var eleR = $("#divUserListRecent li[data-id='" + uid + "']");
+            var eleStatus;
+            if (eleR.length !== 0) {
+                eleStatus = eleR.children("div").eq(0).children().eq(1).children().eq(2);
+                if (eleStatus.hasClass("tab-status-no")) {
+                    eleStatus.removeClass("tab-status-no");
+                }
+                /*设置conid*/
+                eleR.attr("data-connid", connid);
+            }
+            var eleT = $("#divUserListTop li[data-id='" + uid + "']");
+
+            if (eleT.length !== 0) {
+                eleStatus = eleT.children("div").eq(0).children().eq(1).children().eq(2);
+                if (eleStatus.hasClass("tab-status-no")) {
+                    eleStatus.removeClass("tab-status-no");
+                }
+                /*设置conid*/
+                eleT.attr("data-connid", connid);
+                //置顶
+                while (eleT.index() != 0) {
+                    eleT.prev().before(eleT);
+                }
+            }
+        }
+
+        function AddNewCircle() {
+            var eleTop = parent.$("#okcsimIcon");
+            if (eleTop.hasClass("new-circle")) {
+                return;
+            } else {
+                eleTop.addClass("new-circle");
+            }
+        }
+        //查询是否有未读消息 如果没有未读消息 则去掉红点
+        function RemoveNewCircle() {
+            $.post("@Url.Action("QueryNotReadMsg", "Main", new {area = ""})", {}, function (data) {
+                var eleTop = parent.$("#okcsimIcon");
+                if (data.r) {
+                    if (eleTop.hasClass("new-circle")) {
+                        return;
+                    } else {
+                        eleTop.addClass("new-circle");
+                    }
+                } else {
+                    eleTop.removeClass("new-circle");
+                }
+            });
+        }
+
+
+        function AppendTalk(data) {
+            if (data.fromuid === "@LoginUserService.ssoUserID") {
+                //从移动端同步过来的自己发送的消息
+                AppendSelfTalk(data);
+            } else {
+                //收到对方发过来的消息
+                var iframeid = $("#chatWindow", parent.document).children(0).attr("id");
+                var ele = window.parent.document.getElementById(iframeid);
+                if (ele != null) {
+                    /*用户在线并且打开了相应的对话框*/
+                    ele.contentWindow.AppendOtherUserMsg && ele.contentWindow.AppendOtherUserMsg(data);
+                } else {
+                    if (data.isgroup === 0) {
+                        //向用户列表中添加一个未读的单人消息标记
+                        AddUnreadMsgIcon(data);
+                    } else if (data.isgroup === 1) {
+                        //向群组列表中添加一个未读的群组消息标记
+                        AddUnreadGroupMsgIcon(data);
+                    }
+                }
+            }
+        }
+
+        function ToastifyNotice(model) {
+            if (model.msgtype != 6) {
+                //6是加入群组视频会议消息，不进行通知
+                parent.Toastify({
+                    text: "收到新的消息",
+                    duration: 3000,
+                    close: true,
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    onClick: function () {
+                        var photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")" + model.fromuid;
+                        var title = model.fromrealname;
+                        var uid = model.fromuid;
+                        var isgroup = false;
+                        if (model.isgroup == 1) {
+                            //群组消息
+                            if (model.touid.length == 36) {
+                                photo = "@(ConfigHelper.GetConfigString("WorkGroupPic"))" + model.touid;
+                            } else {
+                                photo = "@(ConfigHelper.GetConfigString("IMWebApiGroupPic"))" + model.touid;
+                            }
+                            title = model.torealname;
+                            uid = model.touid;
+                            isgroup = true;
+
+
+                        } else {
+                            //单人聊天消息
+                        }
+                        LayerOpenChatWindow(uid, title, photo, "", "", isgroup);
+                    } // Callback after click
+                }).showToast();
+            }
+        }
+
+
+
+        function AppendSelfTalk(model) {
+            var iframeid = $("#chatWindow", parent.document).children(0).attr("id");
+            var ele = window.parent.document.getElementById(iframeid);
+            if (ele != null) {
+                /*用户在线并且打开了相应的对话框*/
+                ele.contentWindow.AppendSelfMsg && ele.contentWindow.AppendSelfMsg(model);
+            }
+        }
+
+        function AddUnreadMsgIcon(model) {
+
+            ToastifyNotice(model);
+            AddNewCircle();
+            $.post("@Url.Action("AddMsgToRedisNew", "Chat", new {area = ""})", { model: JSON.stringify(model) }, function (result) { });
+            var ele0 = $("#divUserListRecent li[data-id='" + model.fromuid + "']");
+            if (ele0.length !== 0) {
+                /*如果这个人已经在最近联系人列表中
+                    那么就需要添加未读消息标识 或者新增一个未读消息标识
+                    并且将该用户置顶
+                */
+                var iele = ele0.children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                if (iele.length !== 0) {
+                    if (iele.hasClass("displaynone")) {
+                        iele.removeClass("displaynone");
+                        iele.text("1");
+                    } else {
+                        var c = Number(iele.text());
+                        if (c >= 98) c = 98;
+                        iele.text(c + 1);
+                    }
+                    while (ele0.index() != 1) {
+                        ele0.prev().before(ele0);
+                    }
+                }
+            } else {
+                /*如果不在最近联系人列表中 那么添加一个元素到右侧用户列表中 然后显示出未读信息个数 未读消息个数默认为1*/
+                $.post("@Url.Action("AddToContactString", "Main", new {area = ""})", { touid: model.fromuid }, function (result) {
+                    if (result.r) {
+                        var elestr = "<li class=\"tab-li\" onclick=\"Chat(this)\" data-id=\'" + result.uid + "\' data-connid=\'" + result.connid + "\'><div><a href=\"javascript:void(0);\" class=\"mr10 float-l\"><img src=\"" + result.photo + "\" class=\"head-ssimg\" /><i class=\"after-circle\">1</i></a><div class=\"tab-li-div\"><p>" + result.trueName + "</p><p>" + result.departmentName + "</p><span class=\"tab-status\"></span></div></div></li>";
+                        if ($("#divUserListRecent").length != 0) {
+                            //放在第二位，第一个是群组通知
+                            $("#divUserListRecent").children("li").eq(0).after(elestr);
+                        }
+                    } else {
+                        console.log(result.Message);
+                    }
+                });
+            }
+        }
+
+
+        function VideoChat(fromuid, fromusername, touid, connid, roomid) {
+            LayerOpenVideoChat(fromuid, fromusername, connid, roomid);
+        }
+
+        function LayerOpenVideoChat(fromuid, fromusername, connid, roomid) {
+            /*右下角弹出提示*/
+            parent.layer.open({
+                type: 2,
+                id: "videochatfrom" + fromuid,
+                title: false,
+                shadeClose: false,
+                shade: [0],
+                closeBtn: 0,
+                offset: 'rb',
+                border: [0],
+                area: ['300px', '140px'],
+                content: "/im/Chat/VideoChatRequest?fromuid=" + fromuid + "&fromusername=" + fromusername + "&connid=" + connid + "&roomid=" + roomid,
+                success: function (layero, index) {
+                    var eleParent = parent.$('#' + "videochatfrom" + fromuid).parent();
+                    var eleParentLeft = eleParent.position().left - 50;
+                    var eleParentPrev = eleParent.prev();
+                    eleParentPrev.css("width", "350px");
+                    eleParentPrev.css("top", "66px");
+                    eleParentPrev.css("left", eleParentLeft + "px");
+                    eleParentPrev.css("background-color", "transparent");
+
+                }
+            });
+        }
+
+        function VideoChatRefused(fromuid) {
+            parent.layer.msg("对方拒绝了你的视频邀请");
+            var ele = window.parent.document.getElementById("chatWindow");
+            if (ele != null) {
+                var iframeele = ele.children[0];
+                iframeele.contentWindow.GetVideoChatRefused && iframeele.contentWindow.GetVideoChatRefused(fromuid);
+            }
+        }
+
+
+        function AddUnreadGroupMsgIcon(model) {
+            ToastifyNotice(model);
+            /*用户在线 没有打开相应的对话框 将未读消息写入到缓存中取*/
+            AddNewCircle();
+            var groupid = model.touid;
+            $.post("@Url.Action("AddMsgToRedisNew", "Chat", new {area = ""})", { model: JSON.stringify(model) }, function (result) { });
+            if (groupid.length !== 36) {
+                //如果不是工作群，则需要刷信息该用户的自建群列表
+                var ele0 = $("#ulGroupList li[data-id='" + groupid + "']");
+                if (ele0.length !== 0) {
+                    /*
+                        已经显示在列表中
+                    */
+                    var iele = ele0.children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                    if (iele.length !== 0) {
+                        if (iele.hasClass("displaynone")) {
+                            iele.removeClass("displaynone");
+                            iele.text("1");
+                        } else {
+                            var c = Number(iele.text());
+                            if (c >= 98) c = 98;
+                            iele.text(c + 1);
+                        }
+                        //循环，放到第一位
+                        if (ele0.index() != 0) {
+                            //ele0.prev().before(ele0);
+
+                            $("#ulGroupList li").eq(0).before(ele0);
+                        }
+                    }
+                } else {
+                    /*如果不在最近联系人列表中 那么添加一个元素到列表中 然后显示出未读信息个数 未读消息个数默认为1*/
+                    $.post("@Url.Action("AddToGroupContactString", "Main", new {area = ""})", { gid: groupid }, function (result) {
+                        if (result.r) {
+                            var elestr = "<li class=\"tab-li\" data-id=\"" + groupid + "\"><div><a href=\"javascript:void(0);\" onclick=\"GroupChat(this)\" data-id=\"" + groupid + "\" class=\"mr10 float-l posr\"><img src=\"" + result.photo + "\" class=\"head-ssimg\"> <i class=\"after-circle\">1</i></a> <div class=\"tab-li-div\"><p onclick=\"GroupChatByClickName(this)\">" + result.groupName + "</p> <span onclick=\"showmenu(this)\" class=\"close-btn close-btn01\"><i class=\"iconfont icon-more\"></i></span> <div gid=\"" + groupid + "\" class=\"tip-del\"><span onclick=\"editmenuclick(this)\" class=\"block setting\">编辑群组</span> <span onclick=\"exitmenuclick(this)\" class=\"block exiting\">退出群组</span></div></div></div></li>";
+                            $("#ulGroupList").prepend(elestr);
+                        } else {
+                            console.log(result.Message);
+
+                        }
+                    });
+                }
+            } else {
+                /*工作群，未读信息显示为1 2018年12月21日*/
+                var ele2 = $("#ulWorkChatGroupList li[data-id='" + groupid + "']");
+                if (ele2.length !== 0) {
+                    var eleC = ele2.children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                    if (eleC.length !== 0) {
+                        if (eleC.hasClass("displaynone")) {
+                            eleC.removeClass("displaynone");
+                            eleC.text("1");
+                        } else {
+                            var c = Number(eleC.text());
+                            if (c >= 98) c = 98;
+                            eleC.text(c + 1);
+                        }
+                        //循环，放到第一位
+                        if (ele2.index() != 0) {
+                            //ele2.prev().before(ele2);
+                            $("#ulWorkChatGroupList li").eq(0).before(ele2);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        function removeselfgroup(gid) {
+            $("#ulGroupList li[data-id='" + gid + "']").remove();
+
+        }
+
+        /*更新工作群组列表*/
+        function UpdateWorkGroup(cb) {
+            /*请求工作群数据 使用webapi 返回了logo的数据 默认100条，因为这个接口是分页的
+                需要在头部添加access_token*/
+            $.ajax({
+                type: 'Get',
+                headers: {
+                    'accesstoken': $.cookie("@ConfigHelper.GetConfigString("ssoTokenId")")
+                },
+                url: "@ConfigHelper.GetConfigString("GetMyGroups")",
+                data: { unitID: '@LoginUserService.ssoUserUnitID', userID: '@LoginUserService.ssoUserID', pageSize: 100 },
+                success: function (data) {
+                    if (data.Success) {
+                        if (data.Content.length > 0) {
+                            $("#ulWorkChatGroupList").load("@Url.Action("WorkChatGroup", "Main")", { list: data.Content }, function (result) {
+                                if (cb) cb();
+                                var formData = new FormData();
+                                formData.append('obj', JSON.stringify(data.Content));
+                                $.ajax({
+                                    url: "/im/main/SetWorkGroup",
+                                    data: formData,
+                                    type: 'POST',
+                                    contentType: false,
+                                    processData: false,
+                                    success: function (res) {
+                                    }
+                                });
+                            });
+                        }
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                },
+            });
+        }
+
+        function CloseVideoChatRequestWindow(uid) {
+            var iframeid = "videochatfrom" + uid;
+            var ele = window.parent.document.getElementById(iframeid);
+            if (ele != null) {
+                var iframeele = ele.children[0];
+                iframeele.contentWindow.CloseSelf && iframeele.contentWindow.CloseSelf();
+            }
+        }
+
+        /*打开私聊窗口*/
+        function OpenPrivateChat(uid, title) {
+            if (uid === "@LoginUserService.ssoUserID") return;
+
+            var photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")" + uid;
+
+            LayerOpenChatWindow(uid, title, photo, "", "", false);
+        }
+
+        /*从web的群组页面内打开群组聊天窗口*/
+        function OpenGroupChat(gid, title, photo) {
+            //分别表示 群组id,群组名称，群组头像
+            LayerOpenChatWindow(gid, title, photo, "", "", true);
+        }
+
+        /*从web页面关闭聊天窗口*/
+        function CloseChatWindow() {
+            var chatwindow = $("#chatWindow", parent.document).parent();
+            if (chatwindow.length !== 0) {
+                chatwindow.remove();
+            }
+        }
+
+
+        /*打开用户聊天窗口*/
+        function Chat(element) {
+            var uid = $(element).attr("data-id");
+            var connid = $(element).attr("data-connid");
+            var title = $(element).children("div").eq(0).children().eq(1).children().eq(0).html();
+            var photo = $(element).children("div").eq(0).children().eq(0).children().eq(0).attr("src");
+            ///*将该元素下的未读的小红点去掉*/
+            //var iele = $(element).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+            //if (!iele.hasClass("displaynone")) {
+            //    iele.addClass("displaynone");
+            //}
+            LayerOpenChatWindow(uid, title, photo, connid, "", false);
+        }
+
+        /*打开用户聊天窗口 这个是通过搜索面板的用户头像去打开聊天窗口 和上一个函数Chat是类似的 但是传的参数不一样*/
+        function ChatBySearch(uid, realname) {
+            var connid = "";
+            var title = realname;
+            var photo = "@ConfigHelper.GetConfigString("sso_host_name")" + "pic/" + uid;
+            LayerOpenChatWindow(uid, title, photo, connid, "", false);
+        }
+
+        /*接受视频聊天*/
+        function OpenVideoChat(uid, name, connid, roomid) {
+            //如果有未读消息 则将未读消息的小红点去掉
+            var userelement = $("#divUserListRecent li[data-id='" + uid + "']");
+            var iele = $(userelement).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+            if (!iele.hasClass("displaynone")) {
+                iele.addClass("displaynone");
+            }
+            var title = name;
+            var photo = "@ConfigHelper.GetConfigString("sso_host_name")" + "pic/" + uid;
+            LayerOpenChatWindow(uid, title, photo, connid, roomid, false);
+        }
+
+        function LayerOpenChatWindow(uid, title, photo, connid, roomid, isgroup) {
+            //查询是否有未读消息，如果没有则去掉右上角的红点
+            RemoveNewCircle();
+            //去掉列表中该用户/群组头像上右上角的红色小标按钮
+            RemoveUnreadIcon(uid, isgroup);
+            var ele = window.parent.document.getElementById('chatWindow');
+            if (ele != null) {
+                var iframeele = ele.children[0];
+                iframeele.contentWindow.addChatPerson && iframeele.contentWindow.addChatPerson(uid, title, photo, isgroup, roomid);
+                iframeele.contentWindow.addChatWindow && iframeele.contentWindow.addChatWindow(uid, connid, title, isgroup, roomid);
+                return;
+            }
+            parent.layer.open({
+                id: 'chatWindow',
+                type: 2,
+                title: title,
+                closeBtn: 1,
+                shade: false,
+                area: ['1000px', '710px'],
+                offset: 'auto',
+                skin: 'chatWindow',
+                content: [encodeURI("/im/Chat/Index?touid=" + uid + "&connid=" + connid + "&tousername=" + title + "&roomid=" + roomid + "&isgroup=" + isgroup), 'no'],
+                success: function (layero, index) {
+                    var ele = window.parent.document.getElementById('chatWindow');
+                    var iframeele = ele.children[0];
+                    iframeele.setAttribute("allowtransparency", 'true');
+                    iframeele.setAttribute("allowfullscreen", 'true');
+                    iframeele.setAttribute("allow", 'microphone camera');
+                    iframeele.allow = "microphone;camera;midi;encrypted-media;";
+                    iframeele.contentWindow.addChatPerson && iframeele.contentWindow.addChatPerson(uid, title, photo, isgroup, roomid);
+                    iframeele.contentWindow.addChatWindow && iframeele.contentWindow.addChatWindow(uid, connid, title, isgroup, roomid);
+                    parent.$("#chatWindow").append("<div class=\"chat-disconnect\"><p>当前连接已断开，正在重连...</p></div>")
+                }
+            });
+
+        }
+
+        //去掉该用户头像上右上角的红色小标按钮
+        function RemoveUnreadIcon(uid, isgroup) {
+            if (isgroup) {
+                if (uid.length == 36) {
+                    var ele0 = $("#ulWorkChatGroupList li[data-id='" + uid + "']");
+                    if (ele0) {
+                        var iele0 = $(ele0).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                        if (!iele0.hasClass("displaynone")) {
+                            iele0.addClass("displaynone");
+                        }
+                    }
+                } else {
+                    var ele1 = $("#ulGroupList li[data-id='" + uid + "']");
+                    if (ele1) {
+                        var iele1 = $(ele1).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                        if (!iele1.hasClass("displaynone")) {
+                            iele1.addClass("displaynone");
+                        }
+                    }
+                }
+            }
+            else {
+                var ele0 = $("#divUserListRecent li[data-id='" + uid + "']");
+                var ele1 = $("#divUserListTop li[data-id='" + uid + "']");
+                if (ele0) {
+                    var iele0 = $(ele0).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                    if (!iele0.hasClass("displaynone")) {
+                        iele0.addClass("displaynone");
+                    }
+                }
+
+                if (ele1) {
+                    var iele1 = $(ele1).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+                    if (!iele1.hasClass("displaynone")) {
+                        iele1.addClass("displaynone");
+                    }
+                }
+            }
+        }
+
+        /*打开群组聊天窗口*/
+        function GroupChat(element) {
+            var gid = $(element).attr("data-id");
+            var title = $(element).parent().children("div").eq(0).children().eq(0).html();
+            var photo = $(element).children("img").attr('src');
+            LayerOpenChatWindow(gid, title, photo, "", "", true);
+            var iele = $(element).children("i").eq(0);
+            if (!iele.hasClass("displaynone")) {
+                iele.addClass("displaynone");
+            }
+        }
+
+        /*打开群组聊天窗口 通过点击群组名称*/
+        function GroupChatByClickName(element) {
+            var gid = $(element).parent().parent().parent().attr("data-id");
+            var title = $(element).attr("title");
+            var photo = $(element).parent().prev().children("img").attr('src');
+            LayerOpenChatWindow(gid, title, photo, "", "", true);
+            var iele = $(element).parent().parent().children("a").eq(0).children("i").eq(0);
+            if (!iele.hasClass("displaynone")) {
+                iele.addClass("displaynone");
+            }
+        }
+
+        /*打开群组聊天窗口 这个是通过搜索面板的用户头像去打开聊天窗口 和上一个函数Chat是类似的 但是传的参数不一样*/
+        function GroupChatBySearch(element) {
+            var gid = $(element).attr("data-id");
+            var title = $(element).attr("data-groupname");;
+            var photo = $(element).children("div").eq(0).children("a").eq(0).children("img").attr('src');
+            LayerOpenChatWindow(gid, title, photo, "", "", true);
+            var iele = $(element).children("div").eq(0).children("a").eq(0).children("i").eq(0);
+            if (!iele.hasClass("displaynone")) {
+                iele.addClass("displaynone");
+            }
+        }
+
+        /*初始化用户列表*/
+        function InitUserList() {
+            var load = layer.load();
+            $("#friendDiv").load("@Url.Action("InitUserList", "Main", new {area = ""})", {}, function (result) {
+                layer.close(load);
+                //更新用户在线状态
+                //UpdateOnlineStatus();
+            });
+        }
+
+        /*获取所有在线成员 修改成员在线状态*/
+        function UpdateOnlineStatus() {
+            var eles = $("#friendDiv li");
+            if (eles && eles.length > 1) {
+                $.each(eles, function (index, value) {
+                    if (index != 0) {
+                        $.post("@Url.Action("CheckUserOnline", "Main", new {area = ""})", {uid:value.attr("data-id")}, function (result) {
+                            if (result != null && result.result) {
+                                for (var i = 0; i < result.onlineList.length; i++) {
+                                    SetUserOnlie(value.attr("data-id"), "");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+
+            $.post("@Url.Action("GetOnlineUserList", "Main", new {area = ""})", {}, function (result) {
+                if (result != null && result.onlineList != null && result.onlineList.length > 0) {
+                    for (var i = 0; i < result.onlineList.length; i++) {
+                        var ival = result.onlineList[i];
+                        var iuid = ival.uid;
+                        var iconnid = ival.ConnectionId;
+                        SetUserOnlie(iuid, iconnid);
+                    }
+                }
+            });
+        }
+        function InitGroupList() {
+            var load = layer.load();
+            
+            UpdateWorkGroup(function () {
+                layer.close(load);
+            });
+            @*$("#groupDiv").load("@Url.Action("InitGroupList", "Main", new {area = ""})", {}, function (result) {
+                
+                /*请求工作群数据*/
+                UpdateWorkGroup();
+            });*@
+        }
+
+        /*根据关键字查找用户*/
+        function SearchUser(keywords) {
+		if (keywords == "") { return;}
+            var load = layer.load();
+            $("#friendDiv").load("@Url.Action("SearchUserNewPinYin", "Main", new {area = ""})", { keyword: keywords }, function (result) {
+                layer.close(load);
+            });
+        }
+
+        /*根据关键字查找群组*/
+        function SearchGroup(keywords) {
+		if (keywords == "") { return;}
+            var load = layer.load();
+            $("#groupDiv").load("@Url.Action("SearchGroup", "Main", new {area = ""})", { keyword: keywords }, function (result) {
+                layer.close(load);
+            });
+        }
+
+        /*搜索用户*/
+        function SearchUserEvent(e) {
+            var val = $('#searchUserInput').val();
+            val = $.trim(val);
+            if (val === "") {
+                return;
+            }
+            if (e.keyCode === 8) {
+                if (val === "" || val.length === 1) {
+                    //初始化用户列表
+                    InitUserList();
+                    $("#iconFriendSearch").removeClass("icon-delte").addClass("icon-searchBtn");
+                }
+            }
+            if (e.keyCode === 13) {
+                if (val.length > 10) {
+                    $('#searchUserInput').val(val.substring(0, 10));
+                    layer.msg("搜索关键字最长为10个字符");
+                    return;
+                }
+                //变换为叉号图标
+                $("#iconFriendSearch").removeClass("icon-searchBtn").addClass("icon-delte");
+                SearchUser(val);
+            }
+        }
+
+        /*搜索群组*/
+        function SearchGroupEvent(e) {
+            var val = $('#searchGroupInput').val();
+            val = $.trim(val);
+            if (val === "") {
+                return;
+            }
+            if (e.keyCode === 8) {
+                if (val === "" || val.length === 1) {
+                    InitGroupList();
+                    $("#iconGroupSearch").removeClass("icon-delte").addClass("icon-searchBtn");
+                }
+            }
+            if (e.keyCode === 13) {
+                if (val.length > 10) {
+                    $('#searchGroupInput').val(val.substring(0, 10));
+                    layer.msg("搜索关键字最长为10个字符");
+                    return;
+                }
+                //变换为叉号图标
+                $("#iconGroupSearch").removeClass("icon-searchBtn").addClass("icon-delte");
+                SearchGroup(val);
+            }
+        }
+
+        /*添加到常用联系人*/
+        function AddToContact(touid) {
+            var load = layer.load();
+            $.post("@Url.Action("AddToContact", "Main", new {area = ""})", { touid: touid }, function (result) {
+                layer.close(load);
+                if (result.r == true) {
+                    layer.msg("添加成功");
+                    var val = $('#searchUserInput').val();
+                    SearchUser(val);
+                } else {
+                    layer.msg(result.m);
+                }
+            });
+        }
+
+        /*创建群组*/
+        function CreatChatGroup() {
+            parent.$('.el-icon-plus').click();
+
+            @*parent.layer.open({
+                type: 2,
+                id: "groupeditlayer",
+                title: '新建群聊',
+                skin: 'okcsclass createChatGroup',
+                shade: 0.3,
+                shadeClose: true,
+                border: [0],
+                //skin: 'createGroup',
+                area: ['750px', '600px'],
+                content: "@Url.Action("CreateChatGroup", "Main", new {area = ""})"
+            });*@
+        }
+
+        /*编辑群组*/
+        function EditChatGroup(ele) {
+            var gid = ele.parent().attr("gid");
+            var load = parent.layer.load();
+            $.post("@Url.Action("EditChatGroupPre", "Main", new {area = ""})", { gid: gid }, function (result) {
+                if (result.result) {
+                    parent.layer.close(load);
+                    parent.layer.open({
+                        type: 2,
+                        id: "groupeditlayer",
+                        title: '编辑群组',
+                        skin: 'okcsclass createChatGroup',
+                        shade: 0.3,
+                        shadeClose: true,
+                        border: [0],
+                        //skin: 'createGroup',
+                        area: ['750px', '600px'],
+                        content: result.url
+                    });
+                } else {
+                    parent.layer.msg("操作失败," + result.msg, { time: 2000 });
+                    parent.layer.close(load);
+                }
+            });
+        }
+
+        /*退出群组*/
+        function ExitChatGroup(ele) {
+            var gid = ele.parent().attr("gid");
+            var elefather = ele.parent().parent().parent().parent();
+            parent.layer.confirm("确定退出该群组?", {
+                title: '退出群组',
+                btn: ['确定', '取消'],
+                skin: 'okcsclass dialog-s'
+            }, function () {
+                var load = parent.layer.load();
+                $.post("@Url.Action("ExitChatGroup", "Main", new {area = ""})", { gid: gid }, function (result) {
+                    if (result.r) {
+                        parent.layer.msg("退出群组成功", { time: 2000 });
+                        parent.layer.close(load);
+                        //从控件列表上移除该元素
+                        elefather.remove();
+                    } else {
+                        parent.layer.msg("退出群组失败" + result.msg, { time: 2000 });
+                        parent.layer.close(load);
+                    }
+                });
+            });
+        }
+
+        /*解散群组*/
+        function dissolutiongroup(ele) {
+            $(ele).parent().slideToggle(200);
+            var gid = $(ele).parent().attr("gid");
+            var elefather = $(ele).parent().parent().parent().parent();
+            parent.layer.confirm("确定解散该群组?", {
+                title: '解散群组',
+                btn: ['确定', '取消'],
+                skin: 'okcsclass dialog-s'
+            }, function () {
+                var load = parent.layer.load();
+                $.post("@Url.Action("GiveupChatGroup", "Main", new {area = ""})", { gid: gid }, function (result) {
+                    if (result.r) {
+                        parent.layer.msg("解散群组成功", { time: 2000 });
+                        parent.layer.close(load);
+                        //从控件列表上移除该元素
+                        elefather.remove();
+                    } else {
+                        parent.layer.msg("解散群组失败," + result.msg, { time: 2000 });
+                        parent.layer.close(load);
+                    }
+                });
+            });
+        }
+
+
+        function editmenuclick(ele) {
+            $(ele).parent().slideToggle(200);
+            EditChatGroup($(ele));
+        }
+
+        function exitmenuclick(ele) {
+            $(ele).parent().slideToggle(200);
+            ExitChatGroup($(ele));
+        }
+
+        function AfterCreateOrEditGroup() {
+            $("#ulGroupList").load("@Url.Action("SelfChatGroup", "Main", new {area = ""})", {}, function (result) { });
+        }
+
+        /*请求最新的一条群通知，若为空，则暂时显示暂无相关通知*/
+        window.GetGroupMsg = function () {
+            //第一个请求，请求需要我去批准的群通知
+            //第二个请求，请求我申请入群的结果
+            var kCount = 0;
+            $.ajax({
+                type: "Get",
+                url: "@ConfigHelper.GetConfigString("GroupMsg02")",
+                headers: {
+                    'accesstoken': $.cookie("@ConfigHelper.GetConfigString("ssoTokenId")")
+                },
+                data: { userId: "@LoginUserService.ssoUserID" },
+                dataType: "json",
+                success: function (result) {
+                    if (result.Success) {
+                        var k = { Msg: "" };
+                        $.each(result.Content, function (n, value) {
+                            if (value.Status === 0) {
+                                if (k.Msg === "") {
+                                    k.Msg = value.ApplyUser.RealName + "申请加入" + value.GroupName;
+                                }
+                                kCount++;
+                            }
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "/im/Main/GetGroupApplyResult",
+                            data: { uid: "@LoginUserService.ssoUserID" },
+                            dataType: "json",
+                            success: function (result) {
+                                if (result.Success) {
+                                    if (result.Content != null && result.Content.length > 0) {
+                                        kCount += result.Content.length;
+                                        var tempValue = result.Content[0];
+                                        k.Msg = tempValue.TrueName + tempValue.ApplyResult + tempValue.GroupName;
+                                    }
+                                    if (kCount !== 0) {
+                                        $("#groupIcon").removeClass("displaynone").html(kCount);
+                                        $("#groupMsg").html(k.Msg);
+                                    } else {
+                                        $("#groupIcon").addClass("displaynone");
+                                    }
+                                } else {
+                                    layer.msg('请求群通知失败！');
+                                    console.log(result.Message);
+                                }
+                            }
+                        });
+                    } else {
+                        layer.msg('请求群通知失败！');
+                        console.log(result.Message);
+                    }
+                }
+            });
+        }
+    </script>
+}
+

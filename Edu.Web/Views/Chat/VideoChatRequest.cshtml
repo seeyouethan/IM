@@ -1,0 +1,33 @@
+﻿<link href="~/Content/Web/css/videochat.css" rel="stylesheet" />
+<div class="layui-card">
+    <div class="layui-card-header">视频通话邀请</div>
+    <div class="layui-card-body">
+        收到了来自 <span title="@ViewBag.fromusername">@ViewBag.fromusername</span> 的视频通话邀请
+    </div>
+</div>
+
+<div class="layui-layer-btn layui-layer-btn-c">
+    <a class="layui-layer-btn0" href="javascript:void(0)" onclick="AcceptVideoChat('@ViewBag.fromuid','@ViewBag.fromusername','@ViewBag.connid','@ViewBag.roomid')">接受</a>
+    <a class="layui-layer-btn1" href="javascript:void(0)" onclick="RefuseVideoChat('@LoginUserService.ssoUserID','@ViewBag.fromuid')">拒绝</a>
+</div>
+<script type="text/javascript">
+    var index = parent.layer.getFrameIndex(window.name);
+    var ele = window.parent.document.getElementById("okcsim");
+    var iframeele = ele.children[0];
+    /*同意*/
+    function AcceptVideoChat(fromuid, fromusername, connid,roomid) {
+        /*打开视频聊天对话框 并显示视频聊天界面*/
+        iframeele.contentWindow.OpenVideoChat(fromuid, fromusername, connid, roomid);
+        parent.layer.close(index);
+    }
+    /*拒绝*/
+    function RefuseVideoChat(fromuid, touid) {
+        /*返回拒绝信息*/
+        iframeele.contentWindow.RefuseVideoChat(fromuid, touid);
+        parent.layer.close(index);
+    }
+
+    function CloseSelf() {
+        parent.layer.close(index);
+    }
+</script>

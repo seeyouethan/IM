@@ -1,0 +1,229 @@
+﻿@*添加工作日志*@
+<script src="~/Content/Web/fonts/iconfont.js"></script>
+<div id="app" v-loading="loading" element-loading-text="拼命加载中" style="margin-top: 10px;">
+    <el-scrollbar class="group-dialog h500 margin10">
+        <div>
+            <el-form label-width="100px" @@submit.native.prevent v-bind:model="formData" v-bind:rules="rules" ref="form" class="paddingright10 paddingleft20" :label-position="labelPostition">
+                <el-form-item label="任务名称：">
+                    <span v-html="formData.Title"></span>
+                </el-form-item>
+                <el-form-item label="完成进度：">
+                    <div class="block">
+                        <el-slider v-model="formData.Completing"
+                                   show-input>
+                        </el-slider>
+                    </div>
+                </el-form-item>
+                @*formData.Content 用这个字段做工作日志内容，原来用的是logContetnt这个字段，但是在渲染后，就不可编辑了*@
+                <el-form-item label="工作日志：" prop="Content">
+                    <el-input type="textarea" v-model.trim="formData.Content" placeholder="请输入工作日志，长度在5到500个字符"></el-input>
+                </el-form-item>
+                <el-form-item label="工作成果：">
+                    <el-popover placement="top-start"
+                                title="文件上传:"
+                                width="200"
+                                trigger="hover"
+                                content="文件上传支持大小在50MB以内的pdf、ppt、doc、docx、jpg、jpeg、png、tif、bmp、gif、pptx、caj、nh、kdh、tab、xls、xlsx格式文件">
+                        <span slot="reference" class="tip-sm">
+                            <svg aria-hidden="true" class="icon">
+                                <use xlink:href="#icon-bangzhu"></use>
+                            </svg>
+                        </span>
+                    </el-popover>
+                    <el-upload class="upload-demo" ref="upload"
+                               action="/PMC/File/Upload"
+                               multiple
+                               :limit="5"
+                               :on-success="uploadSuccess"
+                               :on-remove="handleRemove"
+                               :on-change="handleChange"
+                               :auto-upload="false"
+                               :file-list="fileList">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">可上传多个文件（5个文件以内）</div>
+                    </el-upload>
+
+                </el-form-item>
+                <el-form-item class="amid">
+                    <el-button type="primary" @@click="submitForm()">确 定</el-button>
+                    <el-button @@click="closeForm()">取 消</el-button>
+                </el-form-item>
+            </el-form>              
+        </div>
+    </el-scrollbar>
+</div>
+<script>
+    var index = parent.layer.getFrameIndex(window.name);
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                labelPostition: 'left',
+                loading: true,
+                formData: {
+                },
+                fileids: "",
+                fileList: [],
+                rules: {
+                    Content: [
+                        { required: true, message: '请输入工作日志', trigger: 'blur' },
+                        { min: 5, max: 500, message: '工作日志长度在 5 到 500 个字符', trigger: 'blur' }
+                    ],
+                }
+            };
+        },
+        created: function () {
+            this.getInfo();
+        },
+        methods: {
+            handleRemove: function (file, fileList) {
+                this.fileList = fileList;
+            },
+
+            handleChange: function (file, fileList) {
+                file = file.raw;
+                var ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+                var isType = (ext === '.pdf' || ext === '.ppt' || ext === '.doc' || ext === '.docx' || ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.tif' || ext === '.bmp' || ext === '.gif' || ext === '.pptx' || ext === '.caj' || ext === '.nh' || ext === '.kdh' || ext === '.tab' || ext === '.xls' || ext === '.xlsx');
+                
+                var isLt2M = file.size / 1024 / 1024 < 50;
+                if (file.size === 0) {
+                    this.$message.error('上传文件大小不能为0KB!');
+                    fileList.splice(fileList.length - 1, 1);
+                    this.$refs.upload.fileList = fileList;
+                }
+                if (!isType) {
+                    this.$message.error('上传文件只能是pdf、ppt、doc、docx、jpg、jpeg、png、tif、bmp、gif、pptx、caj、nh、kdh、tab、xls、xlsx格式!');
+
+                    fileList.splice(fileList.length - 1, 1);
+                    this.$refs.upload.fileList = fileList;
+                    //this.$refs.upload.clearFiles();
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传文件大小不能超过 50MB!');
+                    fileList.splice(fileList.length - 1, 1);
+                    this.$refs.upload.fileList = fileList;
+                }
+                this.fileList = fileList.slice(0);
+                return isType && isLt2M && (file.size !== 0);
+            },
+            uploadSuccess: function (response, file, fileList) {
+                var self = this;
+                var uploadAll = true;//是否已经上传完所有文件
+                $.ajaxSettings.async = false;
+                //存储到数据库 存储name和url
+                $.post("/JobAssignment/Home/CreateWorkLogFile", { filename: file.name, fileurl: file.url, newfilename: response.Data.FileCode  }, function (result) {
+                    if (result.r) {
+                        self.fileids += result.fileid + ";";
+                        //选择文件后先不上传文件，点击确定的时候才开始上传
+                        //如果是最后一个文件上传完毕了，那么就提交表单
+                        /*
+                            通过遍历fileList中文件的status为 "success"  ，全部为"success" 才表示文件全部上传成功，它这个不是按照fileList中从0到最后的顺序上传的，所以要检查所有文件的status
+                        */
+                        $.each(fileList, function (n, value) {
+                            if (value.status !== "success") {
+                                uploadAll = false;
+                            }
+                        });
+                        if (uploadAll) {
+                            self.submitFormData();
+                        }
+                    } else {
+                        self.$message.error('文件上传失败，请删除后重新上传' + result.m);
+                    }
+                });
+            },
+            handleExceed: function (files, fileList) {
+                this.$message.warning('最多可上传5个文件');
+            },
+            getInfo: function () {
+                var self = this;
+                $.post("/JobAssignment/Home/GetWorkDetail", { uid: '@ViewBag.uid' }, function (result) {
+                    if (result.r) {
+                        self.formData = result.data;
+                        self.formData.Content = '';
+                        self.loading = false;
+                    } else {
+                        self.$message.error('请求失败，未查询到数据');
+                        setTimeout(function () {
+                            parent.layer.close(index);
+                        }, 700);
+                    }
+                });
+            },
+            //点击确定按钮，开始上传文件，文件上传完之后，才提交表单数据，生成一条日志文件
+            submitForm: function () {
+                var self = this;
+                if (this.loading) return;
+                if (this.fileList.length === 0) {
+                    this.submitFormData();
+                } else {
+                    this.$refs.form.validate(function(valid) {
+                        if (valid) {
+                            self.$refs.upload.submit();
+                        }
+                    });
+                }
+            },
+            submitFormData: function () {
+                var self = this;
+                if (self.loading) return;
+                this.$refs.form.validate(function (valid) {
+                    if (valid) {
+                        self.loading = true;
+                        $.ajax({
+                            type: 'POST',
+                            url: '/JobAssignment/Home/CreateWorkLogData',
+                            data: { uid: self.formData.Guid, completing: self.formData.Completing, logContent: self.formData.Content, files: self.fileids },
+                            success: function (result) {
+                                if (result.r) {
+                                    self.$message({
+                                        message: '任务日志创建成功',
+                                        type: 'success'
+                                    });
+                                    self.loading = false;
+                                    //刷新index页面
+                                    /*
+                                        1.更新左侧列表中的对应任务的完成度百分比
+                                        2.更新右侧滑动模块：
+                                            2.1 MyWork页面中的滑动模块工作日志数据、明细内容中的百分比
+                                            2.2 PMC页面中的滑动模块工作日志数据、明细内容中的百分比
+                                    */
+                                    var ele = window.parent.document.getElementById("todolistiframe");
+                                    if (ele != null) {
+                                        //1.回调
+                                        ele.contentWindow.UpdatePlanList && ele.contentWindow.UpdatePlanList('@ViewBag.uid', self.formData.Completing);
+                                        //2.1回调 MyWork页
+                                        ele.contentWindow.getPlanLogs && ele.contentWindow.getPlanLogs();
+                                    }
+                                    //2.2回调函数 调用PMC全页面的更新任务日志方法
+                                    window.parent.getNewTodoList && window.parent.getNewTodoList();
+
+                                    //调用首页方法，添加一条动态通知
+                                    window.parent.addGroupMessage && window.parent.addGroupMessage("edit", self.formData.Title, self.formData.Completing,'@ViewBag.uid');
+
+                                    //ele.contentWindow.searchwork();
+                                    setTimeout(function() {
+                                        parent.layer.close(index);
+                                    }, 700);
+                                } else {
+                                    self.$message.error('请求失败');
+                                    console.log(result.m);
+                                    self.loading = false;
+                                }
+                            },
+                            dataType: 'json'
+                        });
+                        self.loading = false;
+                    } else {
+                        console.log('error submit!!');
+                        self.loading = false;
+                        return false;
+                    }
+                });
+            },
+            closeForm: function() {
+                parent.layer.close(index);
+            },
+        }
+    });
+</script>

@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "EduIMChat";
+}
+<h1>您好:@(Edu.Service.LoginUserService.userName)</h1>
+<script src="~/Tookit/Push/push.js"></script>
+<script type="text/javascript">
+    $(function() {
+        //iframe层
+
+            layer.open({
+              type: 2,
+              title: 'WebRtc页',
+              shadeClose: true,
+              shade: 0.8,
+              area: ['680px', '90%'],
+              content: '/im/Home/WebRtcB' //iframe的url
+            });
+    });
+</script>

@@ -1,0 +1,45 @@
+﻿<#+
+    public class OpTemplate:CSharpTemplate
+    {
+        private string _name;
+         private List<string> _list;
+        public OpTemplate(string tname,List<string>tlist)
+        {
+            _name = tname;
+			_list=tlist;
+        }
+
+        /// <summary>
+        /// 获取 生成的文件名，根据模型名定义
+        /// </summary>
+        public string FileName
+        {
+            get
+            { 
+                return "_Op.cshtml";
+            }
+        }
+        public override string TransformText()
+        {
+#>
+@model <#=_name#>
+@using (Html.BeginForm("Mody", "<#=_name#>", FormMethod.Post, new { @id = "fm", @class = "form-horizontal", role = "form" }))
+{
+    @Html.HiddenFor(p => p.ID)
+	<#+ foreach (var item in _list){ #>
+     <div class="form-group">
+	     <label class="control-label col-md-3" for="<#=item#>"><#=item#></label>
+        <div class="col-sm-8">
+            @Html.TextBoxFor(p => p.<#=item#>, new { @class = "form-control", placeholder ="<#=item#>" })
+        </div>
+    </div>	
+	<#+} #>
+   
+}
+
+
+ <#+
+            return this.GenerationEnvironment.ToString();
+        }
+    }
+#>

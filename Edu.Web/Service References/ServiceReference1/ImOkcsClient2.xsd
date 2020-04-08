@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.ViewModel" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.ViewModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://192.168.105.26/OKCSWcf/ImOkcsClient.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.Model" />
+  <xs:complexType name="ArrayOfGroupView">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GroupView" nillable="true" type="tns:GroupView" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfGroupView" nillable="true" type="tns:ArrayOfGroupView" />
+  <xs:complexType name="GroupView">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.Model" base="q1:Group">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CanExit" type="xs:boolean" />
+          <xs:element minOccurs="0" name="CanManage" type="xs:boolean" />
+          <xs:element minOccurs="0" name="CreationCount" type="xs:int" />
+          <xs:element minOccurs="0" name="DiscussCount" type="xs:int" />
+          <xs:element minOccurs="0" name="DocumentCount" type="xs:int" />
+          <xs:element minOccurs="0" name="Leader" nillable="true" type="q1:UserInfo" />
+          <xs:element minOccurs="0" name="Members" nillable="true" type="tns:ArrayOfUserView" />
+          <xs:element minOccurs="0" name="MembersCount" type="xs:int" />
+          <xs:element minOccurs="0" name="ProjectCount" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GroupView" nillable="true" type="tns:GroupView" />
+  <xs:complexType name="ArrayOfUserView">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="UserView" nillable="true" type="tns:UserView" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfUserView" nillable="true" type="tns:ArrayOfUserView" />
+  <xs:complexType name="UserView">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/OKCS.PMC.Model.Model" base="q2:UserInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CanManageBackground" type="xs:boolean" />
+          <xs:element minOccurs="0" name="ImageUrl" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="LogOutUrl" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="UserView" nillable="true" type="tns:UserView" />
+</xs:schema>

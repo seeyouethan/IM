@@ -1,0 +1,312 @@
+﻿@using Edu.Tools
+@*群组申请业务消息通知*@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/iconfont.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/style.css" rel="stylesheet" />
+    <link href="~/Content/Web/css/main.css" rel="stylesheet" />
+    <script src="~/Scripts/data.js"></script>
+</head>
+<body>
+    <div id="app" v-loading="loading" element-loading-text="拼命加载中">
+        <div class="notify-con">
+            <el-scrollbar>
+                <div class="notify-panel">
+                    <!-- 待处理消息 -->
+                    <div class="notifyp-top">
+                        <ul>
+                            <li v-for="item in aData">
+                                <p style="padding: 10px;">{{item.PostDate}}</p>
+                                <div v-for="data in item.List" class="notifypt-item">
+                                    <a href="javascript:;" class="notifypti-l float-l">
+                                        <img v-bind:src="data.Photo" class="head-mimg" />
+                                    </a>
+                                    <div class="notifypti-r clearfix">
+                                        <div class="float-l">
+                                            <p>
+                                                <a href="javascript:;" class="link-blue mr20 nopointer">{{data.RealName}}</a>申请加入群<a href="javascript:;" class="link-blue ml20 nopointer group-name">{{data.GroupName}}</a>
+                                            </p>
+                                            <p class="color-9 mt10" v-bind:title="data.Reason">{{data.Reason}}</p>
+                                        </div>
+                                        <div class="float-r">
+                                            <el-button class="btns btns-b" @@click="HandleGroupMessage(data.MessageID,data.UserID,data.GroupName,1)">同意</el-button>
+                                            <el-button class="btns btns-g" @@click="HandleGroupMessage(data.MessageID,data.UserID,data.GroupName,-1)">拒绝</el-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-show="aData.length==0">
+                                <p class="groupmsg-nodata-tip">暂无处理消息</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="line-txt"><span>以上为待处理信息</span></p>
+                    <!-- 已处理消息 -->
+                    <div class="notifyp-bot mt25">
+                        <ul>
+                            <!-- 已拒绝 -->
+                            <li v-for="item in bData" class="notifypt-item">
+                                <a href="javascript:;" class="notifypti-l float-l">
+                                    <img v-bind:src="item.Photo" class="head-mimg" />
+                                </a>
+                                <div class="notifypti-r clearfix">
+                                    <div class="float-l">
+                                        <p>
+                                            <a href="javascript:;" class="link-blue mr20 nopointer">{{item.RealName}}</a>
+                                            <span v-bind:class="{'color-d7' : item.StatusText==='被拒绝加入群', 'color-28': item.StatusText==='已成功加入群'}">{{item.StatusText}}</span>
+                                            <a href="javascript:;" class="link-blue ml20 nopointer group-name">{{item.GroupName}}</a>
+                                        </p>
+                                        <p class="color-9 mt10" v-bind:title="item.Reason">{{item.Reason}}</p>
+                                    </div>
+                                    <div class="float-r">
+                                        <span v-bind:class="{ 'color-d7': item.StatusResult==='已拒绝', 'color-28': item.StatusResult==='已同意'}" class="mr20">{{item.StatusResult}}</span>
+                                        <span class="color-9">{{item.PostDate}}</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </el-scrollbar>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-1.8.0.min.js"></script>
+    <script src="~/Content/Web/js/vue.js"></script>
+    <script src="~/Content/Web/js/index.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript">
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+            loading: true,
+            Message02: [],
+            Message03: [],
+            kData: { PostDate: new Array(), List: new Array() },
+            sData:{ PostDate:"",List: new Array()},//每一条数据
+            aData: new Array(),//待处理消息
+            bData:new Array(),//已处理消息
+        }
+      },
+      created () {
+          this.GetMessage02();
+      },
+      methods: {
+          ///public IHttpActionResult UpdateStatus(string id, int status)
+          ///public IHttpActionResult GetUserGroupApply(string userId)
+          ///public IHttpActionResult GetUserApplyResult(string userId)
+          //获取需要我去处理的消息
+          GetMessage02: function () {
+              var self = this;
+              //清空数据
+              self.kData.PostDate = new Array();
+              self.kData.List = new Array();
+              self.aData = new Array();
+              self.bData = new Array();
+              $.ajax({
+                  type: "Get",
+                  url: "@ConfigHelper.GetConfigString("GroupMsg02")",
+                  headers: {
+                      'accesstoken': $.cookie("@ConfigHelper.GetConfigString("ssoTokenId")")
+                  },
+                  data: {userId:"@LoginUserService.ssoUserID"},
+                  dataType: "json",
+                  success: function (result) {
+                      self.Message02 = result.Content;
+                      if (result.Success) {
+                          $.each(result.Content, function (n, value) {
+                              if (value.Status === 0) {
+                                  var k = { PostDate: "", RealName: "", GroupName: "", Reason: "", UserID: "", Photo: "",MessageID:"" };
+                                  var tempkList = new Array();
+                                  var hasin = $.inArray(value.PostTime.substring(0, 10), self.kData.PostDate);
+                                  if (hasin === -1) {
+                                      self.kData.PostDate.push(value.PostTime.substring(0, 10));
+                                      k.PostDate = value.PostTime.substring(0, 10);
+                                      k.RealName = value.ApplyUser.RealName;
+                                      k.GroupName = value.GroupName;
+                                      k.Reason = value.Reason;
+                                      k.UserID = value.UserID;
+                                      k.Photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")" + value.UserID;
+                                      k.MessageID = value.ID;
+                                      tempkList.push(k);
+                                      self.kData.List.push(tempkList);
+                                  } else {
+                                      k.PostDate = value.PostTime.substring(0, 10);
+                                      k.RealName = value.ApplyUser.RealName;
+                                      k.GroupName = value.GroupName;
+                                      k.Reason = value.Reason;
+                                      k.UserID = value.UserID;
+                                      k.Photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")" + value.UserID;
+                                      k.MessageID = value.ID;
+                                      self.kData.List[hasin].push(k);
+                                  }
+                              }
+                          });
+                          var todayDate = timeFormat(new Date());
+                          $.each(self.kData.PostDate, function (n, value) {
+                              self.sData.PostDate = timeFormat(new Date(value));
+                              if (todayDate === self.sData.PostDate) {
+                                  self.sData.PostDate = "今天";
+                              }
+                              self.sData.List = self.kData.List[n];
+                              var tempArray = jQuery.extend(true, {}, self.sData);
+                              self.aData.push(tempArray);
+                          });
+                          //已经处理的消息
+                          self.GetMessage03();
+                      } else {
+                          self.$message.error('请求失败！');
+                          console.log(result.Message);
+                      }
+                  }
+              });
+          },
+          //获取我已经处理过的消息
+          GetMessage03: function () {
+              var self = this;
+              $.ajax({
+                  type: "Get",
+                  url: "@ConfigHelper.GetConfigString("GroupMsg03")",
+                  headers: {
+                      'accesstoken': $.cookie("@ConfigHelper.GetConfigString("ssoTokenId")")
+                  },
+                  data: {userId:"@LoginUserService.ssoUserID"},
+                  dataType: "json",
+                  success: function (result) {
+                  if (result.Success) {
+                      self.Message03 = result.Content;
+                      $.each(result.Content, function (n, value) {
+                          var k = { PostDate: "", RealName: "", GroupName: "", Reason: "", UserID: "", Photo: "", MessageID: "" ,StatusText:"",StatusResult:""};
+                          k.PostDate = value.PostTime;
+                          k.RealName = value.ApplyUser.RealName;
+                          k.GroupName = value.GroupName;
+                          k.Reason = value.Reason;
+                          k.UserID = value.UserID;
+                          k.Photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")" + value.UserID;
+                          k.MessageID = value.ID;
+                          if (value.Status === 1) {
+                              k.StatusText = "已成功加入群";
+                          } else if (value.Status === -1) {
+                              k.StatusText = "被拒绝加入群";
+                          }
+                          self.bData.push(k);
+                      });
+                      $.each(self.Message02, function (n, value) {
+                          if (value.Status !== 0) {
+                              var k = { PostDate: "", RealName: "", GroupName: "", Reason: "", UserID: "", Photo: "", MessageID: "", StatusText: "" };
+                              k.PostDate = value.PostTime;
+                              k.RealName = value.ApplyUser.RealName;
+                              k.GroupName = value.GroupName;
+                              k.Reason = value.Reason;
+                              k.UserID = value.UserID;
+                              k.Photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/")" + value.UserID;
+                              k.MessageID = value.ID;
+                              if (value.Status === -1) {
+                                  k.StatusText = "申请加入群";
+                                  k.StatusResult = "已拒绝";
+                              } else if (value.Status === 1) {
+                                  k.StatusText = "申请加入群";
+                                  k.StatusResult = "已同意";
+                              }
+                              self.bData.push(k);
+                          }
+                      });
+
+
+
+                      //console.log(self.bData);
+                      //排序
+                      self.dateOrder(self.bData, 0);
+                      //console.log(self.bData);
+                      //修改成为年月日字符串
+                      $.each(self.bData, function (n, value) {
+                          value.PostDate = timeFormat(new Date(value.PostDate));
+                      });
+                      //console.log(self.bData);
+                      self.loading = false;
+                  } else {
+                      self.loading = false;
+                      self.$message.error('请求失败！');
+                      console.log(result.Message);
+                  }
+                }
+            });
+          },
+          //处理群组申请消息，id表示消息的id,status表示1已通过，-1已拒绝
+          HandleGroupMessage: function (id,uid,groupname, status) {
+              var self = this;
+              self.loading = true;
+              $.ajax({
+                  type: "Get",
+                  url: "@ConfigHelper.GetConfigString("GroupMsg01")",
+                  headers: {
+                      'accesstoken': $.cookie("@ConfigHelper.GetConfigString("ssoTokenId")")
+                  },
+                  data: { id: id, status: status },
+                  dataType: "json",
+                  success: function (result) {
+                      if (result.Success) {
+                          //刷新列表
+                          self.GetMessage02();
+                          //处理的结果暂存到Redis中，用来通知申请人
+                          self.SaveGroupApplyResult(uid, groupname,status);
+                      } else {
+                          self.$message.error('请求失败！');
+                          console.log(result.Message);
+                      }
+                    self.loading = false;
+                  }
+              });
+          },
+          SaveGroupApplyResult: function (uid, groupname, status) {
+              var self = this;
+                self.loading = true;
+              $.ajax({
+                  type: "POST",
+                  url: "/im/Main/SaveGroupApplyResult",
+                  data: { uid: uid, groupname: groupname, status: status },
+                  dataType: "json",
+                  success: function (result) {
+                      if (result.Success) {
+
+                      } else {
+                          self.$message.error('保存通知申请人消息失败！');
+                          console.log(result.Message);
+                      }
+                    self.loading = false;
+                  }
+              });
+          },
+
+          //按照时间从大到小排序
+          dateOrder: function (objectArr,flag) {
+              var dates;
+              if (flag === 1) {
+                  dates = objectArr.sort(
+                      function (a, b) {
+                          return (new Date(a.PostDate).getTime() - new Date(b.PostDate).getTime());
+                      }
+                  );
+              } else {
+                  dates = objectArr.sort(
+                      function (a, b) {
+                          return (new Date(b.PostDate).getTime() - new Date(a.PostDate).getTime());
+                      }
+                  );
+              }
+          }
+
+      },
+    })
+
+    </script>
+
+</body>
+</html>

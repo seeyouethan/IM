@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>联系人界面</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="css/Element-UI/index.css">
+  <link rel="stylesheet" type="text/css" href="css/iconfont.css"> 
+  <link rel="stylesheet" type="text/css" href="css/style.css">   
+  <link rel="stylesheet" type="text/css" href="css/main.css"> 
+</head>
+<body>
+<div id="app">
+    <!-- 即时聊天界面 -->
+    <div class="chat-wrap"><!-- 默认隐藏，显示时给此部分加上类名r0 -->
+        <span class="chat-close"><i class="iconfont icon-delte"></i></span>
+        <el-tabs value="first">
+           <el-tab-pane label="聊天" name="first">
+              <div class="tab-pane">
+                <div class="tab-search is-focused "><input type="text" placeholder="搜索" /><i class="iconfont icon-searchBtn"></i></div>
+                 <div class="tab-con">
+                  <h6 class="tab-h6">最近联系人</h6>
+                  <!-- 检索时 -->
+                  <!-- <h6 class="tab-h6">检索结果</h6> -->
+                  <ul> 
+                    <!-- 默认列表展示 -->
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <!-- 在线类名是tab-status，不在线类名是tab-status-no -->
+                            <span class="tab-status tab-status-no"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                    <!-- 拒绝好友申请展示 -->
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p class="color-f0">已拒绝你的好友申请</p>
+                            <span class="tab-status"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                    <!-- 好友申请展示 -->
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊<span class="tip-add">添加好友申请</span></p>
+                            <p class="tip-apply"><span>拒绝</span> <span>同意</span></p>
+                            <span class="tab-status"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <h6 class="tab-h6">联系人</h6>
+                  <ul> 
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <span class="tab-status"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <span class="tab-status"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <span class="tab-status"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l"><img src="images/defaultHeadImg.png" class="head-ssimg" /></a>
+                         <div class="tab-li-div">
+                            <p>邱菊</p>
+                            <p>前方的路怎么走就看你的了</p>
+                            <span class="tab-status"></span>
+                            <!-- 右键点击某个联系人区域时，出现删除好友的提示框 静态页默认展示-->
+                            <div class="tip-del">删除好友</div>
+                         </div>
+                      </div>
+                    </li>
+                  </ul>
+                 </div>
+                </div>
+           </el-tab-pane>
+           <el-tab-pane label="群组" name="second">
+             <div class="tab-pane">
+                <div class="tab-search is-focused"><input type="text" placeholder="搜索" /></div>
+                <div class="tab-con tab-con2">
+                  <h6 class="tab-h6">常用群聊</h6>
+                  <ul> 
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>邱菊协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>邱菊协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <h6 class="tab-h6">我的群聊</h6>
+                  <ul> 
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>邱菊协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                    <li class="tab-li">
+                      <div>
+                         <a href="javascript:;" class="mr10 float-l posr"><img src="images/defaultHeadImg.png" class="head-ssimg" /><i class="after-circle">25</i></a>
+                         <div class="tab-li-div">
+                            <p>邱菊协同开发群聊</p>
+                            <!-- 鼠标移上去出现删除按钮 -->
+                            <span class="close-btn"><i class="iconfont icon-delte"></i></span>
+                            <!-- 右键点击某个联系人区域时，出现提示框 静态页默认展示-->
+                            <div class="tip-del"><span class="block">设置群组</span><span class="block">退出群组</span></div>
+                         </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <!-- 添加群组按钮 -->
+                <a href="javascript:;" class="add-group"><i class="iconfont icon-add"></i></a>
+              </div>
+           </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+  <script src="js/vue.js"></script>
+  <!-- 引入组件库 -->
+   <script src="js/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+
+  </script>
+
+</body>
+</html>

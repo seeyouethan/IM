@@ -1,0 +1,53 @@
+﻿@*自建群群组成员信息，后来又添加了群组简介*@
+@model IEnumerable<ImGroupDetail>
+@{
+    <div class="mb10">
+        <p class='gi-l'>群组说明：</p>
+        <p class="gi-r">@ViewBag.groupDesc</p>
+    </div>
+
+    <p class='gi-l'>群组成员：</p>
+
+    if (Model != null && Model.Any())
+    {
+        <ul id="membersUl" class="gi-r">
+            @{
+                foreach (var item in Model)
+                {
+                    <li class="mr18 us" data-uid="@item.UserID" data-name="@item.NickName" title="@item.NickName">
+                        <span class="posr">
+                            <img src="@item.photo" class="head-simg vam">
+                        </span>
+                        <span class="dvm">@item.NickName</span>
+                    </li>
+                }
+            }
+        </ul>
+
+                if (ViewBag.announcementTitle != "")
+                {
+                    <div class="mb10">
+                        <p class='gi-l'>群组公告：</p>
+                        <h2>@ViewBag.announcementTitle</h2>
+                        <p class="gi-r gi-a">@ViewBag.announcement</p>
+                    </div>
+                }
+
+
+                if (ViewBag.isadmin == 1)
+                {
+                    <div class="fli">
+                        <div>
+                            <a class="a-blue" onclick="editgroup('@ViewBag.groupid')">管理群组</a>
+                            <a class="a-default" onclick="giveupgroup('@ViewBag.groupid')">解散群组</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="fli">
+                        <div><a class="a-blue" onclick="exitgroup('@ViewBag.groupid')">退出群组</a></div>
+                    </div>
+                    }
+                }
+}

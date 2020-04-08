@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "SignalR监听";
+}
+
+<div class="jumbotron">
+    <h1>SignalR监听日志</h1>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script type="text/javascript">
+    $(function() {
+        var chat = $.connection.chatHub;
+        $.connection.hub.start().done(function () {
+            //chat.server.connect("01logger", false);
+            chat.server.connectWithTerminal("01logger", "oaokcs");
+        });
+        chat.client.weblog = function (msgtime, fromrealname, torealname, msg) {
+            var elestr = "<div>" +
+                "<p class=\"p0\">------" + msgtime + "------</p>" +
+                "<p class=\"p1\">【<em>" + fromrealname + "</em>】对【<em>" + torealname + "</em>】说</p>" +
+                "<p class=\"p3\">" + JSON.stringify(msg) + "</p>" +
+                "</div>";
+            $(".jumbotron").append(elestr);
+        };
+
+        chat.client.selfweblog = function (msgtime, fromrealname, torealname, msg) {
+            var elestr = "<div>" +
+                "<p class=\"p0\">------" + msgtime + "------</p>" +
+                "<p class=\"p1\">【<em>" + fromrealname + "</em>】对【<em>" + torealname + "</em>】说</p>" +
+                "<p class=\"p3\">" + JSON.stringify(msg) + "</p>" +
+                "</div>";
+            $(".jumbotron").append(elestr);
+        };
+
+        chat.client.redislog = function (msgtime, fromrealname, torealname, msg) {
+            var elestr = "<div>" +
+                "<p class=\"p0\">------" + msgtime + "------</p>" +
+                "<p class=\"p1\">【<em>" + fromrealname + "</em>】对【<em>" + torealname + "</em>】说</p>" +
+                "<p class=\"p3\">" + JSON.stringify(msg) + "</p>" +
+                "</div>";
+            $(".jumbotron").append(elestr);
+        };
+        chat.client.receiveMessage = function (model) {
+            console.log(model);
+        }
+
+    });
+
+</script>
+

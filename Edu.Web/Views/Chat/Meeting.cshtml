@@ -1,0 +1,141 @@
+﻿@*这个是第一版Meeting*@
+@using Edu.Tools
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet" />
+<link href="~/Content/EasyRTC/easyrtc.css" rel="stylesheet" />
+<link href="~/Content/EasyRTC/demo_room.css" rel="stylesheet" />
+<script src="~/Content/EasyRTC/socket.io.js"></script>
+<script src="~/Content/EasyRTC/easyrtc.js"></script>
+<script src="~/Content/EasyRTC/demo_multiparty_a.js"></script>
+<script src="~/Content/Web/js/vue.js"></script>
+<script src="~/Content/Web/js/index.js"></script>
+
+<div class="container body-content">
+    <div class="row">
+        <div id="elementApp">
+            <el-container>
+                <el-container>
+                    <el-container class="min800">
+                        <el-main>
+                            <div id="fullpage" class="boxCommon">
+                                <p class="videoTitle">我的视频</p>
+                                <video id="box0" class="transit boxCommon thumbCommon easyrtcMirror width100" muted="muted" volume="0" autoplay="autoplay" playsinline="playsinline"></video>
+                            </div>
+                            <div>
+                                <!--其他成员视频窗口-->
+                                <div class="submainBox" id="submainVideo"></div>
+                            </div>
+                        </el-main>
+                        <el-footer>
+                            <div>
+                                <button type="button" id="ScreenShare" class="btn btn-primary" style="float: left; margin-top: 12px;">屏幕共享</button>
+                            </div>
+                        </el-footer>
+                    </el-container>
+                    <el-aside width="300px">
+                        <ul class="videoMember" id="videoMember"></ul>
+                    </el-aside>
+                </el-container>
+            </el-container>
+        </div>
+    </div>
+</div>
+<script src="~/Tookit/anyRTC_Meet/js/adapter.js"></script>
+<script src="~/Tookit/anyRTC_Meet/js/xmlhttp.js"></script>
+<script src="~/Tookit/anyRTC_Meet/js/anyrtc.js"></script>
+<script src="~/Tookit/anyRTC_Meet/js/RTMeetKit.js"></script>
+<script src="~/Tookit/anyRTC_Meet/js/Screen-Capturing.js"></script>
+<script>
+     new Vue({
+        el: '#elementApp',
+    });
+    var roomName = "";//roomName不能太长，如果用uid则会报错
+     var groupid = "@ViewBag.roomid";
+    var username = "@LoginUserService.ssoUserID";//用uid作为username
+    var vCount = 10;//群组成员总个数,默认为1
+    var videoIds = [];
+    /*
+        查询自己是否是该群组成员
+        分为工作群和自建群
+    */
+    $.ajaxSettings.async = false;
+    if (groupid.length === 36) {
+        roomName = groupid.substring(8);
+        $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: "@ViewBag.roomid" }, function (data) {
+            vCount = data.Data.length;
+            $.each(data.Data, function (n, value) {
+                addGroupMembers(value.realName, value.id);
+            });
+        });
+    } else {
+        roomName = groupid;
+        $.post("@Url.Action("GetGroupMembers","Chat")", { groupid: "@ViewBag.roomid" }, function (result) {
+            if (result.Success) {
+                vCount = result.Content.length;
+                //初始化成员列表
+                $.each(result.Content, function (n, value) {
+                    addGroupMembers(value.NickName,value.UserID);
+                });
+            } else {
+                console.log(result.Error);
+            }
+        });
+    }
+    $.ajaxSettings.async = false;
+    
+    for (var i = 1; i < vCount; i++) {
+        console.log("初始化其他成员的视频窗口------>", i);
+        var newP = document.createElement("p");
+        newP.innerHTML = i;
+        newP.setAttribute("class", "videoTitle");
+        var newVideo = document.createElement("video");
+        //video的Id 必须设置个id,否则无法观看
+        var id = "box" + i;//strPubId是标识视频窗口的唯一ID
+        //div的Id
+        var idDiv = "otherDiv" + i;//strPubId是标识视频窗口的唯一ID
+        //div的Id
+        var idP = "otherP" + i;//strPubId是标识视频窗口的唯一ID
+        newP.setAttribute("id", idP);
+        //设置video的属性
+        newVideo.setAttribute("autoplay", "autoplay");
+        newVideo.setAttribute("id", id);
+        newVideo.setAttribute("class", "transit boxCommon thumbCommon");
+        newVideo.style.visibility = "hidden";
+        newVideo.setAttribute("autoplay", "autoplay");
+        newVideo.setAttribute("playsinline", "playsinline");
+
+        var newDiv = document.createElement("div");
+        newDiv.setAttribute("id", idDiv);
+        newDiv.setAttribute("class", "remoteMemberDiv");
+        newDiv.appendChild(newP);
+        newDiv.appendChild(newVideo);
+
+        $('#submainVideo').append(newDiv);
+        videoIds.push(id);
+    }
+    rtcAppInit(roomName, "box0", videoIds, username, vCount);
+
+
+   
+
+    function addGroupMembers(nickName, uid) {
+        var newLi = document.createElement("li");
+        newLi.setAttribute("id", "li" + uid);
+
+        var newImg = document.createElement("img");
+        newImg.setAttribute("src", "@ConfigHelper.GetConfigString("sso_host_name")" + "pic/" + uid);
+
+        var p1 = document.createElement("p");
+        p1.setAttribute("class", "p1");
+        p1.innerHTML = nickName;
+
+        var p2 = document.createElement("p");
+        p2.setAttribute("class", "p2");
+        p2.innerHTML = "未加入";
+
+        newLi.appendChild(newImg);
+        newLi.appendChild(p1);
+        newLi.appendChild(p2);
+        $('#videoMember').append(newLi);
+    }
+</script>

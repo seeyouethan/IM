@@ -1,0 +1,368 @@
+﻿@using Edu.Tools
+
+<link href="~/Content/Web/css/mystyle-icon.css" rel="stylesheet" />
+<link href="~/Content/Web/css/mylayer.css" rel="stylesheet" />
+    <div id="app" class="task-panel posr" v-loading="loading" element-loading-text="拼命加载中">
+        <i class="iconfont icon-delte close-btnt cp"></i>
+        <span class="task-arrow"></span>
+        <el-scrollbar>
+            <div class="task-panel-con">
+                <!-- 外层动画div -->
+                <div class="tasklist-top posr">
+                    <i class="iconfont" v-bind:class="{'icon-bottomDouble': spread,'icon-topDouble': !spread,}" @@click="dospread()"></i>
+                    <el-form label-width="100px">
+                        <el-form-item label="任务名称：" v-html="formData.Title">
+                        </el-form-item>
+                        <div v-bind:class="{'form-hide': !spread}">
+                            <el-form-item label="上级任务：" v-html="fatherTitle">
+                            </el-form-item>
+                            <el-form-item label="完成进度：">
+                                <el-progress v-bind:percentage="formData.Completing"></el-progress><!-- 进度条 -->
+                            </el-form-item>
+                            <el-form-item label="创建人：">
+                                <span class="mr30">
+                                    <img v-bind:src="creator.photo" class="head-simg mr10 vam"><span v-html="creator.realname"></span>
+                                </span>
+                            </el-form-item>
+                            <el-form-item label="时间：">
+                                <i class="iconfont icon-date" v-html="formData.StartDate"></i>
+                                <span> —— </span>
+                                <i class="iconfont icon-date" v-html="formData.EndDate"></i>
+                            </el-form-item>
+                            <el-form-item label="优先级：" v-html="priorityText[formData.Priority]"></el-form-item>
+                            <el-form-item label="提醒：" v-html="callDateText[formData.CallDate]"></el-form-item>
+                            <el-form-item label="抄送人：">
+                                <span v-for="item in copyToUsers" class="mr20">
+                                    <img v-bind:src="item.photo" class="head-simg mr10 vam"><span v-html="item.name"></span>
+                                </span>
+                            </el-form-item>
+                            <el-form-item label="执行人：">
+                                <span class="mr20">
+                                    <img v-bind:src="doUser.photo" class="head-simg mr10 vam"><span v-html="doUser.name"></span>
+                                </span>
+                            </el-form-item>
+                            <el-form-item label="任务描述：" v-html="formData.Content">
+                            </el-form-item>
+                        </div>
+                    </el-form>
+                </div>
+                <div class="tasklist-mid">
+                    <h2 class="mb20">
+                        <span class="color-4a font-s16 mr10">工作任务</span>
+                        <el-popover placement="right-start" width="170" trigger="click">
+                            <i class="iconfont icon-addSolid cp" slot="reference"></i>
+                            <ul class="popover-ul">
+                                <li class="small-circle"><a href="javascript:;" @@click="openproject()">新建协同研究</a></li>
+                                <li class="small-circle"><a href="javascript:;" @@click="opendiscuss()">新建协同研讨</a></li>
+                                <li class="small-circle"><a href="javascript:;" @@click="opencreation()">新建协作文档</a></li>
+                            </ul>
+                        </el-popover>
+                    </h2>
+                    <el-row class="taskul-list" v-bind:gutter="20">
+                        <el-col class="small-circle" v-bind:span="12" v-for="item in plandiscusslist">
+                            <a v-bind:href="item.Url" target="_blank" v-html="item.DiscussTitle"></a>
+                        </el-col>
+
+                    </el-row>
+                </div>
+                <div class="tasklist-bot">
+                    <h2 class="mb20">
+                        <span class="color-4a font-s16 mr10">工作日志</span>
+                        <i class="iconfont icon-addSolid cp addlog2"></i>
+                    </h2>
+                    <div class="step-panel">
+                        <div class="step-list posr step-list-finish" v-for="log in planlogs">
+                            <span class="step-list-l float-l"></span>
+                            <div class="step-list-r">
+                                <div class="mb10">
+                                    <span class="color-4a" v-html="log.Planlog.CreateDate.ToString('yyyy/MM/dd')"></span>
+                                    <el-progress v-bind:percentage="log.Planlog.CurProgress"></el-progress>
+                                    <i class="iconfont icon-del float-r" @@click="DeleteWorkLog(log.Planlog.Guid)"></i>
+                                </div>
+                                <p class="mb10" v-html="log.Planlog.Content"></p>
+                                <a v-bind:href="logfile.FileUrl" class="i-type block" v-for="logfile in log.PlanFiles" target="_blank">
+                                    <i class="other" v-bind:class="[logfile.FileExtension]"></i>
+                                    <span class="color-4a" v-html="logfile.FileName"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </el-scrollbar>
+
+    </div>
+    <script src="~/Tookit/calendar/schedule.js"></script>
+    <script src="~/Scripts/data.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                loading: true,
+                creator: { photo: '', realname: '' },
+                formData: {},
+                copyToUsers: {},
+                doUser: {},
+                priorityText: ['一般', '紧急', '特急'],
+                callDateText: ['不提醒', '提前5分钟', '提前10分钟', '提前15分钟', '提前30分钟', '提前1小时', '提前1天'],
+                fatherTitle: "无",
+                spread: true,
+                planlogs: {},
+                plandiscusslist: {},//群组中的系统研讨
+                currentUserID: "",
+
+            };
+        },
+        created : function() {
+            this.getDetail();
+            var self = this;
+            //添加完日志后 回调这个函数 刷新工作日志
+            window.getPlanLogs = function() {
+                $.post('/JobAssignment/Home/GetPlanLogs', { uid: '@ViewBag.uid' }, function(data) {
+                    if (data.r) {
+                        self.planlogs = data.data;
+                    }
+                });
+            };
+            //回调的关闭按钮页面
+            window.CancelIframe = function () {
+                var ele1 = $("#myproject", parent.document);
+                ele1.parent().prev().remove();
+                ele1.parent().remove();
+                var ele2 = $("#mydiscuss", parent.document);
+                ele2.parent().prev().remove();
+                ele2.parent().remove();
+                var ele3 = $("#mycreation", parent.document);
+                ele3.parent().prev().remove();
+                ele3.parent().remove();
+            }
+            //新建协同研讨回调方法
+            window.addDiscussSuccess = function (data) {
+                $.ajax({
+                    type: "Post",
+                    url: "/discuss/DiscussAdd/GetDisInfo?disId=" + data,
+                    dataType: "json",
+                    success: function (result) {
+                        $.post('/JobAssignment/Home/AddPlanDiscuss', { uid: data, planid: "@ViewBag.uid", title: result.Data.DisInfo.Title }, function (result0) {
+                            if (result0.r) {
+                                $.post('/JobAssignment/Home/GetPlanDiscusses', { planid: '@ViewBag.uid' }, function (data) {
+                                    self.plandiscusslist = data.data;
+                                });
+                                CancelIframe();
+                            }
+                        });
+                    }
+                });
+            }
+            //新建协作文档初始化数据
+            window.CurrentUser = {
+                realName: '@ViewBag.realName',
+                id: '@ViewBag.id',
+                icon: '@ViewBag.icon',
+            }
+            //新建协作文档回调方法
+            window.SubmitAddCooperation = function () {
+                $.ajax({
+                    type: "Post",
+                    url: "/PMC/creative/getList",
+                    data: { projectState: 0, creationType: 0, searchKey: "", pageIndex: 1, pageSize: 1 },
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.Code === 200) {
+                            $.post('/JobAssignment/Home/AddPlanCooperation', { uid: result.Data[0].CategoryId, planid: "@ViewBag.uid", title: result.Data[0].CategoryName }, function (result0) {
+                                if (result0.r) {
+                                    $.post('/JobAssignment/Home/GetPlanDiscusses', { planid: '@ViewBag.uid' }, function (data) {
+                                        self.plandiscusslist = data.data;
+                                    });
+                                    CancelIframe();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            //新建协同研究回调方法
+            window.submitAddProject = function (resId) {
+                $.post('/pmc/Project/Add', { projectId: resId }, function (res) {
+                    var data = res;
+                    if (data.Code === 200) {
+                        if (data.Data) {
+                            $.post('/jobassignment/Home/GetPlanProject', { projectid: resId }, function (data) {
+                                $.post('/jobassignment/Home/AddPlanProject', { uid: resId, planid: "@ViewBag.uid", title: data.data.ProjectName }, function (result) {
+                                    if (result.r) {
+                                        $.post('/JobAssignment/Home/GetPlanDiscusses', { planid: '@ViewBag.uid' }, function (data) {
+                                            self.plandiscusslist = data.data;
+                                        });
+                                        CancelIframe();
+                                    }
+                                }, 'json');
+                            }, 'json');
+                        } else {
+                            self.$message({ message: '添加失败！', type: 'error' });
+                        }
+                    } else {
+                        self.$message({ message: '请求出错！', type: 'error' });
+                    }
+                }, 'json');
+            }
+        },
+        methods: {
+            //删除工作日志
+            DeleteWorkLog: function (uid) {
+                var self = this;
+                $.post('/jobassignment/Home/DeleteWorkLog', { uid: uid }, function (result) {
+                    if (result.r) {
+                        $.post('/JobAssignment/Home/GetPlanLogs', { uid: '@ViewBag.uid' }, function (data) {
+                            if (data.r) {
+                                self.planlogs = data.data;
+                            }
+                        });
+                        self.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        //任务日志
+                    } else {
+                        this.$message.error('请求失败' + result.m);
+                        console.log(result.m);
+                    }
+                });
+            },
+            dospread:function() {
+                this.spread = !this.spread;
+            },
+            getDetail: function () {
+                var self = this;
+                //获取创建人的真实姓名和头像
+                $.post('/JobAssignment/Home/GetPlanDetail', { uid: '@ViewBag.uid' }, function (result) {
+                    if (result.r) {
+                        self.loading = false;
+                        self.formData = result.data;
+                        self.formData.StartDate = self.formData.StartDate.ToString("yyyy/MM/dd hh:mm");
+                        self.formData.EndDate = self.formData.EndDate.ToString("yyyy/MM/dd hh:mm");
+                        //self.formData.CompleteDate = self.formData.CompleteDate.ToString("yyyy/MM/dd HH:mm:ss");
+                        self.fatherTitle = result.fatherTitle;
+                        //创建者
+                        self.creator.photo = result.creatorPhoto;
+                        self.creator.realname = self.formData.CreatorTrueName;
+                        //抄送人
+                        $.post("/JobAssignment/Home/GetCopyToUsers", { uids: result.data.ManagerPerson }, function (data0) {
+                            self.copyToUsers = data0.data;
+                        });
+                        //执行人
+                        $.post('/JobAssignment/Home/GetDoUsers', { uid: result.data.ExecutivesPerson }, function (data1) {
+                            self.doUser = data1.data;
+                        });
+                        //任务日志
+                        $.post('/JobAssignment/Home/GetPlanLogs', { uid: result.data.Guid }, function (data) {
+                            if (data.r) {
+                                self.planlogs = data.data;
+                                self.spread1 = true;
+                            }
+                        });
+                        //工作任务
+                        $.post('/JobAssignment/Home/GetPlanDiscusses', { planid: '@ViewBag.uid' }, function (data) {
+                            self.plandiscusslist = data.data;
+                        });
+                    } else {
+                        self.$message.error('请求失败');
+                        console.log(result.m);
+                        self.loading = false;
+                    }
+                });
+            },
+            //发起协同研究
+            openproject:function() {
+                parent.layer.open({
+                    id: 'myproject',
+                    type: 2,
+                    title: '新建协同研究',
+                    closeBtn: 1,
+                    shade: true,
+                    shadeClose: true,
+                    area: ['750px', '66%'],
+                    anim: 2,
+                    content: ["/rpms/project/add", 'no'],
+                    success: function (layero, index) {
+                    }
+                });
+            },
+            //发起协同研讨
+            opendiscuss:function() {
+                parent.layer.open({
+                    id: 'mydiscuss',
+                    type: 2,
+                    title: '新建协同研讨',
+                    closeBtn: 1,
+                    shade: true,
+                    shadeClose: true,
+                    area: ['750px', '66%'],
+                    anim: 2,
+                    content: ["/discuss/discussadd/new?type=create&disid", 'no'],
+                    success: function (layero, index) {
+                    }
+                });
+            },
+            //发起协作文档
+            opencreation:function() {
+                parent.layer.open({
+                    id: 'mycreation',
+                    type: 2,
+                    title: '新建协作文档',
+                    closeBtn: 1,
+                    shade: true,
+                    shadeClose: true,
+                    area: ['750px', '66%'],
+                    anim: 2,
+                    content: ["/Creation/Outer/AddCooperation?sourceType=2&sourceID=", 'no'],
+                    success: function (layero, index) {
+                    }
+                });
+            }
+        }
+    });
+
+    $(".task-arrow").css('top', '@ViewBag.top' + 'px');
+    $("#app").css('margin-right', '0');
+
+    /*16. 点击新建工作日志*/
+    $(document).on('click', '.addlog2', function () {
+        addworklog('@ViewBag.uid');
+    });
+    var index = parent.layer.getFrameIndex(window.name);
+    $(".close-btnt").click(function () {
+        parent.layer.close(index);
+    });
+    var addworklog = function (uid) {
+        //先判断权限
+        $.post('/JobAssignment/Home/CheckCanAddWorkLog', { uid: uid }, function (result) {
+            if (result.r) {
+                parent.layer.open({
+                    id: 'addworklog',
+                    type: 2,
+                    title: '工作反馈',
+                    closeBtn: 1,
+                    shade: true,
+                    shadeClose: true,
+                    area: ['750px', '710px'],
+                    offset: 'auto',
+                    content: ["/JobAssignment/Home/CreateWorkLog?uid=" + uid, 'no'],
+                    success: function (layero, index) {
+                    }
+                });
+            } else {
+                console.log(result);
+                parent.layer.msg(result.m);
+            }
+        });
+    }
+    /*
+    var todolistele = window.parent.document.getElementById("detailnewWindow");
+    if (todolistele != null) {
+        todolistele.children[0].contentWindow.CancelIframe();
+        todolistele.children[0].contentWindow.submitAddProject(data);
+
+    }*/
+</script>

@@ -1,0 +1,22 @@
+﻿#searchUserInput + .icon-delte,
+    #searchGroupInput + .icon-delte {
+        position: absolute;
+        right: 2px;
+        top: 9px;
+    }
+
+    .red {
+        border: 1px solid #d00;
+        background: #ffe9e8;
+        color: #d00;
+    }
+.height92p {
+    height: 92%;
+}
+.height50p {
+    height: 50%;
+}
+.k-height100p {
+    height: 100% !important;
+    position: relative !important;
+}

@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "EduIMChat";
+}
+<h1>您好:@(Edu.Service.LoginUserService.userName)</h1>
+<script src="~/Tookit/Push/push.js"></script>
+<script type="text/javascript">
+    $(function() {
+        layer.open({
+            type: 2,
+            id: 'okcsim',
+            shade: 0,
+            closeBtn: 0,
+            title: false, //不显示标题
+            area: ['350px', '100%'],
+            offset: 'rb', //右下角弹出
+            shadeClose: false, //开启遮罩关闭
+            content: "@Url.Action("Index","Main",new { area=""}) ",
+            success: function(layero, index) {
+            }
+        });
+    });
+
+    layerPhotos = function(json){
+        json = JSON.parse(JSON.stringify(json));
+        layer.photos({
+            photos: json,
+            shift: 5,
+            id:'layerimg',
+            success: function (layero, index) {
+                console.log("layer.photos  success");
+                var elestr = "<span class=\"layui-layer-setwin\"><a class=\"layui-layer-ico layui-layer-close layui-layer-close1\" href=\"javascript:;\"></a></span>";
+                var ele = $('#layerimg').children('div').eq(0);
+                ele.append(elestr);
+                var eleClose = ele.children("span").eq(0).children('a').eq(0);
+                eleClose.on('click', function () {
+                    ele.parent().parent().prev().remove();
+                    ele.parent().parent().remove();
+                });
+
+            }
+        });
+    }
+</script>

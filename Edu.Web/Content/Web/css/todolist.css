@@ -1,0 +1,16 @@
+.editClass {
+    padding: 10px;background-color: white;
+}
+.editClass .el-scrollbar {
+    height: 90%;
+}
+.editClass .el-textarea {
+    padding-bottom: 20px;
+}
+.editfoot{
+    text-align: center;
+    display: block;
+}
+.us {
+    position: relative;
+}

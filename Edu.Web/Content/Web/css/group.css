@@ -1,0 +1,53 @@
+body {
+    padding: 0px 30px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-right: 10px;
+}
+
+.el-dialog {
+    margin-top: 1vh !important;
+    margin-bottom: 0;
+}
+
+.head-upload {
+    position: relative;
+    display: inline-block;
+}
+
+    .head-upload img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+    }
+    .hu-txt {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: rgba(0, 0, 0, .5);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    display: none;
+}
+    .hu-txt svg {
+    font-size: 50px;
+    display: block;
+    margin: 12px auto 0;
+}
+    .icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    overflow: hidden;
+}.hu-txt span {
+    display: block;
+}.head-upload:hover .hu-txt {
+    display: block;
+}

@@ -1,0 +1,85 @@
+ImGroup中的Des字段长度修改为500
+
+ImGroupDetail中的isAdmin修改为int类型 NickName 修改为 varchar(50)
+
+
+
+
+immsg添加了两列  fromusername和tousername
+ALTER TABLE `eduim`.`immsg` 
+ADD COLUMN `fromusername` VARCHAR(50) NULL COMMENT '发送者 真实姓名' AFTER `ResultDate`,
+ADD COLUMN `tousername` VARCHAR(50) NULL COMMENT '接收者 真实姓名' AFTER `fromusername`;
+  
+imgroupdetail 中新增了photo列 头像
+ALTER TABLE `eduim`.`imgroupdetail` 
+ADD COLUMN `photo` VARCHAR(255) NULL COMMENT '头像' AFTER `ResultDate`;
+
+ALTER TABLE `eduim`.`userdevice` 
+ADD COLUMN `isonline` INT(11) NULL COMMENT '是否在线标记 1表示在线 0表示不在线' AFTER `devicetype`;
+
+ALTER TABLE `eduim`.`userdevice` 
+CHANGE COLUMN `isonline` `isonline` INT(11) NULL DEFAULT 0 COMMENT '是否在线标记 1表示在线 0表示不在线' ;
+
+ALTER TABLE `eduim`.`userdevice` 
+CHANGE COLUMN `uid` `uid` VARCHAR(50) NULL COMMENT '用户ID' ,
+ADD COLUMN `id` INT NOT NULL AUTO_INCREMENT AFTER `isonline`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `eduim`.`immsg` 
+CHANGE COLUMN `FileUrl` `FileUrl` VARCHAR(10000) NULL DEFAULT NULL COMMENT '文件下载地址(地址中有url编码，所以长度需要长一些)' ;
+
+
+ALTER TABLE `eduim`.`plan` 
+CHANGE COLUMN `ManagerPerson` `ManagerPerson` TEXT NULL DEFAULT NULL COMMENT '抄送人（管理者，查看人）' ;
+ALTER TABLE `eduim`.`immsg` 
+ADD COLUMN `ImgList` TEXT NULL COMMENT '如果是图文类型，这个字段用来存放图片的集合' AFTER `Duration`;
+
+
+ALTER TABLE `eduim`.`immsg` 
+ADD COLUMN `NewFileName` VARCHAR(255) NULL COMMENT '上传到HFS后生成的filecode' AFTER `id1`,
+ADD COLUMN `IsDel` INT(1) NULL DEFAULT 0 COMMENT '是否已经被删除' AFTER `NewFileName`;
+
+
+
+
+
+
+
+
+
+						//获取工作交办中创建的协同研究
+                        //$.post('/JobAssignment/Home/GetPlanDiscussesRPMS', { planid: uid }, function (data) {
+                        //    if (data.data.length > 0) {
+                        //        $.ajax({
+                        //            url: "/RPMSWebAPI/api/Project/GetProjectNames",
+                        //            type: "POST",
+                        //            data: JSON.stringify(data.data),
+                        //            error: function(xhr, status, error) {
+                        //                console.log(error);
+                        //            },
+                        //            dataType: "json",
+                        //            contentType: "application/json",
+                        //            success: function(data2) {
+                        //                if (data2.Count > 0) {
+                        //                    $.each(data2.Content, function (n, value) {
+                        //                        var item = {
+                        //                            CreateTime: "",
+                        //                            Creator: "",
+                        //                            DiscussID: value.id,
+                        //                            DiscussTitle: value.name,
+                        //                            Guid: "",
+                        //                            ID: 0,
+                        //                            IsDel: 0,
+                        //                            PlanID: "",
+                        //                            Type: "协同研讨",
+                        //                            Url: "/discuss/DiscussAdd/Index?did=" + value.id + "&from=todolist",
+                        //                        }
+                        //                        self.plandiscusslist.push(item);
+                        //                    });
+                        //                }
+                        //            }
+                        //        });
+                        //    }
+                        //});

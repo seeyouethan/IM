@@ -1,0 +1,59 @@
+﻿@{ 
+    ViewBag.Title = "转发日志查询";
+}
+
+
+<style>
+    .div1{
+        padding:20px;
+    }
+    .ul1 li{
+        margin:10px;
+    }
+    .ul1 li a{
+        text-decoration:underline;
+        color:#2a8cd7;        
+    }
+    .ul1 li a:hover{
+        color:#f60;
+    }
+</style>
+
+
+
+<div class="div1">
+    <ul class="ul1">
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/AppGroupDynamic/"+ViewBag.filename)">工作群群组动态</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/AppGroupNotice/"+ViewBag.filename)">工作群群组公告</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/AppNotice/"+ViewBag.filename)">PMC首页公告(工作台公告,发送给所有人的)</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/TodoTask/"+ViewBag.filename)">PMC首页待办任务</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/AddDiscuss/"+ViewBag.filename)">新增研讨</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/DeleteDiscuss/"+ViewBag.filename)">删除研讨</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/ModifyDiscuss/"+ViewBag.filename)">修改研讨</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/FinishDiscuss/"+ViewBag.filename)">完成研讨</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/ActivateDiscuss/"+ViewBag.filename)">激活研讨</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/RemindDiscuss/"+ViewBag.filename)">提示研讨</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/Note/"+ViewBag.filename)">研讨笔记</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/SelfGroupNotice/"+ViewBag.filename)">自建群创建通知</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/LiveAPPInfo/"+ViewBag.filename)">新建直播的通知</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/SelfGroupNoticeMore/"+ViewBag.filename)">自建群编辑通知</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/MessageModel/"+ViewBag.filename)">公司OA平台发出的消息</a></li>
+
+        <li><a href="@("http://oaokcs.cnki.net/im/GroupMsg.WindowsService/log/ScheduleModel/"+ViewBag.filename)">工作交办（群组日程、待办）计划通知（提前5分钟/10分钟）</a></li>
+    </ul>
+</div>
+

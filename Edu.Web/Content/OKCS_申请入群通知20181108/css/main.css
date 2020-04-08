@@ -1,0 +1,110 @@
+html,#app{height: 100%;}
+body{color:#333; font:14px Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "Microsoft YaHei";position: relative;height:100%;}
+/*即时聊天*/
+/*.chat-wrap{width:300px;position:fixed;top:60px;bottom:0;right:0;z-index:9999;background-color: #fff;transition: all 0.5s ease;right:-302px;border:1px solid #e8e8e8;box-shadow:0 1px 17px rgba(0,0,0,.4)}
+*/.chat-wrap{z-index:9999;background-color: #fff;position: relative;height: 100%}
+/*.chat-wrap.r0{right:0;}*/
+.chat-close{position: absolute;right:10px;color:#666;top:15px;cursor: pointer;width:30px;height:30px;text-align: center;line-height: 30px;border-radius:2px;transition: all .3s;z-index: 10000;font-weight: bold;}
+.chat-close:hover{background-color: #41a0e9;color:#fff;}
+.chat-wrap .el-tabs{height:100%;}
+.chat-wrap .el-tabs__content{height:calc(100% - 60px);}
+.chat-wrap .el-tabs__header{background-color: #eef3f8;margin-bottom: 0;}
+.chat-wrap .el-tabs__item{height: 60px;line-height: 60px;padding:0 34px!important;font-size: 18px;}
+.chat-wrap .el-tabs__nav-wrap::after{height:0;font-size: 18px;}
+.chat-wrap .el-tabs__active-bar{height:3px;}
+.chat-wrap  .el-tabs__active-bar{width:105px!important;}
+.chat-wrap  .el-tabs__item.is-active,.chat-wrap .el-tabs__item:hover{color:#41a0e9;}
+.chat-wrap .el-tabs__active-bar{background-color:#41a0e9}
+.tab-pane{padding:5px 20px;}
+.tab-search{padding-bottom: 7px;position: relative;}
+.tab-search input{border: 0;background-image: linear-gradient(#41a0e9, #41a0e9),linear-gradient(#D2D2D2, #D2D2D2);background-size: 0 2px, 100% 1px;background-repeat: no-repeat;background-position: center bottom,center calc(100% - 1px);background-color: transparent;transition: background 0s ease-out;float: none;box-shadow: none;border-radius: 0;font-weight: 400;padding:11px 0;width: 100%}
+.tab-search.is-focused input:focus{background-image: linear-gradient(#41a0e9, #41a0e9),linear-gradient(#D2D2D2, #D2D2D2);background-size: 100% 2px, 100% 1px;transition-duration: .3s}
+.tab-h6{font-size: 16px;border-bottom: 1px solid #ececec;padding-bottom: 10px;margin-bottom: 10px;margin-top: 10px;}
+.tab-li{padding:15px 5px;cursor:pointer;transition:.3s;border-radius:2px;position: relative;}
+.tab-li:hover{background-color:#f5f5f5;}
+.tab-li>div{position: relative;}
+.tab-li-div,.meadia-body{display: table-cell;vertical-align: top;}
+.tab-li-div p{width:195px;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
+.tab-li-div p:nth-child(2){font-size: 12px;color:#999;margin-top: 3px;}
+.tab-status{width:10px;height:10px;border-radius:50%;background-color: #31d620;position: absolute;right:0;top:4px;}
+.tab-status-no{background-color: #ececec}
+.tab-con{position: absolute;top:50px;bottom:0;left:20px;right:-15px;padding-right: 35px;overflow-y: auto;}
+.tab-con2{padding-bottom: 50px;}
+.tab-con2 p{line-height: 40px;}
+.tip-del{padding: 10px 0;width:150px;text-align: center;box-shadow:0 1px 7px rgba(0,0,0,.3);border-radius: 4px;position: absolute;z-index: 2;right:0;top:25px;background-color: #fff;display: none;}
+.tip-del span{line-height: 35px;}
+.tab-li-div .tip-apply{overflow:visible;}
+.tip-apply span{border:1px solid #ddd;padding:2px 28px;margin-right: -4px;}
+.tip-apply span:nth-child(1){color:#f02f2f}
+.tip-apply span:nth-child(2),.icon-addPerson2:hover,.icon-searchBtn:hover{color:#41a0e9}
+.tip-add{font-size: 12px;float:right;padding-right: 15px;color:#41a0e9;}
+.icon-addPerson2{position: absolute;color:#999;font-size: 20px;right:20px;top:0;}
+.apply-tip2{background-color: transparent;color: #41a0e9;border: 1px solid #41a0e9;padding: 9px 0;text-align: center;border-radius: 4px;margin: 0 auto;width: 150px;margin-top:30px;}
+.icon-searchBtn{font-size: 22px;color: #d2d2d2;cursor: pointer;transition: .3s;}
+.tab-search .icon-searchBtn{position: absolute;right: 2px;top: 9px;}
+/*聊天-发送*/
+.chat-con{height:100%;}
+.chat-con .el-row,.chat-con  .el-col,.chatr-panel,.chatl-panel{height: 100%;box-sizing: border-box;}
+.chatlp-top{height:calc(100% - 135px);overflow-y: auto;}
+.chatrp-mid{height: calc(100% - 80px)}
+.chatrpm-bot{height:calc(100% - 33px);overflow-y: auto;}
+.chatlp-top>li:not(.chat-time){margin:0 0 45px 0;}
+.chatlp-top li:first-child{margin-top:0;}
+.media-body{width:auto;background-color: #f3f3f3;padding:12px 20px;border-radius: 5px;display: table-cell}
+.media-body p{line-height: 30px;}
+.chatlp-top>li.in .media-body{text-align: left;border-top:1px solid #41a0e9;}
+.chatlp-top>li.out .media-body{text-align: left;border-top:1px solid #F15F79;float: right;max-width: calc(100% - 90px)}
+.chatlp-top .chat-time{text-align: center;color:#999;margin-bottom: 10px;}
+.chatlp-bot{border-top:1px solid #ddd;padding:0 20px;}
+.chatlpb-btn i{color:#666;margin-right: 20px;cursor: pointer;}
+.chatlpb-btn i:hover{color:#41a0e9;}
+.chatlp-bot textarea{width:100%;border:none;}
+.mes-cont{padding:0 4px;border-radius:3px;font-size:12px;}
+.mes-cont:hover,.mes-cont.cur{background-color: #f3f3f3;}
+.chatrp-top{border-bottom: 1px solid #ddd;padding-left: 15px;line-height: 29px;font-size: 12px;}
+.chatrpm-top span{padding:2px 6px;display: inline-block;margin-right: 12px;cursor: pointer;font-size: 12px;border-radius: 4px;}
+.chatrpm-top span.cur{color:#fff;background-color: #41a0e9}
+.chatrpm-bot li p:first-child{color:#41a0e9;padding:7px 0 2px 0;}
+.chatrpm-bot li p:last-child{padding-left: 3px;}
+.chatrp-mid{padding: 3px;}
+.chat-dialog .el-dialog__body{padding:0;}
+.media-body.inline-block{padding:5px;}
+.chatrp-top i{font-size: 12px;color:#999;}
+.chatrpm-bot li{padding: 0 15px;border:1px solid transparent;}
+.chatrpm-bot li.cur{background-color: #e2f0fb;border-color: #a9d7fa}
+.chat-con-show .el-col-17{width: 100%;}
+.chat-con-show .el-col-7{display: none;}
+.chatrp-bot{border-top:1px solid #ddd;padding:0 10px;}
+.chatrp-bot .el-date-editor.el-input{width:31px;}
+.chatrp-bot .float-r .el-input__inner{border:none;padding:0 0 0 30px;}
+.chatrp-bot .el-input__icon{font-size: 22px;color:#999;}
+.chatrp-bot .icon-searchBtn{margin:9px 16px 0 0;color:#999;}
+.arrow-group i{font-size: 20px;color:#999;vertical-align: middle;}
+.arrow-group i:hover{color:#666;}
+.arrow-group i.disabled,.arrow-group i.disabled:hover{color:#ddd;}
+.chatr-panel{border-left: 1px solid #ddd}
+.search-div{position: absolute;top: -32px;background-color: #e2f0fb;left: 3px;right: 3px;padding: 3px 10px;font-size: 12px;}
+.search-div .el-input{width: 100px;}
+.search-div input{height:25px;line-height: 25px;}
+/*群组*/
+.add-group{background-color: #41a0e9;padding:8px 10px;border-radius:50%;position: fixed;bottom:10px;right: 10px;transition: .3s}
+.add-group i{color:#fff;font-size: 20px;}
+.add-group:hover{background-color: #1888de}
+.close-btn{border: 1px solid #ddd;border-radius: 50%;padding: 2px 4px;position: absolute;right:0;top:9px;display: none;}
+.close-btn i{color:#999;font-size: 12px;}
+.tab-li>div:hover .close-btn{display: block;}
+.after-circle{position: absolute;top: -3px;left:27px;display: inline-block;padding: 1px 3px;border-radius: 50%;line-height: normal;background-color: #ea4b4b;color: #fff;font-size: 12px;}
+.min-input{width:150px;}
+.icon-tianjia1{font-size: 34px;color:#999;vertical-align: middle;transition: .3s;cursor: pointer;}
+.icon-tianjia1:hover{color:#41a0e9;}
+.icon-addPerson{font-size: 24px;color:#999;cursor: pointer;transition: .3s;vertical-align: }
+.icon-addPerson:hover{color:#41a0e9;}
+.min-input .el-input{height:35px;line-height: 35px;}
+
+/*消息通知*/
+.notifypt-item{padding:15px 20px;}
+.notifypti-r{margin-left: 65px;}
+.line-txt{color:#999;position: relative;text-align: center;}
+.line-txt:before{content:"";width: 100%;height: 1px;background-color: #ddd;left:0;right:0;top:9px;position: absolute;}
+.line-txt span{padding:0 20px;display: inline-block;position: relative;background-color: #fff}
+.notifypti-r div p:nth-child(2){max-width: 21em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}

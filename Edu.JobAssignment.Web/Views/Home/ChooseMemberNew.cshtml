@@ -1,0 +1,169 @@
+﻿@*这个页面不用了*@
+@using Edu.Service
+@using Edu.Tools
+
+<link href="~/Content/Web/css/Element-UI/index.css" rel="stylesheet" />
+<link href="~/Content/Web/css/iconfont.css" rel="stylesheet" />
+<link href="~/Content/Web/css/style.css" rel="stylesheet" />
+<link href="~/Content/Web/css/main.css" rel="stylesheet" />
+<style>
+    body{padding:25px 35px;box-sizing:border-box}
+</style>
+<div id="app">
+    <div class="talk-wrap clearfix">
+        <div class="talk-box float-r">
+            <h2 class="tree-ht"><span>已添加人员：<span id="personCount">0</span> 人</span></h2>
+            <div class="tree-hide top32">
+                <ul class="mtb10" id="list1">
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="talk-box float-l">
+            <div class="search-sm clearfix">
+                <input type="text" placeholder="输入查找关键字" class="f-input float-l" id="searchUserInput"/>
+                <button class="s-btn float-r">
+                    <i class="iconfont icon-searchBtn"></i>
+                </button>
+            </div>
+            <div class="tree-hide">
+                <div class="group-tree">
+                    <el-tree @@node-click="clickNameChoose"
+                             :filter-node-method="filterNode"
+                             ref="tree"
+                             :data="departMembers"
+                             node-key="id"
+                             :empty-text="empty"
+                             :props="treeProps"
+                             show-checkbox
+                             :default-checked-keys="keys"
+                             @@check="toggleMembers">
+                    </el-tree>
+                </div>
+            </div>
+        </div>
+        <div class="talk-box-c"><i class="iconfont icon-rightJ"></i></div>
+    </div>
+    <div class="btn-group text-center">
+        <el-button type="primary" id="submitBtn">确定</el-button>
+        <el-button id="cancelBtn">取消</el-button>
+    </div>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                loading: true,
+                memberData: {},
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                departMembers: [],
+                empty: '正在加载数据...',
+                treeProps: {
+                    label: 'RealName',
+                    children: 'children',
+                },
+                keys: [],
+            }
+        },
+        created: function() {
+            this.GetMemberData();
+        },
+        methods: {
+            //筛选
+            filterNode: function (value, data) {
+                if (!value) return true;
+                return data.RealName.indexOf(value) !== -1;
+            },
+            GetMemberData: function() {
+                if ('@ViewBag.groupid' === '0') {
+                    $.post("@Url.Action("GetAllMembers","Home")", {}, function (data) {
+                        console.log(data);
+                        var depart = [];
+                        var people = [];
+                        $.each(data.members, function (index, value) {
+                            if (value.id === '@LoginUserService.ssoUserID') {  
+                            }
+                            value.UserID = value.id;
+                            value.children = [];
+                            if (value.type === 1) depart.push(value);
+                            else people.push(value);
+                        });
+                        var departData = [];
+
+                        $.each(depart, function (index, value) {
+                            //depart[index].children = [];
+                            if (departData.length === 0) {
+                                departData.push(depart[index]);
+                            }
+                            $.each(departData, function (pindex, pvalue) {
+                                if (depart[index].pid === departData[pindex].id) {
+                                    departData[pindex].children.push(value);
+                                } else {
+                                    departData.push(depart[index]);
+                                }
+                            });
+                            //if (depart[index].children.length === 0) {
+                            //    depart.splice(index, 1);
+                            //    index--;
+                            //}
+                        });
+                        //部门为空的同事
+                        $.each(depart, function (index, value) {
+                            //depart[index].children = [];
+                            $.each(depart, function (pindex, pvalue) {
+                                if (depart[index].id === depart[pindex].pid) {
+                                    depart[index].children.push(depart[pindex]);
+                                }
+                            });
+                            //if (depart[index].children.length === 0) {
+                            //    depart.splice(index, 1);
+                            //    index--;
+                            //}
+                        });
+
+
+
+                        $.each(people,function(index, value) {
+                            value.Logo = value.icon;
+                            if (!value.hasDepart) {
+                                depart.push(value);
+                            }
+                        });
+                        
+                        this.departMembers = depart.slice(0);
+                        console.log(this.departMembers);
+                    });
+                } else {
+                    $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: '@ViewBag.groupid' }, function (data) {
+                        $("#list0").empty();
+                        allmembers = data.Data;
+                        $.each(data.Data, function (n, value) {
+                            AddPersonLeft(value.id, value.icon, value.realName, value.department);
+                        });
+                        var elespan = $("#list0 li label .myclick");
+                        elespan.on('click', function () {
+                            Check($(this));
+                        });
+                    });
+                }
+            },
+
+            clickNameChoose:function(a, b, c) {
+                
+            },
+            toggleMembers:function(mem, all) {
+                
+            }
+        }
+
+    });
+
+    var allmembers;
+    var selectedMembers;
+
+</script>
