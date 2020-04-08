@@ -176,7 +176,7 @@ namespace Edu.Web.Controllers
                 Msg = msg,
                 TouID = touid,
                 CreateUser = fromuid,
-                Result = 0,
+               
                 fromusername = fromusername,
                 tousername = tousername,
                 isgroup= isgroup
@@ -202,75 +202,6 @@ namespace Edu.Web.Controllers
 
        
         
-
-        public ActionResult SendImageMsg(string touid,string msg, string fromusername, string tousername)
-        {
-            var fromuid = LoginUserService.ssoUserID;
-            var item = new IMMsg
-            {
-                FromuID = fromuid,
-                CreateDate = DateTime.Now,
-                Msg = "<img src=\""+msg+"\">",
-                TouID = touid,
-                CreateUser = fromuid,
-                Result = 0,
-                fromusername = fromusername,
-                tousername = tousername
-            };
-            var photo = ConfigHelper.GetConfigString("sso_host_name") + "pic/" + LoginUserService.ssoUserID;
-            unitOfWork.DIMMsg.Insert(item);
-            var result = unitOfWork.Save();
-            if (result.ResultType == OperationResultType.Success)
-            {
-                // 此群组包含的用户 即群聊要通知的用户
-                List<string> touids =
-                    unitOfWork.DImGroupDetail.Get(p => p.GroupID == touid && p.UserID != fromuid).Select(p => p.UserID).ToList();
-                return Json(new { r = true, msgtime = item.CreateDate.Value.ToString("yyyy/MM/dd HH:mm:ss"), msgcontent = item.Msg, photo = photo, msgid = item.ID, touids = touids }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { r = false, m = "操作失败！\n" + result.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        /// <summary>
-        /// 这个方法已经弃用了，最新的存储文件聊天消息到数据库的方法在chatHub中 2018年12月20日
-        /// </summary>
-        /// <param name="touid"></param>
-        /// <param name="fileurl"></param>
-        /// <param name="filename"></param>
-        /// <param name="fromusername"></param>
-        /// <param name="tousername"></param>
-        /// <returns></returns>
-        public ActionResult SendFileMsg(string touid, string fileurl,string filename, string fromusername, string tousername)
-        {
-            var fromuid = LoginUserService.ssoUserID;
-            var item = new IMMsg
-            {
-                FromuID = fromuid,
-                CreateDate = DateTime.Now,
-                Msg = "<a class=\"layui-layim-file\" href=\""+fileurl+"\" target=\"_blank\"><i class=\"layui-icon\"></i><cite>"+ filename + "</cite></a>",
-                TouID = touid,
-                CreateUser = fromuid,
-                Result = 0,
-                fromusername = fromusername,
-                tousername = tousername
-            };
-            var photo = ConfigHelper.GetConfigString("sso_host_name") + "pic/" + LoginUserService.ssoUserID;
-            unitOfWork.DIMMsg.Insert(item);
-            var result = unitOfWork.Save();
-            if (result.ResultType == OperationResultType.Success)
-            {
-                // 此群组包含的用户 即群聊要通知的用户
-                List<string> touids =
-                    unitOfWork.DImGroupDetail.Get(p => p.GroupID == touid && p.UserID != fromuid).Select(p => p.UserID).ToList();
-                return Json(new { r = true, msgtime = item.CreateDate.Value.ToString("yyyy/MM/dd HH:mm:ss"), msgcontent = item.Msg, photo = photo, msgid = item.ID, touids = touids }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { r = false, m = "操作失败！\n" + result.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
 
         public ActionResult ShowSelfGroupMembers(string groupid)
         {

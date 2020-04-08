@@ -1767,5 +1767,18 @@ namespace Edu.Web.Controllers
 
             return View();
         }
+
+
+        /// <summary>
+        /// 新的群组聊天页面
+        /// </summary>
+        /// <param name="id">群组id</param>
+        /// <returns></returns>
+        public ActionResult GroupIndex(string id)
+        {
+
+
+            return View();
+        }
     }
 }

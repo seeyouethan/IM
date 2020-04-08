@@ -137,7 +137,7 @@ namespace Edu.SignalRServer.Service
                 String pushResult = push.pushMessageToSingle(message, target);
                 //LoggerHelper.AndroidPush($"2.给[{touid}]推送的消息返回结果为{Environment.NewLine}{pushResult}");
 
-                _dataService.InsertGeguiLog(msg.fromuid, touid, msg.msgtime, msg.id0, "android", deviceid, messageJson);
+                //_dataService.InsertGeguiLog(msg.fromuid, touid, msg.msgtime, msg.id0, "android", deviceid, messageJson);
 
 
             }

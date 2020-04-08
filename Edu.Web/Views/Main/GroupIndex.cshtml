@@ -1,0 +1,502 @@
+﻿@*新的群组聊天页面*@
+@using Edu.Tools
+
+
+
+
+<div id="app">
+    <el-container>
+        <el-main>
+            <div class="group_chat_con">
+                <!-- bot -->
+                <div class="group_chatc_bot chatc_bot_c">
+                    <!-- 切换有5种样式颜色对应类名为chatcb_tab_c1f、chatcb_tab_c6c、chatcb_tab_ce3、chatcb_tab_cd9 -->
+                    <div class="chatcb_tab_list chatcb_tab_c1f">
+                        <el-badge :value="12">
+                            <a class="chat_tab_item" href="javascript:;">聊天大厅</a>
+                        </el-badge>
+                        <el-badge :value="12">
+                            <a class="chat_tab_item" href="javascript:;">OKMS汇智平台</a>
+                        </el-badge>
+                        <el-badge :value="8">
+                            <a class="chat_tab_item" href="javascript:;">在线直播教学平台</a>
+                        </el-badge>
+                        <el-badge :value="12">
+                            <a class="chat_tab_item" href="javascript:;">在线直播教学平台</a>
+                        </el-badge>
+                        <el-badge :value="12">
+                            <a class="chat_tab_item" href="javascript:;">在线直播教学平台</a>
+                        </el-badge>
+                    </div>
+                    <!-- tab_content -->
+                    <!--  聊天记录显示时给下面div加类名chat_trends_show
+                    群组成员显示时给下面div添加类名chat_mem_show -->
+                    <div class="chatcb_tab_content clearfix chat_mem_show">
+                        <!-- 聊天内容 -->
+                        <div class="chatcb_tc_l el-col el-col-18">
+                            <div class="chatcb_tcl_top">
+                                <el-scrollbar>
+                                    <el-row>
+                                        <!-- 左侧聊天框样式 -->
+                                        <el-col :span="24" class="chat_left">
+                                            <div class="chatl_con clearfix">
+                                                <img src="images/defaultHeadImg.png" class="head_img chat_fl" />
+                                                <div class="chatl-r chat_fl">
+                                                    <p class="chatlr-name">邱菊</p>
+                                                    <p class="chatlr-txt">法简洁的表达你的想法达你法简洁的表达你表达你的想法达你法简洁的表达你的想法的想法达你法简你法简洁的表达你的想法的想法达你法简法简洁的表达你的想法达你法简洁的表达你表达你的</p>
+                                                </div>
+                                                <div class="chatl-icon">
+                                                    <span class="linkc9">
+                                                        <svg class="icon" aria-hidden="true">
+                                                            <use xlink:href="#icon-zan"></use>
+                                                        </svg><i>65</i>
+                                                    </span>
+                                                    <el-popover placement="bottom" width="80" trigger="click">
+                                                        <span slot="reference" class="linkc9">
+                                                            <svg class="icon" aria-hidden="true">
+                                                                <use xlink:href="#icon-more"></use>
+                                                            </svg>
+                                                        </span>
+                                                        <ul class="select-ul">
+                                                            <li>引用</li>
+                                                            <li>复制</li>
+                                                            <li>收藏</li>
+                                                            <li>删除</li>
+                                                        </ul>
+                                                    </el-popover>
+                                                </div>
+                                            </div>
+                                        </el-col>
+                                        <!-- 时间 -->
+                                        <el-col :span="24" class="chat_time">2020/3/4  18:00:10</el-col>
+                                        <!-- 右侧聊天框样式 -->
+                                        <el-col :span="24" class="chat_right">
+                                            <div class="chatl_con">
+                                                <img src="images/defaultHeadImg.png" class="head_img chat_fr" />
+                                                <div class="chatl-r  chat_fr">
+                                                    <p class="chatlr-txt">法简洁的表达你的想法达你法简洁的表达你表达你的想法达你法简洁的表达你的想法的想法达你法简你法简洁的表达你的想法的想法达你法简法简洁的表达你的想法达你法简洁的表达你表达你的</p>
+                                                </div>
+                                            </div>
+                                        </el-col>
+                                        <!-- 文件样式 -->
+                                        <el-col :span="24" class="chat_left">
+                                            <div class="chatl_con clearfix">
+                                                <img src="images/defaultHeadImg.png" class="head_img chat_fl" />
+                                                <div class="chatl-r chat_fl">
+                                                    <p class="chatlr-name">邱菊</p>
+                                                    <div class="chatlr-txt1">
+                                                        <p class="chatlrt-t">
+                                                            <svg class="icon icon-sl" aria-hidden="true">
+                                                                <use xlink:href="#icon-word-s"></use>
+                                                            </svg>
+                                                            <span>知网教学平台</span>
+                                                            <span class="c9">(7.9M)</span>
+                                                        </p>
+                                                        <p class="chatlrt-b clearfix">
+                                                            <span class="chat_fl">协同创作</span>
+                                                            <span class="chat_fr">
+                                                                <svg class="icon linkc9 chat_mr10" aria-hidden="true">
+                                                                    <use xlink:href="#icon-star1"></use>
+                                                                </svg>
+                                                                <svg class="icon linkc9" aria-hidden="true">
+                                                                    <use xlink:href="#icon-download"></use>
+                                                                </svg>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </el-scrollbar>
+                            </div>
+                            <div class="chatcb_tcr_bot">
+                                <div class="chatcb-icon clearfix">
+                                    <p class="chat_fl">
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-font"></use>
+                                            </svg>
+                                        </span>
+                                        <span class="cur">
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-smile"></use>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-file2"></use>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-img"></use>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-video2"></use>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-creation"></use>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-chat"></use>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-tag"></use>
+                                            </svg>
+                                        </span>
+                                    </p>
+                                    <span class="chat_fr">
+                                        <svg class="icon" aria-hidden="true">
+                                            <use xlink:href="#icon-trends"></use>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <el-input type="textarea"></el-input>
+                                <p class="chat_btn">
+                                    <el-button type="primary" class="chat_btn_blue">发送</el-button>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- 聊天记录 -->
+                        <div class="chatcb_tc_trends el-col el-col-6">
+                            <div class=" chat_posr">
+                                <p class="trends_top">消息记录</p>
+                                <el-tabs type="border-card">
+                                    <el-tab-pane label="全部">
+                                        <!-- 搜索到的消息记录条数 -->
+                                        <p class="trends_count clearfix">
+                                            <span class="chat_fl c9">已搜索到18条消息记录</span>
+                                            <a class="chat_fr c23">返回</a>
+                                        </p>
+                                        <!-- 中间聊天记录内容全部 -->
+                                        <div class="trends_panel">
+                                            <el-scrollbar>
+                                                <div class="trendsp_item">
+                                                    <p class="c23 fs12"><span>史阳艳</span><span>9:59:15</span></p>
+                                                    <p>tree是<span class="bg-cfe">多叉树</span></p>
+                                                </div>
+                                                <div class="trendsp_item">
+                                                    <p class="c75 fs12"><span>史阳艳</span><span>9:59:15</span></p>
+                                                    <p>tree是多叉树</p>
+                                                </div>
+                                                <!-- 查找时间 -->
+                                                <p class="trendsp_time">2018-7-12</p>
+                                                <div class="trendsp_item">
+                                                    <p class="c75 fs12"><span>史阳艳</span><span>9:59:15</span></p>
+                                                    <p><img src="images/pustVideo.gif" /></p>
+                                                </div>
+                                            </el-scrollbar>
+                                        </div>
+                                    </el-tab-pane>
+                                    <el-tab-pane label="图片">
+                                        <!-- 中间聊天记录内容图片 -->
+                                        <div class="trends_img">
+                                            <p>
+                                                <svg class="icon" aria-hidden="true">
+                                                    <use xlink:href="#icon-time2"></use>
+                                                </svg>2017/7/12
+                                            </p>
+                                            <ul class="clearfix">
+                                                <li><img src="images/bookImg.jpg" /></li>
+                                                <li><img src="images/bookImg.jpg" /></li>
+                                                <li class="cur"><img src="images/bookImg.jpg" /></li>
+                                                <li><img src="images/bookImg.jpg" /></li>
+                                                <li><img src="images/bookImg.jpg" /></li>
+                                                <li><img src="images/bookImg.jpg" /></li>
+                                            </ul>
+                                        </div>
+                                    </el-tab-pane>
+                                    <el-tab-pane label="文件">
+                                        <!-- 中间聊天记录内容文件 -->
+                                        <div class="trends_file">
+                                            <ul>
+                                                <li class="trends_file_item cur">
+                                                    <img src="images/bookImg.jpg" />
+                                                    <div class="trends_filei_l">
+                                                        <p class="chat_mb5">用户体验方法论.jpg</p>
+                                                        <p class="fs12 c9"><span class="chat_mr10">2018-11-14  14:24</span><span>史阳艳</span></p>
+                                                    </div>
+                                                    <div class="trends_filei_r">
+                                                        <svg class="icon" aria-hidden="true">
+                                                            <use xlink:href="#icon-download"></use>
+                                                        </svg>
+                                                        <p class="block">255.77kb</p>
+                                                    </div>
+                                                </li>
+                                                <li class="trends_file_item">
+                                                    <img src="images/bookImg.jpg" />
+                                                    <div class="trends_filei_l">
+                                                        <p class="chat_mb5">用户体验方法论.jpg</p>
+                                                        <p class="fs12 c9"><span class="chat_mr10">2018-11-14  14:24</span><span>史阳艳</span></p>
+                                                    </div>
+                                                    <div class="trends_filei_r">
+                                                        <svg class="icon" aria-hidden="true">
+                                                            <use xlink:href="#icon-download"></use>
+                                                        </svg>
+                                                        <p class="block">255.77kb</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </el-tab-pane>
+                                </el-tabs>
+                                <!-- 底部搜索 -->
+                                <div class="trends-bot clearfix">
+                                    <svg class="icon icon-search" aria-hidden="true">
+                                        <use xlink:href="#icon-search"></use>
+                                    </svg>
+                                    <div class="trendsb_search">
+                                        内容：
+                                        <el-input>
+                                            <svg class="icon icon-search" aria-hidden="true" slot="suffix">
+                                                <use xlink:href="#icon-error"></use>
+                                            </svg>
+                                        </el-input>
+                                        <a href="javascript:;">确定</a>
+                                    </div>
+                                    <div class="chat_fr">
+                                        <svg class="icon" aria-hidden="true" slot="suffix">
+                                            <use xlink:href="#icon-rlrc"></use>
+                                        </svg>
+                                        <span class="c9">2018-5-25</span>
+                                        <span class="trends_arrow_group">
+                                            <span title="第一页">
+                                                <svg class="icon" aria-hidden="true" slot="suffix">
+                                                    <use xlink:href="#icon-last"></use>
+                                                </svg>
+                                            </span>
+                                            <span title="上一页">
+                                                <svg class="icon" aria-hidden="true" slot="suffix">
+                                                    <use xlink:href="#icon-left"></use>
+                                                </svg>
+                                            </span>
+                                            <span title="下一页">
+                                                <svg class="icon" aria-hidden="true" slot="suffix">
+                                                    <use xlink:href="#icon-right"></use>
+                                                </svg>
+                                            </span>
+                                            <span title="最后页" class="disabled">
+                                                <svg class="icon" aria-hidden="true" slot="suffix">
+                                                    <use xlink:href="#icon-first"></use>
+                                                </svg>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--群组成员 -->
+                        <div class="chatcb_tc_r">
+                            <!-- 展开收起按钮 ,展开图标名字是left-->
+                            <span class="chatcb_toggle">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-right"></use>
+                                </svg>
+                            </span>
+                            <h3 class="chatcb-h3 clearfix">
+                                <span class="chat_fl">群组成员<i class="c9">(23/90)</i></span>
+                                <svg class="icon chat_fr linkc9 chat_mt15" aria-hidden="true">
+                                    <use xlink:href="#icon-search"></use>
+                                </svg>
+                            </h3>
+                            <div class="chatcb_mem_con">
+                                <el-scrollbar>
+                                    <el-row class="chatcb_mem_list">
+                                        <!-- 1群主样式 -->
+                                        <el-col :span="24">
+                                            <p class="chatcb_mem_item clearfix">
+                                                <span class="chat_fl">
+                                                    <img src="images/defaultHeadImg.png" class="head_img" />
+                                                    <span class="mem_width">邱菊</span>
+                                                </span>
+                                                <span class="chatcb_memi_icon chat_fr">
+                                                    <svg class="icon chat_fl" aria-hidden="true">
+                                                        <use xlink:href="#icon-head"></use>
+                                                    </svg>
+                                                </span>
+                                            </p>
+                                        </el-col>
+                                        <!-- 2管理员样式-->
+                                        <el-col :span="24">
+                                            <p class="chatcb_mem_item clearfix">
+                                                <span class="chat_fl">
+                                                    <img src="images/defaultHeadImg.png" class="head_img" />
+                                                    <span class="mem_width">邱菊</span>
+                                                </span>
+                                                <span class="chatcb_memi_icon1 chat_fr">
+                                                    <svg class="icon chat_fl" aria-hidden="true">
+                                                        <use xlink:href="#icon-executor"></use>
+                                                    </svg>
+                                                </span>
+                                            </p>
+                                        </el-col>
+                                        <!-- 3在线样式 -->
+                                        <el-col :span="24">
+                                            <p class="chatcb_mem_item clearfix">
+                                                <span class="chat_fl">
+                                                    <img src="images/defaultHeadImg.png" class="head_img" />
+                                                    <span class="mem_width">邱菊</span>
+                                                </span>
+                                                <span class="chatcb_memi_icon2 chat_fr">
+                                                    <svg class="icon chat_fl" aria-hidden="true">
+                                                        <use xlink:href="#icon-dot"></use>
+                                                    </svg>
+                                                </span>
+                                            </p>
+                                        </el-col>
+                                        <!-- 4在线样式 -->
+                                        <el-col :span="24">
+                                            <p class="chatcb_mem_item clearfix">
+                                                <span class="chat_fl">
+                                                    <img src="images/defaultHeadImg.png" class="head_img" />
+                                                    <span class="mem_width">邱菊</span>
+                                                </span>
+                                                <span class="chatcb_memi_icon3 chat_fr">
+                                                    <svg class="icon chat_fl" aria-hidden="true">
+                                                        <use xlink:href="#icon-dot"></use>
+                                                    </svg>
+                                                </span>
+                                            </p>
+                                        </el-col>
+                                    </el-row>
+                                </el-scrollbar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+
+
+<!--引用滚动加载插件-->
+<script src="~/Content/VideoConfenence/js/vue-infinite-loading.js"></script>
+<!--引用cookie-->
+<script src="~/Scripts/jquery.cookie.js"></script>
+<!--IM中初始化的一些js-->
+<script src="~/Scripts/im_init.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        //定义一个全局过滤器  [$PICTURE$] 是需要被替换的内容
+        Vue.filter('imageAndTextMessage', function (msg) {
+            return msg.replace(/\[.*\]/g, '');//去掉[ ]及内容
+        });
+
+        var vm = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    loading: true,
+                    uid: '@LoginUserService.ssoUserID',
+                    groupId: '@ViewBag.groupid',
+                    realName: '@ViewBag.realName',//当前用户真实姓名
+                    groupName:'',//当前群组名称
+                    isAdmin: false,//如果是群组，该字段表示是否是 管理员，管理员拥有创建主题的权限
+                    chatListAll: [],//当前页面上的聊天记录
+                    subjectList: [],//如果是群组界面,同一个群组，主题最多只有4个
+                    chatList: [],//聊天历史记录,导出聊天历史记录的时候使用
+                }
+            },
+
+            created: function () {
+
+                //收到聊天消息
+                window.getSignalRMessage = function (model) {
+
+                }
+
+
+
+            },
+            methods: {
+                //获取音频长度
+                getAudioLength: function (width) {
+                    return {
+                        width: width + "px"
+                    }
+                },
+
+                //获取用户头像
+                getHeadPhoto: function (uid) {
+                    return '@ConfigHelper.GetConfigString("sso_host_name")' + "pic/" + uid;
+                },
+
+
+                //点击查看大图 这个是基于layer做的弹出
+                showImage: function (url) {
+                    var re = new RegExp("&amp;", "g"); //定义正则表达式
+                    var imgulrResult = url.replace(re, "&");
+                    var resultJson = { "status": 1, "msg": "", "title": "", "id": 1, "start": 0, "data": [{ "alt": "", "pid": "", "src": imgulrResult, "thumb": "" }] };
+                    if (parent.ShowPhotos) {
+                        parent.ShowPhotos(resultJson);
+                    } else {
+                        parent.layerPhotosNew(resultJson);
+                    }
+                },
+
+
+                //滚动加载
+                infiniteHandler($state) {
+                        
+                },
+
+
+
+
+            },
+
+            watch: {
+                //渲染完查询的聊天记录后，再去执行下载
+                chatList: function() {
+                    this.$nextTick(() => {
+                        if(this.chatList.length>0){
+                            var docName="聊天记录";
+                            if("@ViewBag.isGroup"==="1"){
+                                docName="@ViewBag.tousername"+"群组的聊天记录("+(new Date(this.chatList[0].msgtime)).format('yyyy年MM月dd日')+")";
+                            }else{
+                                docName="我与"+"@ViewBag.tousername"+"的聊天记录("+(new Date(this.chatList[0].msgtime)).format('yyyy年MM月dd日')+")";
+                            }
+                            this.$message({
+                                showClose: true,
+                                message: '开始下载'+docName+"聊天记录.doc",
+                                type: 'success'
+                            });
+                            $("#chatcontent").wordExport(docName);
+                        }
+                    });
+                },
+                //渲染完查询的聊天后，再去格式化表情、高德地图
+                chatListAll: function () {
+                    this.$nextTick(() => {
+                        var maps = $(".mapi-top");
+                        $.each(maps, function (n, item) {
+                            var itemid = $(item).attr('id');
+                            var latitude = $(item).attr('map-data').split(',');
+                            GaoDeMap(itemid,latitude);
+                        });
+                        var emojies = $(".mb-txt");
+                        $.each(emojies, function (n, item) {
+                            EmojiParse($(item));
+                        });
+                    });
+                },
+            },
+        });
+
+
+
+    });
+
+
+</script>

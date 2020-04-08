@@ -54,8 +54,8 @@ namespace Edu.SignalRServer.Service
                     IsDel = 0,
                     NewFileName = string.Empty,
                     Msg = msg.msg,
-                    IsNotice=false,
-                    
+                    IsNotice = false,
+
                 };
                 if (!string.IsNullOrEmpty(msg.id1))
                 {

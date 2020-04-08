@@ -120,9 +120,21 @@ namespace Edu.Models.Models.Msg
             }
         }
         /// <summary>
-        /// 引用消息的具体内容
+        /// 引用消息的具体内容 比如：张三：这道题改怎么解？
+        /// 具体格式就是 【发送者】：【内容】，注意用中文的冒号
         /// </summary>
         public string quoteContent { get; set; }
+
+
+        /// <summary>
+        /// 这条消息的点赞次数
+        /// </summary>
+        public int thumbCount { get; set; }
+
+        /// <summary>
+        /// 我自己是否点赞 true/false
+        /// </summary>
+        public bool selfThumb { get; set; }
 
     }
 

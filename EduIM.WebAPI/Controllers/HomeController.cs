@@ -162,10 +162,7 @@ namespace EduIM.WebAPI.Controllers
                 else if (fileType == ".txt")
                 {
                     ContentType = "text/plain";
-                }    
-                
-
-
+                }  
 
                 var buffer = result.Content as byte[];
                 var file = File(buffer, ContentType,

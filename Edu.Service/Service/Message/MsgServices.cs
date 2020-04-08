@@ -60,101 +60,7 @@ namespace Edu.Service.Service.Message
                 msgtype = 3;
             }
         }
-
-        /// <summary>
-        /// 将新的Msg类转换为SingleMsg类
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static SingleMsg Msg2SingleMsg(Msg item)
-        {
-            var msg=new SingleMsg();
-            var imglist=new List<string>();
-            msg.msgid = item.id0;
-            msg.uid = item.fromuid;
-            msg.truename = item.fromrealname;
-            msg.photo = Edu.Tools.ConfigHelper.GetConfigString("sso_host_name") + "pic/" + item.fromuid;
-            msg.createtime = item.msgtime;
-            msg.msg = item.msg;
-            msg.groupid = string.Empty;
-            msg.type = item.msgtype;
-            msg.duration = 0;
-            msg.fileurl = "";
-            msg.imgs = imglist;
-            if(item.msgtype == 1)
-            {
-                msg.fileurl = item.filename;
-            }
-            if (item.msgtype == 2)
-            {
-                msg.fileurl = item.msg;
-                msg.msg = item.filename;
-            }
-            if (item.msgtype == 4)
-            {
-                msg.fileurl = item.msg;
-                msg.duration = item.duration;
-            }
-            if (item.msgtype == 3)
-            {
-                msg.imgs = item.imglist;
-            }
-            if (item.isgroup == 1)
-            {
-                msg.groupid = item.touid;
-            }
-
-            return msg;
-        }
-
-        /// <summary>
-        /// 将数据库中的IMMsg转换成为SingleMsg
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static SingleMsg ImMsg2SingleMsg(IMMsg item)
-        {
-            var msg = new SingleMsg();
-            var imglist = new List<string>();
-            msg.msgid = item.ID.ToString();
-            msg.uid = item.FromuID;
-            msg.truename = item.fromusername;
-            msg.photo = Edu.Tools.ConfigHelper.GetConfigString("sso_host_name") + "pic/" + item.FromuID;
-            msg.createtime = item.CreateDate.Value.ToString("yyyy/MM/dd HH:mm:ss");
-            msg.msg = item.Msg;
-            msg.groupid = string.Empty;
-            msg.type = Convert.ToInt32(item.Type);
-            msg.duration = 0;
-            msg.fileurl = "";
-            msg.imgs = imglist;
-            if (msg.type == 2)
-            {
-                //文件类消息
-                msg.fileurl = item.FileUrl;
-                msg.msg = item.Msg;
-            }
-            if (msg.type == 4)
-            {
-                //语音类消息
-                msg.fileurl = item.FileUrl;
-                msg.duration = item.Duration;
-            }
-            if (msg.type == 3)
-            {
-                //图文混合消息
-                if (!string.IsNullOrEmpty(item.ImgList))
-                {
-                    imglist = item.ImgList.Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    msg.imgs = imglist;
-                }
-            }
-            if (item.isgroup == 1)
-            {
-                msg.groupid = item.TouID;
-            }
-
-            return msg;
-        }
+        
 
         public static Msg ImMsg2Msg(IMMsg item)
         {
@@ -172,6 +78,8 @@ namespace Edu.Service.Service.Message
             msg.duration = item.Duration;//默认为0  如果是文件类型，则存放文件的大小 单位是KB
             msg.imglist=new List<string>();
             msg.msg = item.Msg;
+            msg.quoteId = item.QuoteId;
+            msg.quoteContent = item.QuoteContent;
             if (msg.msgtype == 0)
             {
                 //纯文本

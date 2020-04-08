@@ -76,6 +76,47 @@ namespace Edu.Web.Controllers
 
         public ActionResult UserChatContent(string touid, string connid, string tousername, string roomid = "", bool isgroup = false)
         {
+
+            var selfuid = LoginUserService.ssoUserID;
+            ViewBag.unitId = ssoUserOfWork.GetUserByID(selfuid).OrgId;
+            ViewBag.isGroup = 0;
+            if (isgroup) ViewBag.isGroup = 1;
+            //默认为离线状态
+            ViewBag.isOnLine = 0;
+            if (connid != "")
+            {
+                ViewBag.isOnLine = 1;
+            }
+            ViewBag.roomid = "";
+            if (!string.IsNullOrEmpty(roomid))
+            {
+                ViewBag.roomid = roomid;
+            }
+            /*再从redis中查找一下connid*/
+            var touser = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine", touid);
+            if (touser != null)
+            {
+                connid = touser.ConnectionId;
+                ViewBag.isOnLine = 1;
+            }
+            ViewBag.touid = touid;
+            //ViewBag.connid = connid;
+            ViewBag.sefconnid = "";
+            //var self = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine", selfuid);
+            //if (self != null)
+            //{
+            //    ViewBag.sefconnid = self.ConnectionId;
+            //}
+            ViewBag.photo = ConfigHelper.GetConfigString("sso_host_name") + "pic/" + LoginUserService.ssoUserID;
+            ViewBag.touserphoto = ConfigHelper.GetConfigString("sso_host_name") + "pic/" + touid;
+            //if (isgroup)
+            //    ViewBag.touserphoto = "/im/Content/Images/group.png";
+            ViewBag.fromusername = ssoUserOfWork.GetUserByID(LoginUserService.ssoUserID).RealName;
+            ViewBag.tousername = tousername;
+            return View();
+
+
+            /*新版-未完成
             var selfuid = LoginUserService.ssoUserID;
             ViewBag.unitId = ssoUserOfWork.GetUserByID(selfuid).OrgId;
             ViewBag.isGroup = 0;
@@ -105,7 +146,7 @@ namespace Edu.Web.Controllers
             
             ViewBag.fromusername = ssoUserOfWork.GetUserByID(LoginUserService.ssoUserID).RealName;
             ViewBag.tousername = tousername;
-            return View();
+            return View();*/
         }
 
 
@@ -300,7 +341,7 @@ namespace Edu.Web.Controllers
                 Msg = msg,
                 TouID = touid,
                 CreateUser = fromuid,
-                Result = 0,  //0表示未读 1表示已读 暂时没用到
+               
                 fromusername = fromusername,
                 tousername = tousername,
                 isgroup = isgroup //是否是群组消息标记
@@ -355,27 +396,6 @@ namespace Edu.Web.Controllers
 
 
 
-        /// <summary>
-        /// 因为将未读消息 都放入到缓存中了 所以这里的这个 修改数据库中数据已读未读状态的方法暂时不用了
-        /// </summary>
-        /// <param name="msgid"></param>
-        /// <returns></returns>
-        public ActionResult SetMsgRead(int msgid)
-        {
-            var query = unitOfWork.DIMMsg.Get(p => p.ID == msgid).FirstOrDefault();
-            query.Result = 1;
-            query.ResultDate = DateTime.Now;
-            unitOfWork.DIMMsg.Update(query);
-            var result = unitOfWork.Save();
-            if (result.ResultType == OperationResultType.Success)
-            {
-                return Json(new { r = true }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { r = false, m = "操作失败！\n" + result.Message }, JsonRequestBehavior.AllowGet);
-            }
-        }
 
 
         /// <summary>
