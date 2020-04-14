@@ -558,6 +558,8 @@
     <Content Include="Content\VideoConfenence\videoDetail.html" />
     <Content Include="Content\Web\css\Element-UI\index.css" />
     <Content Include="Content\Web\css\group.css" />
+    <Content Include="Content\Web\css\GroupIndex\style.css" />
+    <Content Include="Content\Web\css\GroupIndex\style2.css" />
     <Content Include="Content\Web\css\k-style.css" />
     <Content Include="Content\Web\css\video.css" />
     <Content Include="Content\Web\css\iconfont.css" />
@@ -582,10 +584,6 @@
     <Content Include="Content\Web\js\jquery.cookie.js" />
     <Content Include="Content\Web\js\style.js" />
     <Content Include="Content\Web\js\vue.js" />
-    <Content Include="Content\Web\检索结果页.html" />
-    <Content Include="Content\Web\聊天窗口.html" />
-    <Content Include="Content\Web\联系人界面.html" />
-    <Content Include="Content\Web\设置群组.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -683,6 +681,7 @@
     <Content Include="Scripts\drawingGroupPic.js" />
     <Content Include="Scripts\emoji.js" />
     <None Include="Scripts\drag.js-backup" />
+    <Content Include="Scripts\iconfont.js" />
     <Content Include="Scripts\im_init.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.signalR-2.4.0.js" />

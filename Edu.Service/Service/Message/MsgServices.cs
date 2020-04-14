@@ -78,7 +78,14 @@ namespace Edu.Service.Service.Message
             msg.duration = item.Duration;//默认为0  如果是文件类型，则存放文件的大小 单位是KB
             msg.imglist=new List<string>();
             msg.msg = item.Msg;
-            msg.quoteId = item.QuoteId;
+            if (item.QuoteId != null)
+            {
+                msg.quoteId = item.QuoteId;
+            }else
+            {
+
+                msg.quoteId = 0;
+            }
             msg.quoteContent = item.QuoteContent;
             if (msg.msgtype == 0)
             {

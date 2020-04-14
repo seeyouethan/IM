@@ -1776,7 +1776,8 @@ namespace Edu.Web.Controllers
         /// <returns></returns>
         public ActionResult GroupIndex(string id)
         {
-
+            ViewBag.groupid = id;
+            ViewBag.realName = ssoUserOfWork.GetUserByID(LoginUserService.ssoUserID).RealName;
 
             return View();
         }

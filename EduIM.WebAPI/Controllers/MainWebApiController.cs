@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System;
 using EduIM.WebAPI.Service;
 using EduIM.WebAPI.Models;
+using Edu.Entity;
+using System.Web;
+using Edu.Models.Models;
 
 namespace EduIM.WebAPI.Controllers
 {
@@ -21,7 +24,7 @@ namespace EduIM.WebAPI.Controllers
 
 
         /// <summary>
-        /// 初始加载时的最近聊天记录
+        /// 初始加载时的最近聊天记录,不分主题
         /// </summary>
         /// <param name="uid"></param>
         /// <param name="touid"></param>
@@ -138,7 +141,7 @@ namespace EduIM.WebAPI.Controllers
         /// <param name="lastid"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetChatHistory(string uid, string touid, string keywords, int pageSize, int lastid)
+        public IHttpActionResult GetChatHistory(string uid, string touid, string keywords, int pageSize, int lastid,string subjectId)
         {
             try
             { 
@@ -153,7 +156,14 @@ namespace EduIM.WebAPI.Controllers
                 else
                 {
                     //没有关键字查询，查询全部
-                    var query = _unitOfWork.DIMMsg.Get(p => ((p.FromuID == uid && p.TouID == touid && p.isgroup == 0) || (p.FromuID == touid && p.TouID == uid && p.isgroup == 0) || (p.TouID == touid && p.isgroup == 1)) && p.IsDel != 1 && (p.ID < lastid)).OrderByDescending(p => p.ID);
+                    var query = _unitOfWork.DIMMsg.GetIQueryable(p => ((p.FromuID == uid && p.TouID == touid && p.isgroup == 0) || (p.FromuID == touid && p.TouID == uid && p.isgroup == 0) || (p.TouID == touid && p.isgroup == 1)) && p.IsDel != 1 && (p.ID < lastid)).OrderByDescending(p => p.ID);
+                    if (subjectId != "0")
+                    {
+                        query = query.Where(p => p.SubjectId == subjectId).OrderByDescending(p => p.ID);
+                    }
+                    
+
+                    
                     if(query!=null && query.Any())
                     {
                         totalCount = query.Count();
@@ -169,6 +179,59 @@ namespace EduIM.WebAPI.Controllers
                         Message = "查询成功",
                         Count = result.Count,
                         Total = totalCount,
+                    });
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Error(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return Json(
+                    new
+                    {
+                        Success = false,
+                        Content = "",
+                        Error = ex.Message,
+                        Message = "查询失败",
+                        Count = 0,
+                        Total = 0,
+                    });
+            }
+        }
+        
+        /// <summary>
+        /// 获取在线状态
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult GetOnlineStatus(string uid)
+        {
+            try
+            {
+                var result = false;
+                /*1.oaokcs端在线*/
+                var isonline = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine", uid);
+                /*2.oa端在线*/
+                var isonline_oa = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine_OA", uid);
+                /*3.app端在线*/
+                var isonline_app = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLineApp", uid);
+
+                if (isonline == null && isonline_oa == null && isonline_app == null)
+                {
+                    result = false;
+                }
+                else
+                {
+                    result = true;
+                }
+                return Json(
+                    new
+                    {
+                        Success = true,
+                        Content = result,
+                        Error = "",
+                        Message = "查询成功",
+                        Count = 0,
+                        Total = 0,
                     });
             }
             catch (Exception ex)
@@ -287,5 +350,128 @@ namespace EduIM.WebAPI.Controllers
         }
 
 
+
+        /// <summary>
+        /// 群组中新建主题
+        /// </summary>       
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult AddGroupSubject([FromBody]GroupSubject subject)
+        {
+            try
+            {
+
+
+
+                var model = new GroupSubject();
+                model.groupid = subject.groupid;
+                model.name = subject.name;
+                model.createtime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                model.isdel = 0;
+                model.isend = 0;
+                model.creator = subject.creator;
+                model.remark = string.Empty;
+                model.endtime = string.Empty;
+                _unitOfWork.DGroupSubject.Insert(model);
+
+                var result = _unitOfWork.Save();
+                if (result.ResultType == OperationResultType.Success)
+                {
+                    return Json(new
+                    {
+                        Success = true,
+                        Content = model,
+                        Error = "",
+                        Message = "操作成功",
+                        Count = 0,
+                        Total = 0
+                    });
+                }
+                
+                LoggerHelper.Error(result.ToString());
+                return Json(new
+                {
+                    Success = false,
+                    Content = "",
+                    Error = result.Message,
+                    Message = "操作失败",
+                    Count = 0,
+                    Total = 0
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Error(ex.Message);
+                return Json(
+                    new
+                    {
+                        Success = false,
+                        Content = "",
+                        Error = ex.ToString(),
+                        Message = "操作失败",
+                        Count = 0,
+                        Total = 0
+                    });
+            }
+        }
+
+
+        /// <summary>
+        /// 查询群组主题（未结束的，有效的主题）
+        /// </summary>       
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult GetGroupSubject(string goupId)
+        {
+            try
+            {
+                var result = new List<GroupSubject>() { };
+                if (string.IsNullOrEmpty(goupId))
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Content = result,
+                        Error = "",
+                        Message = "群组id不能为空",
+                        Count = 0,
+                        Total = 0
+                    });
+                }
+                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId && p.isend != 1).OrderByDescending(p => p.id); ;
+                if(query!=null && query.Any())
+                {
+                    result = query.ToList();
+                }
+               
+
+                return Json(new
+                {
+                    Success = true,
+                    Content = result,
+                    Error = "",
+                    Message = "查询成功",
+                    Count = result.Count,
+                    Total = result.Count
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Error(ex.Message);
+                return Json(
+                    new
+                    {
+                        Success = false,
+                        Content = "",
+                        Error = ex.ToString(),
+                        Message = "操作失败",
+                        Count = 0,
+                        Total = 0
+                    });
+            }
+        }
+
+
+
+        }
     }
-}

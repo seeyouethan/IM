@@ -165,8 +165,6 @@
 
         </div>
         <!-- 右侧聊天记录 -->
-
-
         <div class="col-2 float-l chatlist-content posr" id="historychatDiv">
             <p class="vc-top color-9">
                 <span>消息记录</span>
@@ -726,7 +724,7 @@
                             self.subjectList = data.Content;
                             self.subjectPageNo++;
                         } else {
-                            self.$message.error('获取聊天数据出错');
+                            self.$message.error('获取主题数据出错');
                         }
                     },
                     error: function (err) {

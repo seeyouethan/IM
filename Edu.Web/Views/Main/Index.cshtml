@@ -355,6 +355,14 @@
                     return;
                 }
                 SetUserOnlie(uid, connid);
+
+                var groupIndexElement = window.parent.document.getElementById('group_' + uid);
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid,true);
+                }
+
+
+
             };
             /*
                 用户离线 传的值为connid  而不是uid
@@ -384,6 +392,12 @@
                     }
                     var lastli1 = $("#divUserListTop li:last");
                     eleT.insertAfter(lastli1);
+                }
+
+
+                var groupIndexElement = window.parent.document.getElementById('group_' + uid);
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
                 }
             }
             @*
@@ -719,6 +733,16 @@
 
 
         function AppendTalk(data) {
+            //新增的逻辑，向群组聊天页面添加消息
+            if (data.isgroup == 1) {
+                var groupIndexElement = window.parent.document.getElementById('group_' + data.fromuid);
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.getSignalRMessage && groupIndexElement.contentWindow.getSignalRMessage(data);
+                }
+            }
+            
+
+
             if (data.fromuid === "@LoginUserService.ssoUserID") {
                 //从移动端同步过来的自己发送的消息
                 AppendSelfTalk(data);

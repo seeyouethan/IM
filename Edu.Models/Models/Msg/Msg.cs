@@ -66,12 +66,18 @@ namespace Edu.Models.Models.Msg
         /// msgtype=6 存放 xxx加入视频聊天
         /// msgtype=7 存放 视频播放地址的url 
         /// msgtype=8 存放 文本消息内容(回执类消息)
+        /// msgtype=9 存放 协同文档
+        /// msgtype=10 存放 协同研讨
         /// </summary>
         public string msg { get; set; }
         /// <summary>
         /// 当且仅当msgtype=1,即为图片消息的时候，该字段存放的是生成的缩略图的地址;
         /// 当且仅当msgtype=2，即为文件消息的时候，该字段存放完整的文件名，比如abc.docx
-        ///
+        /// 
+        /// 
+        ///  msgtype=9 存放 协同文档对应的id
+        ///  msgtype=10 存放 协同研讨对应的id
+        /// 
         /// 其他情况下，该字段赋值为空字符串
         /// </summary>
         public string filename { get; set; }
@@ -109,15 +115,7 @@ namespace Edu.Models.Models.Msg
         /// 引用消息的Id
         /// </summary>
         public int? quoteId {
-            get
-            {
-                if (quoteId <= 0 || quoteId== null) 
-                    quoteId = 0;
-                return quoteId;
-            }
-            set {
-                quoteId = value;
-            }
+            get;set;
         }
         /// <summary>
         /// 引用消息的具体内容 比如：张三：这道题改怎么解？

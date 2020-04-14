@@ -44,7 +44,6 @@ namespace Edu.SignalRServer.Service
                     CreateDate = DateTime.Now,
                     TouID = msg.touid,
                     CreateUser = msg.fromuid,
-                    QuoteId = msg.quoteId,
                     QuoteContent = msg.quoteContent,
                     fromusername = msg.fromrealname,
                     tousername = msg.torealname,
@@ -57,6 +56,15 @@ namespace Edu.SignalRServer.Service
                     IsNotice = false,
 
                 };
+                if (msg.quoteId != null)
+                {
+                    msg.quoteId = msg.quoteId;
+                }
+                else
+                {
+                    msg.quoteId = 0;
+                }
+
                 if (!string.IsNullOrEmpty(msg.id1))
                 {
                     immsg.id1 = msg.id1;
@@ -116,7 +124,7 @@ namespace Edu.SignalRServer.Service
                     immsg.Msg = JsonConvert.SerializeObject(p);
                 }
 
-                immsg.SubjectId = "";
+                immsg.SubjectId = "0";//默认为0
                 if (!string.IsNullOrEmpty(msg.subjectId))
                 {
                     immsg.SubjectId = msg.subjectId;
