@@ -54,7 +54,7 @@ namespace Edu.SignalRServer.Service
                     NewFileName = string.Empty,
                     Msg = msg.msg,
                     IsNotice = false,
-
+                    FileUrl=msg.filename,
                 };
                 if (msg.quoteId != null)
                 {
@@ -175,6 +175,41 @@ namespace Edu.SignalRServer.Service
                 return 0;
             }
             
+        }
+
+
+        public int DeleteMessage(int id)
+        {
+            var unitOfWork = new UnitOfWork();
+            var query = unitOfWork.DIMMsg.Get(p => p.ID == id).FirstOrDefault();
+            if (query != null)
+            {
+                query.IsDel = 1;
+                unitOfWork.DIMMsg.Update(query);
+                var result = unitOfWork.Save();
+                if (result.ResultType == OperationResultType.Success)
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        public int DeleteSubject(int id)
+        {
+            var unitOfWork = new UnitOfWork();
+            var query = unitOfWork.DGroupSubject.Get(p => p.id == id).FirstOrDefault();
+            if (query != null)
+            {
+                query.isdel = 1;
+                unitOfWork.DGroupSubject.Update(query);
+                var result = unitOfWork.Save();
+                if (result.ResultType == OperationResultType.Success)
+                {
+                    return 1;
+                }
+            }
+            return 0;
         }
 
         public void InsertGeguiLog(string fromuid,string touid,string msgtime,string msgid,string devicetype,string deviceid,string content)

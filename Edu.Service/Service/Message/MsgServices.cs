@@ -138,6 +138,10 @@ namespace Edu.Service.Service.Message
             else if (msg.msgtype == 8)
             {
                 //回执类的消息 忽略
+            }else if(msg.msgtype == 9 || msg.msgtype==10)
+            {
+                //协同文档、协同研讨类消息
+                msg.filename = item.FileUrl;
             }
 
             msg.subjectId = "";

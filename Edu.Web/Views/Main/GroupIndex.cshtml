@@ -22,19 +22,21 @@
         <el-main>
             <div class="group_chat_con">
                 <!-- bot -->
-                <div class="group_chatc_bot chatc_bot_c">
+                <div v-bind:class="'group_chatc_bot chatc_bot_c ' + tabClass">
                     <!-- 切换有5种样式颜色对应类名为
                     chatcb_tab_c1f、
                     chatcb_tab_c88、
                     chatcb_tab_c6c、
                     chatcb_tab_ce3、
                     chatcb_tab_cd9 -->
-                    <div v-bind:class="'chatcb_tab_list ' + tabClass">
+                    <div class="chatcb_tab_list">
                         <el-badge v-bind:value="item.count" v-bind:hidden="item.count<=0" v-for="(item, index) in subjectList" v-bind:key="'s'+index">
                             <a class="chat_tab_item" href="javascript:;" v-on:click="setCurrentSubjectId(item)" v-cloak>{{item.name}}</a>
+                            <!--删除主题按钮-->
+                            <svg class="icon icon-close" aria-hidden="true" v-on:click="deleteSubject(item)" v-if="(item.id!=0)&&(uid==item.creator || isAdmin!=0)">
+                                <use xlink:href="#icon-error"></use>
+                            </svg>
                         </el-badge>
-
-
                     </div>
                     <!-- tab_content -->
                     <!--  聊天记录显示时给下面div加类名chat_trends_show
@@ -44,6 +46,7 @@
                         <div class="chatcb_tc_l el-col el-col-18">
                             <div class="chatcb_tcl_top">
                                 <el-scrollbar ref="chatPanel">
+                                    @*force-use-infinite-wrapper*@
                                     <infinite-loading direction="top" @@infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
                                         <div slot="no-more"></div>
                                         <div slot="no-results"></div>
@@ -60,7 +63,21 @@
                                                     <!--0文本类消息-->
                                                     <p v-if="item.msgtype == 0" class="chatlr-txt" v-html="item.msg"></p>
                                                     <!--1图片类消息-->
-                                                    <p v-if="item.msgtype == 1" class="chatlr-txt" v-html="item.msg"></p>
+                                                    <div class="chatlr-txt2" v-if="item.msgtype == 1" v-on:click="showImage(item.msg)">
+                                                        <img v-bind:src="item.msg" />
+                                                        <div class="ctxt2-bot">
+                                                            @*<p class="ctxt2b-tit">图片.jpg</p>*@
+                                                            @*<p class="clearfix ctxt2b-info">
+                                                                <span class="chat_fl"> 0.2MB </span>
+                                                                <span class="chat_fr" v-on:click="openImageUrl(item.msg)">
+                                                                    <svg class="icon icon-down" aria-hidden="true">
+                                                                        <use xlink:href="#icon-download"></use>
+                                                                    </svg>
+                                                                </span>
+                                                            </p>*@
+                                                        </div>
+                                                    </div>
+
                                                     <!--2文件类消息-->
                                                     <div v-if="item.msgtype == 2" class="chatlr-txt1" v-cloak>
                                                         <p class="chatlrt-t">
@@ -73,8 +90,8 @@
                                                         <p class="chatlrt-b clearfix">
                                                             <!--收藏与下载-->
                                                             <span class="chat_fr">
-                                                                <svg class="icon linkc9 chat_mr10" aria-hidden="true" v-on:click="addUserFavorites(item.id0)">
-                                                                    <use xlink:href="#icon-star1"></use>
+                                                                <svg class="icon linkc9 chat_mr10" aria-hidden="true" v-on:click="addUserFavorites(item)" v-bind:class="{'hover':item.isFavoriate}">
+                                                                    <use v-bind:xlink:href="item.isFavoriate?'#icon-star':'#icon-star1'"></use>
                                                                 </svg>
                                                                 <svg class="icon linkc9" aria-hidden="true" v-on:click="downloadFile(item.msg)">
                                                                     <use xlink:href="#icon-download"></use>
@@ -94,44 +111,44 @@
                                                             <svg class="icon icon-sl" aria-hidden="true">
                                                                 <use xlink:href="#icon-word-s"></use>
                                                             </svg>
-                                                            <span>{{item.msg}}</span>
+                                                            <span>{{item.msg+'.docx'}}</span>
                                                         </p>
                                                         <p class="chatlrt-b clearfix">
                                                             <span class="chat_fl">协同创作</span>
                                                             <span class="chat_fr">
                                                                 <!--收藏-->
-                                                                <svg class="icon linkc9 chat_mr10" aria-hidden="true" v-on:click="addUserFavorites(item.id0)">
-                                                                    <use xlink:href="#icon-star1"></use>
+                                                                <svg class="icon linkc9 chat_mr10" aria-hidden="true" v-on:click="addUserFavorites(item)" v-bind:class="{'hover':item.isFavoriate}">
+                                                                    <use v-bind:xlink:href="item.isFavoriate?'#icon-star':'#icon-star1'"></use>
                                                                 </svg>
-                                                                @*<svg class="icon linkc9" aria-hidden="true">
+                                                                <svg class="icon linkc9" aria-hidden="true" v-on:click="downloadCreationDocument(item.filename)">
                                                                     <use xlink:href="#icon-download"></use>
-                                                                </svg>*@
+                                                                </svg>
                                                             </span>
                                                         </p>
                                                     </div>
                                                     <!--10.协同研讨类消息-->
-                                                    <p v-if="item.msgtype == 10" class="chatlr-txt" v-html="'发起了协同研讨['+item.msg+']'" v-on:click=" v-on:click="openDiscuss(item.filename)""></p>
+                                                    <p v-if="item.msgtype == 10" class="chatlr-txt chat_discuss" v-html="'发起了协同研讨['+item.msg+']'" v-on:click="openDiscuss(item.filename)"></p>
                                                 </div>
                                                 <!--附加功能选项-->
                                                 <div class="chatl-icon" v-if="item.msgtype == 0">
                                                     <!--点赞，先隐藏-->
                                                     @*<span class="linkc9">
-                                                            <svg class="icon" aria-hidden="true">
-                                                                <use xlink:href="#icon-zan"></use>
-                                                            </svg>
-                                                            <i>{{item.thumbCount}}</i>
-                                                        </span>*@
-                                                    <el-popover placement="bottom" width="80" trigger="click">
+                                                        <svg class="icon" aria-hidden="true">
+                                                            <use xlink:href="#icon-zan"></use>
+                                                        </svg>
+                                                        <i>{{item.thumbCount}}</i>
+                                                    </span>*@
+                                                    <el-popover placement="bottom" width="80" trigger="hover">
                                                         <span slot="reference" class="linkc9">
                                                             <svg class="icon" aria-hidden="true">
                                                                 <use xlink:href="#icon-more"></use>
                                                             </svg>
                                                         </span>
                                                         <ul class="select-ul">
-                                                            <li v-on:click="quoteMessage(item.id0)">引用</li>
+                                                            <li v-on:click="quoteMessage(item)">引用</li>
                                                             <li v-on:click="copyMessage(item.msg)" v-if="item.msgtype == 0">复制</li>
-                                                            <li v-on:click="addUserFavorites(item.id0)">收藏</li>
-                                                            <li v-on:click="deleteMessage(item.id0)">删除</li>
+                                                            <li v-on:click="addUserFavorites(item)">收藏</li>
+                                                            <li v-on:click="deleteMessage(item)">删除</li>
                                                         </ul>
                                                     </el-popover>
                                                 </div>
@@ -222,7 +239,7 @@
                                     </span>
                                 </div>
                                 @*<el-input id="msgTextarea" type="textarea" v-model="message" @@keyup.enter.native="sendBtnClick"></el-input>*@
-                                <div id="msgTextarea" contenteditable="true" v-on:keyup="sendMessageKeyUp($event)"></div>
+                                <div id="msgTextarea" contenteditable="true" @*v-on:keyup="sendMessageKeyUp($event)"*@></div>
                                 <p class="chat_btn">
                                     <el-button type="primary" class="chat_btn_blue" v-on:click="sendBtnClick">发送</el-button>
                                 </p>
@@ -516,8 +533,11 @@
             el: '#app',
             data: function () {
                 return {
+                    quoteId: 0,//引用的消息的id
+                    quoteItem: "",//引用的消息的具体Model字符串
                     creationRoot: '@ConfigHelper.GetConfigString("CreationRoot")',
                     creationVisitRoot: '@ConfigHelper.GetConfigString("CreationVisitRoot")',
+                    creationDownLoadRoot: '@ConfigHelper.GetConfigString("CreationDownloadRoot")',
                     discussVisitRoot: '@ConfigHelper.GetConfigString("DiscussVisitRoot")',
                     fontClass: 'font_normal',// 字体大中小
                     poppver1: false,
@@ -621,7 +641,7 @@
                     var inputTxt = $(this);
                     // 回车-->发送消息
                     if (keycode === 13 && !(evt.ctrlKey)) {
-                        sendMsg();
+                        self.sendBtnClick();
                         $event.preventDefault();
                         return false;
                     }
@@ -636,6 +656,36 @@
 
             created: function () {
                 var self = this;
+
+                //收到删除消息
+                window.getDeleteMessage = function (id) {
+                    self.chatListAll = self.chatListAll.filter(item => {
+                        if (id !== item.id0) {
+                            return true;
+                        }
+                    });
+
+                    self.showChatList = self.showChatList.filter(item => {
+                        if (id !== item.id0) {
+                            return true;
+                        }
+                    });
+                };
+                //收到删除主题
+                window.getDeleteSubject = function (id) {
+                    self.subjectList = self.subjectList.filter(item => {
+                        if (id !== item.id1) {
+                            return true;
+                        }
+                    });
+                    self.setCurrentSubjectId(self.subjectList[0]);
+                };
+                //收到新增主题
+                window.getAddSubject = function (model) {
+                    self.subjectList.push(model);
+                    self.setCurrentSubjectId(model);
+                };
+
 
                 //收到index页面的上下线状态
                 window.updateUserStatus = function (uid, b) {
@@ -694,6 +744,7 @@
                 //收到聊天消息
                 window.getSignalRMessage = function (model) {
 
+                    self.$set(model, 'isFavoriate', false);
                     //判断重复消息，
                     if (model.id0 && $("div[data-msgid='" + model.id0 + "']").length != 0) { return; }
 
@@ -740,11 +791,15 @@
 
                 //打开协同创作链接
                 openCreationDocument: function (id) {
-                    window.open(encodeURI('http://oaokcs.cnki.net:8080/onlineeditor/editor/'+id));
+                    window.open(this.creationVisitRoot+id);
+                },
+                //下载协同创作
+                downloadCreationDocument: function (id) {
+                    window.open(this.creationDownLoadRoot + id);
                 },
                 //打开协同研讨链接
                 openDiscuss: function (id) {
-                    window.open(encodeURI('http://oaokcs.cnki.net/discuss/DiscussAdd/Index?did='+id+'&from=pmc'));
+                    window.open(this.discussVisitRoot+id+'&from=pmc');
                 },
 
                 //新建协同文档(工作群中建立)
@@ -820,12 +875,12 @@
 
                                 self.$message('创建成功');
                                 //添加一条协同研讨的消息
-                                var msg="/discuss/discuss/DiscussJump?did=" + result.Data.Data + "&from=group"
+                                //var msg="/discuss/discuss/DiscussJump?did=" + result.Data.Data + "&from=group"
                                 var msgObject = {
                                     "id0": "",
                                     "msgtype": 10,
                                     "msg": self.d_title,
-                                    "filename": msg,
+                                    "filename": result.Other,
                                     "duration": 0,
                                 };
                                 //发送消息
@@ -859,20 +914,20 @@
 
 
                 //监听回车
-                sendMessageKeyUp: function () {
-                    if (event.keyCode === 13 && !(event.ctrlKey)) {
+                //sendMessageKeyUp: function () {
+                //    if (event.keyCode === 13 && !(event.ctrlKey)) {
 
-                        $("#msgTextarea").html($("#msgTextarea").html().replace("<div><br></div>", ""));
-                        this.sendBtnClick()
-                        event.preventDefault();
-                        return false;
-                    }
-                    if (event.ctrlKey && event.keyCode === 13) {
-                        $("#msgTextarea").html($("#msgTextarea").html() + '<br>');
-                        woohecc.placeCaretAtEnd(inputTxt.get(0));
-                        return false;
-                    }
-                },
+                //        $("#msgTextarea").html($("#msgTextarea").html().replace("<div><br></div>", ""));
+                //        this.sendBtnClick()
+                //        event.preventDefault();
+                //        return false;
+                //    }
+                //    if (event.ctrlKey && event.keyCode === 13) {
+                //        $("#msgTextarea").html($("#msgTextarea").html() + '<br>');
+                //        woohecc.placeCaretAtEnd(inputTxt.get(0));
+                //        return false;
+                //    }
+                //},
 
                 //打开表情面板
                 openEmoji: function () {
@@ -912,6 +967,11 @@
                 downloadFile: function (url) {
                     window.open(url);
                 },
+                //下载图片
+                openImageUrl: function (url) {
+                    window.open(url);
+                },
+
 
 
 
@@ -949,6 +1009,18 @@
                                     type: 'success'
                                 });
                                 self.subjectList.push(result.Content);
+
+                                var ele = window.parent.parent.document.getElementById("okcsim");
+                                if (ele != null) {
+                                    var iframeele = ele.children[0];
+
+                                    //先不传回调函数
+                                    iframeele.contentWindow.addSubjectMessage(result.Content, null, null);
+
+                                } else {
+                                    self.$message.error("新建主题发送失败(未查询到im)");
+                                }
+
                             } else {
                                 self.$message({
                                     message: '新建主题失败',
@@ -967,10 +1039,7 @@
                         }
                     });
                 },
-                //将主题添加到显示列表
-                addSubject: function (subject) {
-                    this.subjectList.addSubject(subject);
-                },
+                
 
 
                 //打开协同创作
@@ -992,15 +1061,121 @@
                     this.showMember = !this.showMember;
                 },
 
+                //删除主题
+                deleteSubject: function (item) {
+                    var self = this;
+                    this.$confirm('确定删除该主题吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        $.ajax({
+                            url: '/imwebapi/api/MainWebApi/DeleteGroupSubject',
+                            type: 'POST',
+                            headers: {
+                                'ignore-identity': "true"
+                            },
+                            data: item,
+                            dataType: 'json',
+                            success: function (result) {
+                                if (result.Success) {
+                                    self.$message({
+                                        type: 'success',
+                                        message: '删除成功!'
+                                    });
+                                    self.subjectList = self.subjectList.filter(p => {
+                                        if (p.id != item.id) {
+                                            return true;
+                                        }
+                                    })
+
+                                    var ele = window.parent.parent.document.getElementById("okcsim");
+                                    if (ele != null) {
+                                        var iframeele = ele.children[0];
+
+                                        //先不传回调函数
+                                        iframeele.contentWindow.deleteSubjectMessage(item, null, null);
+
+                                    } else {
+                                        self.$message.error("删除主题发送失败(未查询到im)");
+                                    }
+
+
+                                } else {
+                                    self.$message.error('删除失败');
+                                }
+
+                            },
+                            error: function (xhr, textStatus) {
+                                self.$message.error('删除主题失败');
+
+                            }
+                        });
+
+                    }).catch(() => {
+                        
+                    });
+                },
+                
+
+
                 //删除消息
-                deleteMessage: function (id) {
+                deleteMessage: function (model) {
+                    var self = this;
                     //如果不是消息的创建者，就从列表中移除
                     //如果是消息的创建者，就直接直接从数据库中删除
+                    //从列表移除
+                    this.chatListAll = this.chatListAll.filter(item => {
+                        if (item.id0 != model.id0) {
+                            return true;
+                        }
+                    });
 
+                    if (self.currentSubjectId != '0') {
+                        this.showChatList = this.chatListAll.filter(item => {
+                            if (item.subjectId == self.currentSubjectId) {
+                                return true;
+                            }
+                        });
+                    } else {
+                        this.showChatList = this.chatListAll;
+                    }
+                    
+
+
+                    if (this.uid == model.fromuid) {
+                        //发送撤回消息
+
+                        var ele = window.parent.parent.document.getElementById("okcsim");
+                        if (ele != null) {
+                            var iframeele = ele.children[0];
+
+                            //先不传回调函数
+                            iframeele.contentWindow.deleteMessage(model, null, null);
+
+                        } else {
+                            this.$message.error("消息发送失败(未查询到im)");
+                        }
+                    } else {                        
+
+                    }
 
                 },
-                //引用
-                quoteMessage: function (id) {
+                //引用 目前做的只有文本类型才可以进行引用
+                quoteMessage: function (model) {
+                    this.quoteId = model.id0;
+                    this.quoteItem = JSON.stringify(model);
+
+                    var m = '#' + model.msg + '#';
+                    $("#msgTextarea").html(m).focus();
+
+
+
+
+
+
+
+
 
                 },
                 //复制
@@ -1022,7 +1197,8 @@
                 },
 
                 //点击收藏（聊天消息）
-                addUserFavorites: function (id) {
+                addUserFavorites: function (model) {
+                    var id = model.id0;
                     if (id == '' || id == undefined) { return; }
                     var self = this;
                     $.ajax({
@@ -1045,6 +1221,7 @@
                                     message: '添加收藏成功',
                                     type: 'success'
                                 });
+                                model.isFavoriate = true;
                             } else {
                                 //layer.msg('收藏失败');
                                 self.$message.error('添加收藏失败');
@@ -1240,7 +1417,7 @@
                 },
 
 
-                //向上滚动，滚动加载历史聊天消息
+                //向上滚动，滚动加载历史聊天消息   这个是一开始就执行的
                 infiniteHandler($state) {
                     var self = this;
                     if (self.chatListAll.length <= 0) {
@@ -1270,6 +1447,7 @@
                                 if (data.Content.length > 0) {
                                     content = data.Content;
                                     data.Content.forEach(function (item) {
+                                        self.$set(item, 'isFavoriate', false);
                                         if (self.currentSubjectId == '0') {
                                             self.chatListAll.unshift(item);
                                         } else {
@@ -1411,7 +1589,7 @@
                     var self = this;
                     var sendText = document.getElementById('msgTextarea').innerText;//只能获取出文本内容
                     var msg = $.trim($("#msgTextarea").html());
-                    if (sendText === "" && sendText==""  ) {
+                    if (msg === "" && sendText==""  ) {
                         self.$message("发送内容不能为空");
                         return;
                     }
@@ -1435,8 +1613,7 @@
                     };
                     this.sendMessage(msgObject)
 
-                    //$("#msgTextarea").html("").focus();
-
+                    $("#msgTextarea").html("").focus();
                 },
 
 
@@ -1532,6 +1709,7 @@
                     this.$message.error("文件发送失败！"+err);
                 },
 
+                
 
 
                 //调用im/main 的发送消息
@@ -1547,6 +1725,10 @@
                     model["terminal"] = "@ConfigHelper.GetConfigString("ImTerminal")";
                     model["msgtime"] = (new Date()).format('yyyy/MM/dd hh:mm:ss');
 
+                    model["quoteId"] = this.quoteId;
+                    
+                    model["quoteContent"] = this.quoteItem;
+
 
 
                     var ele = window.parent.parent.document.getElementById("okcsim");
@@ -1555,27 +1737,20 @@
 
                         //添加到列表中
                         getSignalRMessage(model);
-
-
-
                         iframeele.contentWindow.sendMessageNew(model, sendMessageSuccess, sendMessageFail);
+
+                        this.quoteId = 0;
+                        this.quoteItem = "";
+
 
                     } else {
                         this.$message.error("消息发送失败(未查询到im)");
                     }
                 },
 
-                //点击查看大图
-                ShowImage: function (url) {
-                    var re = new RegExp("&amp;", "g"); //定义正则表达式
-                    var imgulrResult = url.replace(re, "&");
-                    var resultJson = { "status": 1, "msg": "", "title": "", "id": 1, "start": 0, "data": [{ "alt": "", "pid": "", "src": imgulrResult, "thumb": "" }] };
-                    if (parent.ShowPhotos) {
-                        parent.ShowPhotos(resultJson);
-                    } else {
-                        parent.layerPhotosNew(resultJson);
-                    }
-                },
+               
+
+
 
 
             },

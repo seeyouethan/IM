@@ -15,6 +15,7 @@ using Edu.SignalRServer.Service;
 using Newtonsoft.Json;
 using Edu.Models.JobAssignment;
 using Edu.SignalRServer.Model;
+using Edu.Entity;
 
 namespace Edu.SignalRServer.Hub
 {
@@ -270,6 +271,82 @@ namespace Edu.SignalRServer.Hub
         public void ConnectNew(string uid, bool isApp, string deviceid,string deviceToken,string devicetype)
         {
             UserOnline(uid, isApp, deviceid, deviceToken,devicetype);
+        }
+
+        /// <summary>
+        /// 删除消息
+        /// </summary>
+        /// <param name="groupid"></param>
+        /// <param name="id"></param>
+        public void DeleteMessage(string groupid,int id) { 
+            var result= _dataService.DeleteMessage(id);
+
+            if (result == 1)
+            {
+                var touids = _dataService.GetWorkGroupMembers(groupid);
+                foreach (var touid in touids)
+                {
+                    Task.Run(() =>
+                    {
+                        var touser = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine", touid);
+                        if (touser != null)
+                        {
+                            Clients.Client(touser.ConnectionId).deleteMessageInvoke(groupid,id);
+                        }
+                    });
+                }
+            }
+            Clients.Caller.DeleteMessageResult(id, result);
+        }
+
+        /// <summary>
+        /// 删除主题
+        /// </summary>
+        /// <param name="groupid"></param>
+        /// <param name="id"></param>
+        public void DeleteSubject(string groupid,int id)
+        {
+            var result = _dataService.DeleteSubject(id);
+            if (result == 1)
+            {
+                var touids = _dataService.GetWorkGroupMembers(groupid);
+                if (result == 1)
+                {
+                    foreach (var touid in touids)
+                    {
+                        Task.Run(() =>
+                        {
+                            var touser = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine", touid);
+                            if (touser != null)
+                            {
+                                Clients.Client(touser.ConnectionId).deleteSubjectInvoke(groupid,id);
+                            }
+                        });
+                    }
+                }
+            }
+
+            Clients.Caller.DeleteSubjectResult(id, result);
+        }
+
+
+        public void AddSubject(string json)
+        {
+            var subject = JsonConvert.DeserializeObject<GroupSubject>(json);
+
+            var touids = _dataService.GetWorkGroupMembers(subject.groupid);
+            touids.Remove(subject.creator);
+            foreach (var touid in touids)
+            {
+                Task.Run(() =>
+                {
+                    var touser = RedisHelper.Hash_Get<UserOnLine>("IMUserOnLine", touid);
+                    if (touser != null)
+                    {
+                        Clients.Client(touser.ConnectionId).addSubjectInvoke(json);
+                    }
+                });
+            }
         }
 
 

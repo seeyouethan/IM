@@ -254,7 +254,7 @@
                                         data.Content.forEach(function (item) {
                                             self.userFavorites.push(item);
                                         });
-                                        self.userFavoritesPageNo++;                                        
+                                        self.userFavoritesPageNo++;
                                         $state.loaded();
                                     } else {
                                         $state.complete();
@@ -278,7 +278,7 @@
                             data: { userId: '@LoginUserService.ssoUserID', id:item.id },
                             success: function (data) {
                                 if (data.Success) {
-                                    self.userFavorites.splice(self.userFavorites.indexOf(item),1);                              
+                                    self.userFavorites.splice(self.userFavorites.indexOf(item),1);
                                 } else {
                                     this.$message.error('删除收藏数据出错');
                                 }
@@ -395,10 +395,10 @@
                 }
 
 
-                var groupIndexElement = window.parent.document.getElementById('group_' + uid);
-                if (groupIndexElement != null) {
-                    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
-                }
+                //var groupIndexElement = window.parent.document.getElementById('group_' + uid);
+                //if (groupIndexElement != null) {
+                //    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
+                //}
             }
             @*
                 客户端的这个addMessage方法 应该写在这个页面中 写在弹出的聊天窗口的Index中并不会响应到
@@ -541,6 +541,58 @@
                 console.log("收到工作交办(待办任务、日程)提醒");
                 console.log(jsonData);
 
+            };
+            //收到删除消息
+            chat.client.deleteMessageInvoke = function (groupid,id) {
+                var groupIndexElement = window.parent.document.getElementById('group_' + groupid);
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.getDeleteMessage && groupIndexElement.contentWindow.getDeleteMessage(id);
+                }
+
+            }
+
+            //收到删除主题
+            chat.client.deleteSubjectInvoke = function (groupid,id) {
+                var groupIndexElement = window.parent.document.getElementById('group_' + groupid);
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.getDeleteSubject && groupIndexElement.contentWindow.getDeleteSubject(id);
+                }
+
+            }
+
+            //收到新增主题
+            chat.client.addSubjectInvoke = function (json) {
+                var model = Json.parse(json);
+                var groupIndexElement = window.parent.document.getElementById('group_' + model.groupid);
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.getAddSubject && groupIndexElement.contentWindow.getAddSubject(model);
+                }
+            }
+
+            //删除消息
+            window.deleteMessage = function (model, Successcb, Failcb) {
+                if ($.connection.hub.state == 1) {
+                    chat.server.deleteMessage(model.touid,model.id0);
+                } else {
+                    parent.layer.msg("撤回消息发送失败(错误代码03)", { time: 2000 });
+                }
+            };
+            //新增主题
+            window.addSubjectMessage = function (model, Successcb, Failcb) {
+                if ($.connection.hub.state == 1) {
+                    var strjson = JSON.stringify(model);
+                    chat.server.addSubject(strjson);
+                } else {
+                    parent.layer.msg("新增主题消息发送失败(错误代码03)", { time: 2000 });
+                }
+            };
+            //删除主题
+            window.deleteSubjectMessage = function (model, Successcb, Failcb) {
+                if ($.connection.hub.state == 1) {
+                    chat.server.deleteSubject(model.groupid,model.id);
+                } else {
+                    parent.layer.msg("删除主题消息发送失败(错误代码03)", { time: 2000 });
+                }
             };
 
             window.sendMessageNew = function (json, Successcb, Failcb) {
@@ -740,7 +792,7 @@
                     groupIndexElement.contentWindow.getSignalRMessage && groupIndexElement.contentWindow.getSignalRMessage(data);
                 }
             }
-            
+
 
 
             if (data.fromuid === "@LoginUserService.ssoUserID") {
@@ -1223,12 +1275,12 @@
         }
         function InitGroupList() {
             var load = layer.load();
-            
+
             UpdateWorkGroup(function () {
                 layer.close(load);
             });
             @*$("#groupDiv").load("@Url.Action("InitGroupList", "Main", new {area = ""})", {}, function (result) {
-                
+
                 /*请求工作群数据*/
                 UpdateWorkGroup();
             });*@

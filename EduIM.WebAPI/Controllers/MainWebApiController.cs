@@ -472,6 +472,65 @@ namespace EduIM.WebAPI.Controllers
         }
 
 
+        /// <summary>
+        /// 删除主题
+        /// </summary>       
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult DeleteGroupSubject([FromBody]GroupSubject subject)
+        {
+            try
+            {
+                
+                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.id == subject.id).FirstOrDefault(); ;
+                if (query != null )
+                {
+                    query.isdel = 1;
+                    _unitOfWork.DGroupSubject.Update(query);
+                    var result = _unitOfWork.Save();
+                    if (result.ResultType == OperationResultType.Success)
+                    {
+                        return Json(new
+                        {
+                            Success = true,
+                            Content = subject,
+                            Error = "",
+                            Message = "操作成功",
+                            Count = 1,
+                            Total = 1
+                        });
+                    }
+                }
+                
 
+
+                return Json(new
+                {
+                    Success = false,
+                    Content = "",
+                    Error = "",
+                    Message = "操作失败",
+                    Count = 0,
+                    Total = 0
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Error(ex.Message);
+                return Json(
+                    new
+                    {
+                        Success = false,
+                        Content = "",
+                        Error = ex.ToString(),
+                        Message = "操作失败",
+                        Count = 0,
+                        Total = 0
+                    });
+            }
         }
+
+
+
+    }
     }
