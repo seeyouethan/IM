@@ -356,7 +356,7 @@
                 }
                 SetUserOnlie(uid, connid);
 
-                var groupIndexElement = window.parent.document.getElementById('group_' + uid);
+                var groupIndexElement = window.parent.document.getElementById('group_index').children[0];
                 if (groupIndexElement != null) {
                     groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid,true);
                 }
@@ -394,11 +394,10 @@
                     eleT.insertAfter(lastli1);
                 }
 
-
-                //var groupIndexElement = window.parent.document.getElementById('group_' + uid);
-                //if (groupIndexElement != null) {
-                //    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
-                //}
+                var groupIndexElement = window.parent.document.getElementById('group_index').children[0];
+                if (groupIndexElement != null) {
+                    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
+                }
             }
             @*
                 客户端的这个addMessage方法 应该写在这个页面中 写在弹出的聊天窗口的Index中并不会响应到
@@ -787,7 +786,10 @@
         function AppendTalk(data) {
             //新增的逻辑，向群组聊天页面添加消息
             if (data.isgroup == 1) {
-                var groupIndexElement = window.parent.document.getElementById('group_' + data.fromuid);
+                if (!data.subjectId || data.subjectId == "") { data.subjectId = "0"; }
+
+
+                var groupIndexElement = window.parent.document.getElementById('group_' + data.touid);
                 if (groupIndexElement != null) {
                     groupIndexElement.contentWindow.getSignalRMessage && groupIndexElement.contentWindow.getSignalRMessage(data);
                 }

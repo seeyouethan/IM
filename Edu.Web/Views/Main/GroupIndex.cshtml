@@ -138,7 +138,7 @@
                                                         </svg>
                                                         <i>{{item.thumbCount}}</i>
                                                     </span>*@
-                                                    <el-popover placement="bottom" width="80" trigger="hover">
+                                                    <el-popover placement="bottom" width="80" trigger="click">
                                                         <span slot="reference" class="linkc9">
                                                             <svg class="icon" aria-hidden="true">
                                                                 <use xlink:href="#icon-more"></use>
@@ -745,16 +745,22 @@
                 window.getSignalRMessage = function (model) {
 
                     self.$set(model, 'isFavoriate', false);
+
                     //判断重复消息，
                     if (model.id0 && $("div[data-msgid='" + model.id0 + "']").length != 0) { return; }
 
                     self.chatListAll.push(model);
 
-                    self.showChatList = self.chatListAll.filter(item => {
-                        if (item.subjectId == self.currentSubjectId) {
-                            return true;
-                        }
-                    });
+                    if (self.currentSubjectId == '0') {
+                        self.showChatList = self.chatListAll;
+                    } else {
+                        self.showChatList = self.chatListAll.filter(item => {
+                            if (item.subjectId == self.currentSubjectId) {
+                                return true;
+                            }
+                        });
+                    }
+
 
                     //如果不是当前主题，添加角标
                     if (model.subjectId != self.currentSubjectId) {
@@ -763,24 +769,27 @@
                                 return true;
                             }
                         });
-                        if (subject) {
-                            subject.count++;
+                        if (subject && subject[0]) {
+                            subject[0].count++;
                         }
                     }
 
-                    //格式化表情
-                    if (model.msgtype === 0 || model.model === 3) {
-                        EmojiParse($("div[data-msgid='" + model.id0 + "']"));
-                    }//格式化地图
-                    else if (model.msgtype === 5) {
-                        //地图消息
-                        var mapid = "map" + model.id0;
-                        //构造地图
-                        var latitude = model.filename.split(',');
-                        GaoDeMap(mapid, latitude);
-                    }
+                    //self.$nextTick(() => {
+                    //    //格式化表情
+                    //    if (model.msgtype === 0 || model.model === 3) {
+                    //        EmojiParse($("div[data-msgid='" + model.id0 + "']"));
+                    //    }//格式化地图
+                    //    else if (model.msgtype === 5) {
+                    //        //地图消息
+                    //        var mapid = "map" + model.id0;
+                    //        //构造地图
+                    //        var latitude = model.filename.split(',');
+                    //        GaoDeMap(mapid, latitude);
+                    //    }
 
-                    self.scrollToBottom();
+                    //})
+
+                    
                 }
 
 
@@ -1301,7 +1310,9 @@
                         success: function (data) {
                             if (data.Success) {
                                 value['online'] = data.Content;
-                                self.onlineCount++;
+                                if (data.Content) {
+                                    self.onlineCount++;
+                                }
                             } else {
                                 value['online'] = false;
                             }
@@ -1319,21 +1330,20 @@
                     var user = self.memberList.filter(item => {
                         return (item.UserId == uid);
                     });
-                    if (user) {
+                    if (user.length>=0) {
                         //上线
                         if (b) {
-                            if (user.online && user.online == false) {
+                            if (user[0].online && user[0].online == false) {
                                 self.onlineCount++;
+                                self.memberList.unshift(self.memberList.splice(self.memberList.findindex(user[0]), 1))
                             }
                         } else {
-                            if (user.online && user.online) {
-                                self.onlineCount--;
+                            if (user[0].online && user[0].online) {
+                                //self.memberList.unshift(self.memberList.splice(self.memberList.findindex(user), 1))
                             }
                         }
-                        user.online = b;
+                        user[0].online = b;
                     }
-                    
-                    
                 },
 
 
@@ -1357,9 +1367,14 @@
                                 if (self.chatListAll.length > 0) {
                                     cb1();
                                     //格式化表情，并滚动到底部
-                                    self.$nextTick(() => {
-                                        self.scrollToBottom();
-                                    });
+                                    //self.$nextTick(() => {
+                                    //    self.scrollToBottom();
+                                    //    self.chatListAll.forEach(function (item, index) {
+                                    //        if (item.msgtype == 0 || item.msgtype == 3) {
+                                    //            EmojiParse($('#' + item.id1));
+                                    //        }                                            
+                                    //    });
+                                    //});
                                 } else {
                                     cb2();
                                 }
@@ -1397,14 +1412,14 @@
 
                                     });
                                     self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
-                                    self.$nextTick(() => {
-                                        var result = data.Content.filter(item => {
-                                            return (item.msgtype == 0 || item.msgtype == 3);
-                                        });
-                                        result.forEach(function (item, index) {
-                                            EmojiParse($('#' + item.id1));
-                                        });
-                                    });
+                                    //self.$nextTick(() => {
+                                    //    var result = data.Content.filter(item => {
+                                    //        return (item.msgtype == 0 || item.msgtype == 3);
+                                    //    });
+                                    //    result.forEach(function (item, index) {
+                                    //        EmojiParse($('#' + item.id1));
+                                    //    });
+                                    //});
                                 } else {
                                     self.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
                                 }
@@ -1456,14 +1471,14 @@
 
                                     });
                                     $state.loaded();
-                                    self.$nextTick(() => {
-                                        var result = data.Content.filter(item => {
-                                            return (item.msgtype == 0 || item.msgtype == 3);
-                                        });
-                                        result.forEach(function (item, index) {
-                                            EmojiParse($('#' + item.id1));
-                                        });
-                                    });
+                                    //self.$nextTick(() => {
+                                    //    var result = self.showChatList.filter(item => {
+                                    //        return (item.msgtype == 0 || item.msgtype == 3);
+                                    //    });
+                                    //    result.forEach(function (item, index) {
+                                    //        EmojiParse($('#' + item.id1));
+                                    //    });
+                                    //});
                                 } else {
                                     $state.complete();
                                 }
@@ -1545,6 +1560,7 @@
                                 self.groupName = data.Content.Name;
                                 if (self.uid == data.Content.Leader.UserID) {
                                     self.isAdmin = 1;
+                                    self.onlineCount++;
                                 } else {
                                     self.d_memberIdList.push(data.Content.Leader.UserID);
                                     self.d_memberList.push(data.Content.Leader)
@@ -1564,13 +1580,14 @@
                                     } else {
                                         self.memberList.push(value);
                                     }
-                                });
-
-                                //获取在线状态，更新前端
-                                $.each(self.memberList, function (index, value) {
+                                    //获取在线状态，更新前端
                                     self.getOnlineStatus(value);
                                 });
 
+                                if (self.isAdmin != 1) {
+                                    self.getOnlineStatus(data.Content.Leader);
+                                }
+                                
 
 
 
@@ -1771,18 +1788,25 @@
                     });
                 },
                 //渲染完查询的聊天后，再去格式化表情、高德地图
-                chatListAll: function () {
-                    this.$nextTick(() => {
-                        var maps = $(".mapi-top");
-                        $.each(maps, function (n, item) {
-                            var itemid = $(item).attr('id');
-                            var latitude = $(item).attr('map-data').split(',');
-                            GaoDeMap(itemid,latitude);
+                showChatList: function () {
+                    var self = this;
+                    self.$nextTick(() => {
+
+                        self.showChatList.forEach(function (item, index) {
+                            if (item.msgtype == 0 || item.msgtype == 3) {
+                                EmojiParse($('#' + item.id1));
+                            }
+                            if (item.msgtype == 5) {
+                                //地图消息
+                                var mapid = "map" + model.id0;
+                                //构造地图
+                                var latitude = model.filename.split(',');
+                                GaoDeMap(mapid, latitude);
+                            }
                         });
-                        var emojies = $(".mb-txt");
-                        $.each(emojies, function (n, item) {
-                            EmojiParse($(item));
-                        });
+
+
+                        self.scrollToBottom();
                     });
                 },
             },

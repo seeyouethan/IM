@@ -104,7 +104,7 @@ body{color:#333; font:14px Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "Microsof
 .chat_right .chatl-r{margin-left: 0;margin-right: 20px;text-align: right}
 .chatlr-name{margin-bottom: 10px;color:#999;}
 .chatlr-txt{display: inline-block;font-size: 16px;line-height: 32px;word-break: break-all;background-color: #f3f3f3;padding: 10px;box-sizing: border-box;border-radius: 8px;}
-.chat_right .chatlr-txt{background-color: #2389d8;color:#fff;text-align: left;}
+.chat_right .chatlr-txt{background-color: #2389d8;color:#fff;text-align: left;direction: ltr;}
 .chat_right .chatl-r{margin-left: 0;margin-right: 20px;text-align: right}
 .chat_right .chatl_con{text-align: right;direction:rtl;}
 .chatl-icon{display: inline-block;vertical-align: bottom;}

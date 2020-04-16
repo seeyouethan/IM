@@ -33,7 +33,12 @@
 .linkc9.hover, .linkc6.hover {
     color: #2389d8
 }
-
+.group_chat_con{
+    background:#fff;
+}
+.chat_right .chatlr-txt {
+    direction: ltr;
+}
 .ctxt2-bot {
     left: 0;
     right: 0;
