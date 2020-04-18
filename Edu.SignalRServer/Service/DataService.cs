@@ -54,15 +54,16 @@ namespace Edu.SignalRServer.Service
                     NewFileName = string.Empty,
                     Msg = msg.msg,
                     IsNotice = false,
-                    FileUrl=msg.filename,
+                    FileUrl = msg.filename,
+                    ThumbCount = 0,
                 };
                 if (msg.quoteId != null)
                 {
-                    msg.quoteId = msg.quoteId;
+                    immsg.QuoteId = msg.quoteId;
                 }
                 else
                 {
-                    msg.quoteId = 0;
+                    immsg.QuoteId = 0;
                 }
 
                 if (!string.IsNullOrEmpty(msg.id1))

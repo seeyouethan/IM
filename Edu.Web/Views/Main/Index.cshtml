@@ -356,48 +356,53 @@
                 }
                 SetUserOnlie(uid, connid);
 
-                var groupIndexElement = window.parent.document.getElementById('group_index').children[0];
-                if (groupIndexElement != null) {
-                    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid,true);
+                var groupIndexDiv = window.parent.document.getElementById('group_index');
+                if (groupIndexDiv) {
+                    var groupIndexElement = groupIndexDiv.children[0];
+                    if (groupIndexElement != null) {
+                        groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, true);
+                    }
                 }
+                
 
 
 
             };
             /*
-                用户离线 传的值为connid  而不是uid
+                用户离线
             */
-            chat.client.bsOffLine = function (connid) {
-                var eleR = $("#divUserListRecent li[data-id='" + connid + "']");
+            chat.client.bsOffLine = function (uid) {
+                var eleR = $("#divUserListRecent li[data-id='" + uid + "']");
                 var eleStatus;
                 if (eleR.length !== 0) {
                     eleStatus = eleR.children("div").eq(0).children().eq(1).children().eq(2);
                     if (!eleStatus.hasClass("tab-status-no")) {
                         eleStatus.addClass("tab-status-no");
-                        /*设置conid*/
-                        eleR.attr("data-connid", "");
+                        
                     }
                     //var lastli = $("#divUserListRecent li:last");
                     //eleR.insertAfter(lastli);
                 }
 
-                var eleT = $("#divUserListTop li[data-id='" + connid + "']");
+                var eleT = $("#divUserListTop li[data-id='" + uid + "']");
 
                 if (eleT.length !== 0) {
                     eleStatus = eleT.children("div").eq(0).children().eq(1).children().eq(2);
                     if (!eleStatus.hasClass("tab-status-no")) {
                         eleStatus.addClass("tab-status-no");
-                        /*设置conid*/
-                        eleT.attr("data-connid", "");
                     }
                     var lastli1 = $("#divUserListTop li:last");
                     eleT.insertAfter(lastli1);
                 }
-
-                var groupIndexElement = window.parent.document.getElementById('group_index').children[0];
-                if (groupIndexElement != null) {
-                    groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
+                var groupIndexDiv = window.parent.document.getElementById('group_index');
+                if (groupIndexDiv) {
+                    var groupIndexElement = groupIndexDiv.children[0];
+                    if (groupIndexElement != null) {
+                        groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, false);
+                    }
                 }
+
+                
             }
             @*
                 客户端的这个addMessage方法 应该写在这个页面中 写在弹出的聊天窗口的Index中并不会响应到
@@ -561,7 +566,7 @@
 
             //收到新增主题
             chat.client.addSubjectInvoke = function (json) {
-                var model = Json.parse(json);
+                var model = JSON.parse(json);
                 var groupIndexElement = window.parent.document.getElementById('group_' + model.groupid);
                 if (groupIndexElement != null) {
                     groupIndexElement.contentWindow.getAddSubject && groupIndexElement.contentWindow.getAddSubject(model);

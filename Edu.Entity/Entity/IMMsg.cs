@@ -99,5 +99,10 @@ namespace Edu.Entity
         /// </summary>
         public string SubjectId { get; set; }
 
+        /// <summary>
+        /// µãÔŞÊı
+        /// </summary>
+        public int ThumbCount { get; set; }
+
     }
 }

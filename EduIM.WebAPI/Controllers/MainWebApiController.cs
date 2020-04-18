@@ -416,6 +416,74 @@ namespace EduIM.WebAPI.Controllers
         }
 
 
+
+        /// <summary>
+        /// 群组中点赞
+        /// </summary>       
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult ThumbMessage([FromBody]Msg msg)
+        {
+            try
+            {
+                var idInt = Convert.ToInt32(msg.id0);
+                var query = _unitOfWork.DIMMsg.Get(p => p.ID == idInt).FirstOrDefault();
+
+                if (query != null)
+                {
+                    query.ThumbCount++;
+                    _unitOfWork.DIMMsg.Update(query);
+                    var result = _unitOfWork.Save();
+                    if (result.ResultType == OperationResultType.Success)
+                    {
+                        return Json(new
+                        {
+                            Success = true,
+                            Content = query.ThumbCount,
+                            Error = "",
+                            Message = "操作成功",
+                            Count = 1,
+                            Total = 1
+                        });
+                    }
+                    return Json(new
+                    {
+                        Success = false,
+                        Content = 0,
+                        Error = result.Message,
+                        Message = "操作失败",
+                        Count = 0,
+                        Total = 0
+                    });
+                }
+                return Json(new
+                {
+                    Success = false,
+                    Content = 0,
+                    Error = "未查询到对应的数据",
+                    Message = "操作失败",
+                    Count = 0,
+                    Total = 0
+                });
+
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Error(ex.Message);
+                return Json(
+                    new
+                    {
+                        Success = false,
+                        Content = "",
+                        Error = ex.ToString(),
+                        Message = "操作失败",
+                        Count = 0,
+                        Total = 0
+                    });
+            }
+        }
+
+
         /// <summary>
         /// 查询群组主题（未结束的，有效的主题）
         /// </summary>       

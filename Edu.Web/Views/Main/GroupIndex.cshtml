@@ -22,16 +22,16 @@
         <el-main>
             <div class="group_chat_con">
                 <!-- bot -->
-                <div v-bind:class="'group_chatc_bot chatc_bot_c ' + tabClass">
+                <div class="group_chatc_bot chatc_bot_c" v-bind:class="[{ 'chat_mem_show ': showMember && openMember,'chat_trends_show ': !showMember }, tabClass]">
                     <!-- 切换有5种样式颜色对应类名为
-                    chatcb_tab_c1f、
-                    chatcb_tab_c88、
-                    chatcb_tab_c6c、
-                    chatcb_tab_ce3、
-                    chatcb_tab_cd9 -->
-                    <div class="chatcb_tab_list">
+                chatcb_tab_c1f、
+                chatcb_tab_c88、
+                chatcb_tab_c6c、
+                chatcb_tab_ce3、
+                chatcb_tab_cd9 -->
+                    <div class="chatcb_tab_list clearfix">
                         <el-badge v-bind:value="item.count" v-bind:hidden="item.count<=0" v-for="(item, index) in subjectList" v-bind:key="'s'+index">
-                            <a class="chat_tab_item" href="javascript:;" v-on:click="setCurrentSubjectId(item)" v-cloak>{{item.name}}</a>
+                            <a class="chat_tab_item" v-bind:class="{'hover':currentSubjectId==item.id}" href="javascript:;" v-on:click="setCurrentSubjectId(item)" v-cloak>{{item.name}}</a>
                             <!--删除主题按钮-->
                             <svg class="icon icon-close" aria-hidden="true" v-on:click="deleteSubject(item)" v-if="(item.id!=0)&&(uid==item.creator || isAdmin!=0)">
                                 <use xlink:href="#icon-error"></use>
@@ -40,8 +40,8 @@
                     </div>
                     <!-- tab_content -->
                     <!--  聊天记录显示时给下面div加类名chat_trends_show
-                    群组成员显示时给下面div添加类名chat_mem_show -->
-                    <div class="chatcb_tab_content clearfix" v-bind:class="{ 'chat_mem_show': showMember && openMember,'chat_trends_show': !showMember }">
+                群组成员显示时给下面div添加类名chat_mem_show -->
+                    <div class="chatcb_tab_content clearfix">
                         <!-- 聊天内容 -->
                         <div class="chatcb_tc_l el-col el-col-18">
                             <div class="chatcb_tcl_top">
@@ -53,7 +53,7 @@
                                     </infinite-loading>
                                     <el-row>
                                         <!-- 左侧聊天框样式 其他用户的发言-->
-                                        <el-col v-bind:span="24" class="chat_left" v-for="(item, index) in showChatList" v-bind:id="item.id1" v-bind:data-msgid="item.id0" v-bind:key="'m'+index" v-bind:class="{ 'chat_right': item.fromuid==uid }">
+                                        <el-col v-bind:span="24" v-for="(item, index) in showChatList" v-bind:id="item.id1" v-bind:data-msgid="item.id0" v-bind:key="'m'+index" v-bind:class="{ 'chat_right': item.fromuid==uid, 'chat_left':item.fromuid!=uid}">
                                             <!-- 时间 -->
                                             <div class="chat_time" v-cloak>{{item.msgtime}}</div>
                                             <div class="chatl_con clearfix">
@@ -61,30 +61,27 @@
                                                 <div class="chatl-r">
                                                     <p class="chatlr-name" v-cloak>{{item.fromrealname}}</p>
                                                     <!--0文本类消息-->
-                                                    <p v-if="item.msgtype == 0" class="chatlr-txt" v-html="item.msg"></p>
+                                                    <p v-if="item.msgtype == 0" class="chatlr-txt" v-html="getQuoteMessageAfterMessage(item)">
+                                                        
+                                                    </p>
                                                     <!--1图片类消息-->
-                                                    <div class="chatlr-txt2" v-if="item.msgtype == 1" v-on:click="showImage(item.msg)">
-                                                        <img v-bind:src="item.msg" />
-                                                        <div class="ctxt2-bot">
-                                                            @*<p class="ctxt2b-tit">图片.jpg</p>*@
-                                                            @*<p class="clearfix ctxt2b-info">
-                                                                <span class="chat_fl"> 0.2MB </span>
-                                                                <span class="chat_fr" v-on:click="openImageUrl(item.msg)">
-                                                                    <svg class="icon icon-down" aria-hidden="true">
-                                                                        <use xlink:href="#icon-download"></use>
-                                                                    </svg>
-                                                                </span>
-                                                            </p>*@
-                                                        </div>
+                                                    <div class="chatlr-txt2" v-if="item.msgtype == 1">
+                                                        <img v-bind:src="item.msg" v-on:click="showImage(item.msg)" />
+                                                        <span class="chat_fr ctxt2-img">
+                                                            <!--收藏-->
+                                                            <svg class="icon linkc9 chat_mr10" aria-hidden="true" v-on:click="addUserFavorites(item)" v-bind:class="{'hover':item.isFavoriate}">
+                                                                <use v-bind:xlink:href="item.isFavoriate?'#icon-star':'#icon-star1'"></use>
+                                                            </svg>
+                                                        </span>
                                                     </div>
 
                                                     <!--2文件类消息-->
                                                     <div v-if="item.msgtype == 2" class="chatlr-txt1" v-cloak>
                                                         <p class="chatlrt-t">
                                                             <svg class="icon icon-sl" aria-hidden="true">
-                                                                <use xlink:href="#icon-word-s"></use>
+                                                                <use v-bind:xlink:href="getFileClass(item.filename)"></use>
                                                             </svg>
-                                                            <span>{{item.filename}}</span>
+                                                            <span>{{getShortFileName(item.filename)}}</span>
                                                             <span class="c9">{{formatFileSize(item.duration)}}</span>
                                                         </p>
                                                         <p class="chatlrt-b clearfix">
@@ -127,29 +124,46 @@
                                                         </p>
                                                     </div>
                                                     <!--10.协同研讨类消息-->
-                                                    <p v-if="item.msgtype == 10" class="chatlr-txt chat_discuss" v-html="'发起了协同研讨['+item.msg+']'" v-on:click="openDiscuss(item.filename)"></p>
+                                                    <div v-if="item.msgtype == 10" class="chatlr-txt1">
+                                                        <p class="chatlrt-t" v-on:click="openDiscuss(item.filename)">
+                                                            <svg class="icon icon-sl" aria-hidden="true">
+                                                                <use xlink:href="#icon-word-s"></use>
+                                                            </svg>
+                                                            <span>{{item.msg+'.docx'}}</span>
+                                                        </p>
+                                                        <p class="chatlrt-b clearfix">
+                                                            <span class="chat_fl">协同研讨</span>
+                                                            <span class="chat_fr">
+                                                                <!--收藏-->
+                                                                <svg class="icon linkc9 chat_mr10" aria-hidden="true" v-on:click="addUserFavorites(item)" v-bind:class="{'hover':item.isFavoriate}">
+                                                                    <use v-bind:xlink:href="item.isFavoriate?'#icon-star':'#icon-star1'"></use>
+                                                                </svg>
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                                 <!--附加功能选项-->
-                                                <div class="chatl-icon" v-if="item.msgtype == 0">
+                                                <div class="chatl-icon">
                                                     <!--点赞，先隐藏-->
-                                                    @*<span class="linkc9">
+                                                    <span class="linkc9" v-on:click="thumb(item)">
                                                         <svg class="icon" aria-hidden="true">
-                                                            <use xlink:href="#icon-zan"></use>
+                                                            <use v-bind:xlink:href="item.selfThumb?'#icon-zan1':'#icon-zan'"></use>
                                                         </svg>
                                                         <i>{{item.thumbCount}}</i>
-                                                    </span>*@
-                                                    <el-popover placement="bottom" width="80" trigger="click">
+                                                    </span>
+                                                    <el-popover placement="bottom" width="80" trigger="hover" v-if="item.msgtype == 0">
+                                                        <ul class="select-ul">
+                                                            <li v-on:click="quoteMessage(item)" v-if="item.msgtype == 0 && item.fromuid!=uid">引用</li>
+                                                            <li v-on:click="copyMessage(item.msg)" v-if="item.msgtype == 0">复制</li>
+                                                            <li v-on:click="addUserFavorites(item)">收藏</li>
+                                                            @*只有自己才能删除*@
+                                                            <li v-on:click="deleteMessage(item)" v-if="item.fromuid == uid">删除</li>
+                                                        </ul>
                                                         <span slot="reference" class="linkc9">
                                                             <svg class="icon" aria-hidden="true">
                                                                 <use xlink:href="#icon-more"></use>
                                                             </svg>
                                                         </span>
-                                                        <ul class="select-ul">
-                                                            <li v-on:click="quoteMessage(item)">引用</li>
-                                                            <li v-on:click="copyMessage(item.msg)" v-if="item.msgtype == 0">复制</li>
-                                                            <li v-on:click="addUserFavorites(item)">收藏</li>
-                                                            <li v-on:click="deleteMessage(item)">删除</li>
-                                                        </ul>
                                                     </el-popover>
                                                 </div>
                                             </div>
@@ -181,10 +195,10 @@
                                             </svg>
                                         </span>
                                         @*<span id="emojiBtn2" v-on:click="openEmoji" @@click.stop="">
-                                                <svg class="icon" aria-hidden="true">
-                                                    <use xlink:href="#icon-smile"></use>
-                                                </svg>
-                                            </span>*@
+                                            <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-smile"></use>
+                                            </svg>
+                                        </span>*@
                                         <!---->
                                         <el-upload class="upload-demo" style="display: none;" ref="upload"
                                                    action="/imwebapi/Home/Upload"
@@ -224,8 +238,7 @@
                                                 <use xlink:href="#icon-chat"></use>
                                             </svg>
                                         </span>
-                                        <!--普通用户无法创建主题-->
-                                        <span id="subjectBtn" v-if="isAdmin!=0" v-on:click="openSubject">
+                                        <span id="subjectBtn" v-on:click="openSubject">
                                             <svg class="icon" aria-hidden="true">
                                                 <use xlink:href="#icon-tag"></use>
                                             </svg>
@@ -309,8 +322,8 @@
                             <h3 class="chatcb-h3 clearfix">
                                 <span class="chat_fl">群组成员<i class="c9" v-cloak>({{onlineCount}}/{{memberCount}})</i></span>
                                 @*<svg class="icon chat_fr linkc9 chat_mt15" aria-hidden="true">
-                                        <use xlink:href="#icon-search"></use>
-                                    </svg>*@
+                                    <use xlink:href="#icon-search"></use>
+                                </svg>*@
                             </h3>
                             <div class="chatcb_mem_con">
                                 <el-scrollbar>
@@ -355,16 +368,12 @@
                                                         <img v-bind:src="item.Logo" class="head_img" />
                                                         <span class="mem_width" v-cloak>{{item.RealName}}</span>
                                                     </span>
-                                                    <span class="chatcb_memi_icon2 chat_fr" v-if="item.online">
+                                                    <span class="chatcb_memi_icon2 chat_fr" v-bind:class="{'chatcb_memi_icon2':item.online,'chatcb_memi_icon3':!item.online,}">
                                                         <svg class="icon chat_fl" aria-hidden="true">
                                                             <use xlink:href="#icon-dot"></use>
                                                         </svg>
                                                     </span>
-                                                    <span class="chatcb_memi_icon3 chat_fr" v-if="!item.online">
-                                                        <svg class="icon chat_fl" aria-hidden="true">
-                                                            <use xlink:href="#icon-dot"></use>
-                                                        </svg>
-                                                    </span>
+
                                                 </p>
                                             </el-col>
                                         </div>
@@ -382,7 +391,7 @@
         <el-dialog class="dialog1" title="新建协同文档" width="750px" v-bind:visible.sync="dialog1">
             <el-form label-width="80px" :label-position="labelPosition">
                 <el-form-item label="名称：" required>
-                    <el-input placeholder="200字以内" v-model="c_title"></el-input>
+                    <el-input placeholder="10个字以内" v-model="c_title" maxlength="10"></el-input>
                 </el-form-item>
                 <el-form-item label="负责人：" required>
                     <span><img v-bind:src="getHeadPhoto(uid)" class="head_img1 chat_mr10" />{{realName}}</span>
@@ -428,15 +437,15 @@
         <el-dialog class="dialog1" title="新建协同研讨" width="750px" v-bind:visible.sync="dialog2">
             <el-form label-width="100px" :label-position="labelPosition">
                 <el-form-item label="名称：" required>
-                    <el-input placeholder="200字以内" v-model='d_title'></el-input>
+                    <el-input placeholder="10个字以内" v-model='d_title' maxlength="10"></el-input>
                 </el-form-item>
                 <el-form-item label="起止时间：">
                     <el-col :span="11">
-                        <el-date-picker type="date" v-model="d_startTime"></el-date-picker>
+                        <el-date-picker type="date" v-model="d_startTime" value-format="yyyy-MM-dd"></el-date-picker>
                     </el-col>
                     <el-col class="line" :span="2">-</el-col>
                     <el-col :span="11">
-                        <el-date-picker type="date" v-model="d_endTime"></el-date-picker>
+                        <el-date-picker type="date" v-model="d_endTime" value-format="yyyy-MM-dd"></el-date-picker>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="负责人：" required>
@@ -448,7 +457,7 @@
                     </svg>*@
                     <!-- 展开添加类名mem_con_max -->
                     <div v-bind:class="{ 'mem_con_max': d_showMember,'mem_con': !d_showMember }">
-                        <span class="mem_con_item"  v-for="(item, index) in d_memberList" v-bind:key="'d_'+index" >
+                        <span class="mem_con_item" v-for="(item, index) in d_memberList" v-bind:key="'d_'+index">
                             <span class="mem_img">
                                 <img v-bind:src="item.Logo" class="head_img1">
                                 @*<a class="mem_del" >
@@ -480,14 +489,33 @@
             </span>
         </el-dialog>
         <!-- 创建主题聊天 -->
-        <el-dialog class="dialog1" title="创建主题聊天" width="500px" v-bind:visible.sync="dialog3">
-            <el-input placeholder="主题名15字以内" v-model="subjectTitle"></el-input>
+        <el-dialog class="dialog1" title="新建讨论主题" width="500px" v-bind:visible.sync="dialog3">
+            <el-input placeholder="10个字以内" v-model="subjectTitle" maxlength="10"></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" v-on:click="createSubject">确 定</el-button>
                 <el-button v-on:click="dialog3=false;subjectTitle='';">取 消</el-button>
             </span>
         </el-dialog>
 
+        <!--导出用-->
+        <div id="chatcontent" style="display: none;">
+            <div v-for="(item, index) in exportChatList">
+                <h3>{{item.fromrealname}}  <span class="h3-time">{{item.msgtime}}</span></h3>
+                <!--0 纯文本消息(包含了表情，用文字替代)-->
+                <p v-if="item.msgtype==0" class="p-msg" v-html="item.msg"></p>
+                <!--1 图片消息-->
+                <img v-if="item.msgtype==1" class="p-msg-img" v-bind:src="item.msg" />
+                <!--2 文件消息-->
+                <p v-if="item.msgtype==2" class="p-msg">{{'[文件]'+item.filename}}</p>
+                <!--3 图文混合消息-->
+                <!--4 存放语音消息的url-->
+                <!--5 存放地图签到消息-->
+                <!--6 存放xxx加入视频聊天-->
+                <!--7 视频播放地址的url-->
+                <!--8 存放 文本消息内容(需要回执类消息)-->
+                <p v-if="item.msgtype==8" class="chat-msg-word">{{item.msg}}</p>
+            </div>
+        </div>
 
 
     </el-container>
@@ -535,6 +563,7 @@
                 return {
                     quoteId: 0,//引用的消息的id
                     quoteItem: "",//引用的消息的具体Model字符串
+                    tempQuoteString: "",//用来替换的
                     creationRoot: '@ConfigHelper.GetConfigString("CreationRoot")',
                     creationVisitRoot: '@ConfigHelper.GetConfigString("CreationVisitRoot")',
                     creationDownLoadRoot: '@ConfigHelper.GetConfigString("CreationDownloadRoot")',
@@ -559,9 +588,10 @@
                     leaderMember: {},//负责人(创建者)
                     adminMember: [], //管理员成员列表
                     memberList: [],//普通群组成员
+                    onlineMemberList: [],//当前在线成员
+                    offlineMemberList:[],//离线成员
                     subjectList: [],//如果是群组界面,同一个群组，主题最多只有4个
                     exportChatList: [],//聊天历史记录,导出聊天历史记录的时候使用
-
                     showMember: true,//右侧显示成员/历史记录
                     openMember: true,//右侧现成成员收起/展开
                     memberCount: 0,//群组总人数
@@ -569,18 +599,18 @@
                     tabClass: 'chatcb_tab_c1f',//主题tab颜色类
                     //message: '',//文本聊天内容，已经启用
 
-                    d_showMember:false,//是否展开
+                    d_showMember: false,//是否展开
                     d_title: '',
                     d_startTime: new Date().format("yyyy-MM-dd"),
                     d_endTime: (new Date(new Date().setDate(new Date().getDate() + 1))).format("yyyy-MM-dd"),
 
                     d_memberList: [],
-                    d_memberIdList:[],
+                    d_memberIdList: [],
                     d_summary: '',
 
-                    c_showMember:false,
+                    c_showMember: false,
                     c_title: '',
-                    c_remark:'',
+                    c_remark: '',
 
                 }
             },
@@ -657,24 +687,44 @@
             created: function () {
                 var self = this;
 
+
+                window.swapItems = function (arr, index1, index2, direction) {
+                    if (direction == 'up') {//置顶
+                        arr.unshift(arr[index1]);
+                        arr.splice(index1 + 1, 1);
+                        return arr;
+                    }
+                    if (direction == 'down') {//置底
+                        arr.push(arr[index1]);
+                        arr.splice(index1, 1);
+                        return arr;
+                    }
+                    arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+                    return arr;
+                };
+
                 //收到删除消息
                 window.getDeleteMessage = function (id) {
+                    var realName = "";
                     self.chatListAll = self.chatListAll.filter(item => {
-                        if (id !== item.id0) {
+                        if (id.toString() !== item.id0) {
                             return true;
+                        } else {
+                            realName = item.fromrealname;
                         }
                     });
 
                     self.showChatList = self.showChatList.filter(item => {
-                        if (id !== item.id0) {
+                        if (id.toString() !== item.id0) {
                             return true;
                         }
                     });
+                    self.$message(realName + "撤回了一条消息")
                 };
                 //收到删除主题
                 window.getDeleteSubject = function (id) {
                     self.subjectList = self.subjectList.filter(item => {
-                        if (id !== item.id1) {
+                        if (id !== item.id) {
                             return true;
                         }
                     });
@@ -682,6 +732,21 @@
                 };
                 //收到新增主题
                 window.getAddSubject = function (model) {
+
+                    //设置count为0
+                    //设置样式
+                    self.$set(model, 'count', 0);
+                    //类样式
+                    if (self.subjectList.length == 1) {
+                        self.$set(model, 'class', 'chatcb_tab_c88');
+                    } else if (self.subjectList.length == 2) {
+                        self.$set(model, 'class', 'chatcb_tab_c6c');
+                    } else if (self.subjectList.length == 3) {
+                        self.$set(model, 'class', 'chatcb_tab_ce3');
+                    } else if (self.subjectList.length == 4) {
+                        self.$set(model, 'class', 'chatcb_tab_cd9');
+                    }
+
                     self.subjectList.push(model);
                     self.setCurrentSubjectId(model);
                 };
@@ -700,8 +765,8 @@
                         headers: {
                             'ignore-identity': true
                         },
-                        url: "/imwebapi/api/MainWebApi/GetChatHistory",
-                        data: { uid: uid, touid: groupid, dt0: dt0, dt1: dt1 },
+                        url: "/imwebapi/api/MainApi/GetChatHistory",
+                        data: { uid: self.uid, touid: self.groupId, dt0: dt0, dt1: dt1 },
                         dataType: "json",
                         success: function (data) {
                             if (data.Success) {
@@ -774,22 +839,7 @@
                         }
                     }
 
-                    //self.$nextTick(() => {
-                    //    //格式化表情
-                    //    if (model.msgtype === 0 || model.model === 3) {
-                    //        EmojiParse($("div[data-msgid='" + model.id0 + "']"));
-                    //    }//格式化地图
-                    //    else if (model.msgtype === 5) {
-                    //        //地图消息
-                    //        var mapid = "map" + model.id0;
-                    //        //构造地图
-                    //        var latitude = model.filename.split(',');
-                    //        GaoDeMap(mapid, latitude);
-                    //    }
-
-                    //})
-
-                    
+                    self.scrollToBottom();
                 }
 
 
@@ -800,7 +850,7 @@
 
                 //打开协同创作链接
                 openCreationDocument: function (id) {
-                    window.open(this.creationVisitRoot+id);
+                    window.open(this.creationVisitRoot + id);
                 },
                 //下载协同创作
                 downloadCreationDocument: function (id) {
@@ -808,7 +858,7 @@
                 },
                 //打开协同研讨链接
                 openDiscuss: function (id) {
-                    window.open(this.discussVisitRoot+id+'&from=pmc');
+                    window.open(this.discussVisitRoot + id + '&from=pmc');
                 },
 
                 //新建协同文档(工作群中建立)
@@ -828,8 +878,8 @@
                     }
                     $.ajax({
                         type: 'Post',
-                        contentType:'application/json;charset=UTF-8',
-                        url: self.creationRoot + '/project/addCooperation?_=' + (new Date()).valueOf()+'&'+"@ConfigHelper.GetConfigString("ssoTokenId")"+'='+$.cookie("@ConfigHelper.GetConfigString("ssoTokenId")"),
+                        contentType: 'application/json;charset=UTF-8',
+                        url: self.creationRoot + '/project/addCooperation?_=' + (new Date()).valueOf() + '&' + "@ConfigHelper.GetConfigString("ssoTokenId")" + '=' + $.cookie("@ConfigHelper.GetConfigString("ssoTokenId")"),
                         data: JSON.stringify(param),
                         dataType: "json",
                         success: function (result) {
@@ -921,23 +971,6 @@
                     this.d_summary = '';
                 },
 
-
-                //监听回车
-                //sendMessageKeyUp: function () {
-                //    if (event.keyCode === 13 && !(event.ctrlKey)) {
-
-                //        $("#msgTextarea").html($("#msgTextarea").html().replace("<div><br></div>", ""));
-                //        this.sendBtnClick()
-                //        event.preventDefault();
-                //        return false;
-                //    }
-                //    if (event.ctrlKey && event.keyCode === 13) {
-                //        $("#msgTextarea").html($("#msgTextarea").html() + '<br>');
-                //        woohecc.placeCaretAtEnd(inputTxt.get(0));
-                //        return false;
-                //    }
-                //},
-
                 //打开表情面板
                 openEmoji: function () {
                     $('#emojiBtn').click();
@@ -949,8 +982,28 @@
                         return fullname;
                     }
                     else {
-                        return fullname.substring(0, pos + 1);
+                        return fullname.substring(0, pos);
                     }
+                },
+                //返回带省略号的文件名
+                getShortFileName: function (fullname) {
+                    var suffix = "";//后缀
+                    var tempFullname = "";
+                    var pos = fullname.lastIndexOf('.');
+                    if (pos < 0) {
+                        tempFullname = fullname;
+                    } else {
+                        suffix = fullname.substring(pos, fullname.length);//后缀名  .docx
+                        tempFullname = fullname.substring(0, pos);
+                    }
+                    var result = "";
+
+                    if (tempFullname.length > 10) {
+                        result = tempFullname.substring(0, 8) + "..." + tempFullname[tempFullname.length - 1] + suffix;
+                    } else {
+                        result = fullname;
+                    }
+                    return result;
                 },
                 //准备上传文件
                 triggerFile: function () {
@@ -1017,6 +1070,20 @@
                                     message: '新建主题成功',
                                     type: 'success'
                                 });
+
+                                //设置count为0
+                                //设置样式
+                                self.$set(result.Content, 'count', 0);
+                                //类样式
+                                if (self.subjectList.length == 1) {
+                                    self.$set(result.Content, 'class', 'chatcb_tab_c88');
+                                } else if (self.subjectList.length == 2) {
+                                    self.$set(result.Content, 'class', 'chatcb_tab_c6c');
+                                } else if (self.subjectList.length == 3) {
+                                    self.$set(result.Content, 'class', 'chatcb_tab_ce3');
+                                } else if (self.subjectList.length == 4) {
+                                    self.$set(result.Content, 'class', 'chatcb_tab_cd9');
+                                }
                                 self.subjectList.push(result.Content);
 
                                 var ele = window.parent.parent.document.getElementById("okcsim");
@@ -1048,7 +1115,7 @@
                         }
                     });
                 },
-                
+
 
 
                 //打开协同创作
@@ -1122,10 +1189,10 @@
                         });
 
                     }).catch(() => {
-                        
+
                     });
                 },
-                
+
 
 
                 //删除消息
@@ -1149,7 +1216,7 @@
                     } else {
                         this.showChatList = this.chatListAll;
                     }
-                    
+
 
 
                     if (this.uid == model.fromuid) {
@@ -1165,7 +1232,7 @@
                         } else {
                             this.$message.error("消息发送失败(未查询到im)");
                         }
-                    } else {                        
+                    } else {
 
                     }
 
@@ -1174,9 +1241,9 @@
                 quoteMessage: function (model) {
                     this.quoteId = model.id0;
                     this.quoteItem = JSON.stringify(model);
-
-                    var m = '#' + model.msg + '#';
-                    $("#msgTextarea").html(m).focus();
+                    this.tempQuoteString = '#' + model.msg + '#';
+                    $("#msgTextarea").focus();
+                    $("#msgTextarea").html(this.tempQuoteString);
 
 
 
@@ -1190,7 +1257,7 @@
                 //复制
                 copyMessage: function (message) {
                     var self = this;
-                    window.copyToClip(message, function(){
+                    window.copyToClip(message, function () {
                         self.$message('复制成功');
                     })
                 },
@@ -1230,7 +1297,7 @@
                                     message: '添加收藏成功',
                                     type: 'success'
                                 });
-                                model.isFavoriate = true;
+                                self.$set(model, 'isFavoriate', true);
                             } else {
                                 //layer.msg('收藏失败');
                                 self.$message.error('添加收藏失败');
@@ -1298,8 +1365,22 @@
                 },
 
                 //查看列表中的用户是否在线
-                getOnlineStatus: function (value) {
+                getOnlineStatus: function (value,index) {
                     var self = this;
+                    console.log("getOnlineStatus:", value.UserID);
+
+                    if (value.UserID == self.uid) {
+                        self.$set(value, 'online', true);
+                        self.onlineCount++;
+                        console.log(value.RealName,index,"置顶")
+                        while (index > 0) {
+                            self.upTr(index);
+                            index--;
+                        }
+                        return;
+                    }
+
+
                     $.ajax({
                         url: '/imwebapi/api/MainWebApi/GetOnlineStatus',
                         type: 'Get',
@@ -1309,12 +1390,17 @@
                         data: { uid: value.UserID },
                         success: function (data) {
                             if (data.Success) {
-                                value['online'] = data.Content;
+                                self.$set(value, 'online', data.Content);
                                 if (data.Content) {
+                                    console.log(value.RealName, index, "置顶")
                                     self.onlineCount++;
+                                    while (index > 0) {
+                                        self.upTr(index);
+                                        index--;
+                                    }
                                 }
                             } else {
-                                value['online'] = false;
+                                self.$set(value, 'online', false);
                             }
                         },
                         error: function (err) {
@@ -1328,21 +1414,37 @@
                 updateUserStatus: function (uid, b) {
                     var self = this;
                     var user = self.memberList.filter(item => {
-                        return (item.UserId == uid);
+                        if (uid == item.UserID) {
+                            return true;
+                        }
                     });
-                    if (user.length>=0) {
+                    if (user.length > 0) {
                         //上线
                         if (b) {
-                            if (user[0].online && user[0].online == false) {
+                            if (!user[0].online) {
+                                //Vue.set(self.memberList, 0, user[0]);
+                                var index = self.memberList.indexOf(user[0]);
+                                while (index > 0) {
+                                    this.upTr(index);
+                                    index--
+                                }
                                 self.onlineCount++;
-                                self.memberList.unshift(self.memberList.splice(self.memberList.findindex(user[0]), 1))
                             }
                         } else {
-                            if (user[0].online && user[0].online) {
-                                //self.memberList.unshift(self.memberList.splice(self.memberList.findindex(user), 1))
+                            //离线
+                            if (user[0].online) {
+                                //Vue.set(self.memberList, self.memberList.length-1, user[0]);
+                                var index = self.memberList.indexOf(user[0]);
+                                while (index < self.memberList.length) {
+                                    self.downTr(index); 
+                                    index++
+                                }
+
+                                self.onlineCount--;
                             }
                         }
                         user[0].online = b;
+
                     }
                 },
 
@@ -1365,16 +1467,7 @@
                                 self.chatListAll = data.Content.reverse();
                                 self.showChatList = self.chatListAll;
                                 if (self.chatListAll.length > 0) {
-                                    cb1();
-                                    //格式化表情，并滚动到底部
-                                    //self.$nextTick(() => {
-                                    //    self.scrollToBottom();
-                                    //    self.chatListAll.forEach(function (item, index) {
-                                    //        if (item.msgtype == 0 || item.msgtype == 3) {
-                                    //            EmojiParse($('#' + item.id1));
-                                    //        }                                            
-                                    //    });
-                                    //});
+                                    cb1();                                    
                                 } else {
                                     cb2();
                                 }
@@ -1412,14 +1505,7 @@
 
                                     });
                                     self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
-                                    //self.$nextTick(() => {
-                                    //    var result = data.Content.filter(item => {
-                                    //        return (item.msgtype == 0 || item.msgtype == 3);
-                                    //    });
-                                    //    result.forEach(function (item, index) {
-                                    //        EmojiParse($('#' + item.id1));
-                                    //    });
-                                    //});
+                                    
                                 } else {
                                     self.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
                                 }
@@ -1471,14 +1557,6 @@
 
                                     });
                                     $state.loaded();
-                                    //self.$nextTick(() => {
-                                    //    var result = self.showChatList.filter(item => {
-                                    //        return (item.msgtype == 0 || item.msgtype == 3);
-                                    //    });
-                                    //    result.forEach(function (item, index) {
-                                    //        EmojiParse($('#' + item.id1));
-                                    //    });
-                                    //});
                                 } else {
                                     $state.complete();
                                 }
@@ -1521,17 +1599,20 @@
                                 }
 
                                 $.each(self.subjectList, function (index, value) {
-                                    value['count'] = 0;//右上角消息个数
+                                    //右上角消息个数
+                                    self.$set(value, 'count', 0);
+                                    
                                     if (index == 0) {
-                                        value['class'] = 'chatcb_tab_c1f';//类样式
+                                        //类样式
+                                        self.$set(value, 'class', 'chatcb_tab_c1f');
                                     } else if (index == 1) {
-                                        value['class'] = 'chatcb_tab_c88';
+                                        self.$set(value, 'class', 'chatcb_tab_c88');
                                     } else if (index == 2) {
-                                        value['class'] = 'chatcb_tab_c6c';
+                                        self.$set(value, 'class', 'chatcb_tab_c6c');
                                     } else if (index == 3) {
-                                        value['class'] = 'chatcb_tab_ce3';
+                                        self.$set(value, 'class', 'chatcb_tab_ce3');
                                     } else if (index == 4) {
-                                        value['class'] = 'chatcb_tab_cd9';
+                                        self.$set(value, 'class', 'chatcb_tab_cd9');
                                     }
                                 });
 
@@ -1580,15 +1661,18 @@
                                     } else {
                                         self.memberList.push(value);
                                     }
-                                    //获取在线状态，更新前端
-                                    self.getOnlineStatus(value);
                                 });
 
-                                if (self.isAdmin != 1) {
-                                    self.getOnlineStatus(data.Content.Leader);
-                                }
-                                
+                                //更新在线状态，将在线的成员放到onlineMemberList中，离线的成员放到offlineMemberList中
+                                $.each(self.memberList, function (index, value) {
+                                    console.log(value.RealName, value.UserID);
+                                    self.getOnlineStatus(value, index);
+                                });
 
+
+                                if (self.isAdmin != 1) {
+                                    self.getOnlineStatus(data.Content.Leader,0);
+                                }
 
 
                             } else {
@@ -1606,6 +1690,7 @@
                     var self = this;
                     var sendText = document.getElementById('msgTextarea').innerText;//只能获取出文本内容
                     var msg = $.trim($("#msgTextarea").html());
+
                     if (msg === "" && sendText==""  ) {
                         self.$message("发送内容不能为空");
                         return;
@@ -1618,9 +1703,6 @@
                         });
                         return;
                     }
-
-
-
                     var msgObject = {
                         "id0": "",
                         "msgtype": 0,
@@ -1731,6 +1813,7 @@
 
                 //调用im/main 的发送消息
                 sendMessage: function (model) {
+                    this.$set(model, 'thumbCount', 0);
                     model["fromuid"] = this.uid;
                     model["touid"] = this.groupId;
                     model["isgroup"] = 1;
@@ -1738,7 +1821,6 @@
                     model["torealname"] = this.groupName;
                     model["id1"] = (new Date()).valueOf();
                     model["subjectId"] = this.currentSubjectId;
-                    model["thumbCount"] = 0;
                     model["terminal"] = "@ConfigHelper.GetConfigString("ImTerminal")";
                     model["msgtime"] = (new Date()).format('yyyy/MM/dd hh:mm:ss');
 
@@ -1746,7 +1828,14 @@
                     
                     model["quoteContent"] = this.quoteItem;
 
-
+                    if (this.quoteId != 0 && this.quoteItem != "") {
+                        var reg = new RegExp(this.tempQuoteString, 'g')//g代表全部
+                        model.msg = model.msg.replace(reg, '');                        
+                    }
+                    if (model.msg == "") {
+                        this.$message("发送内容不能为空");
+                        return;
+                    }
 
                     var ele = window.parent.parent.document.getElementById("okcsim");
                     if (ele != null) {
@@ -1758,6 +1847,7 @@
 
                         this.quoteId = 0;
                         this.quoteItem = "";
+                        this.tempQuoteString = "";
 
 
                     } else {
@@ -1765,10 +1855,108 @@
                     }
                 },
 
-               
+                //根据文件名全称获取后缀及样式
+                getFileClass: function (fullname) {
+                    fullname = fullname.toLowerCase();
+                    var result = 'icon-other-s';                    
+                    var index1 = fullname.lastIndexOf(".");
+
+                    if (index1 < 0) {
+                        result = '#' + result;
+                        return result;
+                    }
+
+                    var index2 = fullname.length;
+                    var suffix = fullname.substring(index1, index2);//后缀名  .docx
+
+                    if (suffix == ".docx" || suffix == ".doc" || suffix == ".wps") {
+                        result = 'icon-word-s';
+                    } else if (suffix == ".pptx" || suffix == ".ppt") {
+                        result = 'icon-ppt-s';
+                    } else if (suffix == ".pdf") {
+                        result = 'icon-pdf-s';
+                    } else if (suffix == ".xls" || suffix == ".xlsx") {
+                        result = 'icon-xls-s';
+                    } else if (suffix == ".caj") {
+                        result = 'icon-caj-s';
+                    } else if (suffix == ".txt") {
+                        result = 'icon-txt-s';
+                    } else if (suffix == ".rar" || suffix == ".zip") {
+                        result = 'icon-zip-s';
+                    } else if (suffix == ".bmp" || suffix == ".jpg" || suffix == ".jpeg" || suffix == ".png") {
+                        result = 'icon-img-s';
+                    } else if (suffix == ".gif") {
+                        result = 'icon-gif-s';
+                    } else if (suffix == ".cad") {
+                        result = 'icon-cad-s';
+                    } else if (suffix == ".bmp") {
+                        result = 'icon-bmp-s';
+                    } else if (suffix == ".wav" || suffix == ".mp3" || suffix == ".wma" || suffix == ".aac" || suffix == ".flac") {
+                        result = 'icon-audio-s';
+                    } else if (suffix == ".mov" || suffix == ".swf" || suffix == ".flv" || suffix == ".mp4" || suffix == ".rm" || suffix == ".mpg" || suffix == ".rmvb") {
+                        result = 'icon-video-s';
+                    }
+                    result = '#' + result;
+                    return result;
+                },
+
+                //获取引用消息具体内容
+                getQuoteMessageString: function (json) {
+                    var model = JSON.parse(json);
+                    return model.fromrealname + "：" + model.msg;
+                },
+
+                //获取引用消息具体内容
+                getQuoteMessageAfterMessage: function (model) {
+                    if (model.quoteId != 0) {
+                        return "<span class='ctxt-child'>" + this.getQuoteMessageString(model.quoteContent) + " </span>" + model.msg;
+                    } else {
+                        return model.msg;
+                    }
+                },
+
+                //点赞消息
+                thumb: function (model) {
+                    if (model.selfThumb) {
+                        return;
+                    }
+                    var self = this;
+                    $.ajax({
+                        url: '/imwebapi/api/MainWebApi/ThumbMessage',
+                        type: 'POST',
+                        headers: {
+                            'ignore-identity': "true"
+                        },
+                        data: model,
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.Success) {
+                                self.$set(model, 'thumbCount', result.Content);
+                                self.$set(model, 'selfThumb', true);
+                            } else {
+                                self.$message.error('点赞失败');
+                            }
+
+                        },
+                        error: function (xhr, textStatus) {
+                            self.$message.error('点赞失败');
+                        }
+                    });
+                },
 
 
-
+                upTr(index) { // 上移
+                    if (index === 0) {
+                        return;
+                    }
+                    swapItems(this.memberList, index, index - 1);
+                },
+                downTr(index) { // 下移
+                    if (index === this.memberList.length - 1) {
+                        return
+                    }
+                    swapItems(this.memberList, index, index + 1);
+                }
 
             },
 
@@ -1777,7 +1965,7 @@
                 exportChatList: function() {
                     this.$nextTick(() => {
                         if (this.exportChatList.length > 0) {
-                            var docName = self.groupName + "群组的聊天记录(" + (new Date(this.exportChatList[0].msgtime)).format('yyyy年MM月dd日') + ")"
+                            var docName = this.groupName + "群组的聊天记录(" + (new Date(this.exportChatList[0].msgtime)).format('yyyy年MM月dd日') + ")"
                             this.$message({
                                 showClose: true,
                                 message: '开始下载'+docName+"聊天记录.doc",
@@ -1787,14 +1975,17 @@
                         }
                     });
                 },
+               
+
                 //渲染完查询的聊天后，再去格式化表情、高德地图
-                showChatList: function () {
+                showChatList: function (val, oldVal) {
                     var self = this;
                     self.$nextTick(() => {
 
                         self.showChatList.forEach(function (item, index) {
                             if (item.msgtype == 0 || item.msgtype == 3) {
-                                EmojiParse($('#' + item.id1));
+                                //EmojiParse($('#' + item.id0 + ' .chatlr-txt')); 
+                                EmojiParse($("div[data-msgid='"+item.id0+"'] .chatlr-txt"));
                             }
                             if (item.msgtype == 5) {
                                 //地图消息
@@ -1804,16 +1995,10 @@
                                 GaoDeMap(mapid, latitude);
                             }
                         });
-
-
-                        self.scrollToBottom();
                     });
                 },
             },
         });
-
-
-
     });
 
 

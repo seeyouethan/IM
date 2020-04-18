@@ -5989,6 +5989,23 @@ namespace EduIM.WebAPI.Controllers
                         Total = 0
                     });
                 }
+                //查询是否满足四个主题
+                var queryAll = _unitOfWork.DGroupSubject.GetIQueryable(p=>p.groupid== groupid && p.isdel!=1);
+                if(queryAll!=null && queryAll.Any()&& queryAll.Count()>=4)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Content = "",
+                        Error = "",
+                        Message = "当前群组主题已经超过4个，无法继续新建",
+                        Count = 0,
+                        Total = 0
+                    });
+                }
+
+
+
                 var model = new GroupSubject();
                 model.groupid = groupid;
                 model.name = subjectName;
@@ -7035,6 +7052,13 @@ namespace EduIM.WebAPI.Controllers
                         }
                     }
                 }
+
+                //去掉空的
+                if (result.Any())
+                {
+                    result = result.Where(p => !string.IsNullOrEmpty(p.content)).ToList();
+                }
+
 
                 return Json(
                    new

@@ -3,21 +3,24 @@
     display: none;
 }
 .el-main{
-    padding-top:10px;
+    padding:10px 0 0;
+    overflow:hidden;
 }
 .chatcb_tab_content {
-    height: calc(100vh - 120px);
+    height: calc(100vh - 75px);
 }
-
+.chatcb_mem_con{
+    background:#fff;
+}
 .chatcb_tcl_top {
-    height: calc(100vh - 300px);
+    height: calc(100vh - 241px);
 }
 .chat_fr{
     cursor:pointer;
 }
-/*.chat_right .head_img, .chat_right .chatl-r, .chat_right .zan, .chat_right .zan .icon {
-    float: right;
-}*/
+.chatcb_toggle{
+    z-index:999;
+}
 .font_large .chatlr-txt {
     font-size: 18px !important;
 }
@@ -35,7 +38,9 @@
 }
 .group_chat_con{
     background:#fff;
+    border-radius:8px;
 }
+.chatlr-txt1,
 .chat_right .chatlr-txt {
     direction: ltr;
 }
@@ -54,7 +59,9 @@
 .chatlrt-t{
     cursor:pointer;
 }
-
+.mem_width{
+    line-height:40px;
+}
 
 
 
@@ -63,9 +70,9 @@
 }
     #msgTextarea {
     border: none;
-    height: 75px;
+    height:75px;
     overflow-y: auto;
-    padding: 10px;
+    padding: 5px 10px 0;
     overflow-wrap: break-word;
     outline: none;
 }
@@ -107,7 +114,6 @@
 }
 #historychatDiv {
     height: 100%;
-    border-left: 1px solid #DDD; /*font-size: 12px;*/
 }
 
 .ihide {
@@ -118,4 +124,9 @@
     width: 88px;
     display: inline-block;
     height: 24px;
+}
+
+.cl-file-l .icon{
+    width:2em;
+    height:2em;
 }
