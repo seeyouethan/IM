@@ -38,6 +38,11 @@
         /// 消息类型
         /// </summary>
         public string MsgType { get; set; }
+
+        /// <summary>
+        /// 新增
+        /// </summary>
+        public string Ext { get; set; }
         
     }
 }

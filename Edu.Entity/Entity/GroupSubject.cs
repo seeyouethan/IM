@@ -28,11 +28,11 @@ namespace Edu.Entity
         /// </summary>
         public int isdel { get; set; }
         /// <summary>
-        /// 结束标记
+        /// 结束标记（已经弃用）
         /// </summary>
         public int isend { get; set; }
         /// <summary>
-        /// 结束时间
+        /// 结束时间（作为删除时间使用）
         /// </summary>
         public string endtime { get; set; }
         /// <summary>

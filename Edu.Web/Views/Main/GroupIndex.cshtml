@@ -61,7 +61,7 @@
                                                 <div class="chatl-r">
                                                     <p class="chatlr-name" v-cloak>{{item.fromrealname}}</p>
                                                     <!--0文本类消息-->
-                                                    <p v-if="item.msgtype == 0" class="chatlr-txt" v-html="getQuoteMessageAfterMessage(item)">
+                                                    <p v-if="item.msgtype == 0" class="chatlr-txt" v-bind:class="getSubjectClass(item.subjectId)" v-html="getQuoteMessageAfterMessage(item)">
                                                         
                                                     </p>
                                                     <!--1图片类消息-->
@@ -144,7 +144,6 @@
                                                 </div>
                                                 <!--附加功能选项-->
                                                 <div class="chatl-icon">
-                                                    <!--点赞，先隐藏-->
                                                     <span class="linkc9" v-on:click="thumb(item)">
                                                         <svg class="icon" aria-hidden="true">
                                                             <use v-bind:xlink:href="item.selfThumb?'#icon-zan1':'#icon-zan'"></use>
@@ -174,11 +173,14 @@
                             <div class="chatcb_tcr_bot">
                                 <div class="chatcb-icon clearfix">
                                     <div class="chat_fl">
+                                        
                                         <el-popover placement="top" width="50" trigger="click" v-model="poppver2">
                                             <span slot="reference">
-                                                <svg class="icon" aria-hidden="true">
-                                                    <use xlink:href="#icon-font"></use>
-                                                </svg>
+                                                <el-tooltip class="item" effect="dark" content="字体" placement="top">
+                                                    <svg class="icon" aria-hidden="true">
+                                                        <use xlink:href="#icon-font"></use>
+                                                    </svg>
+                                                </el-tooltip>
                                             </span>
                                             <ul class="select-ul">
                                                 <li v-on:click="poppver2=false;fontClass='font_large';" v-bind:class="{ 'hover': fontClass=='font_large' }">大
@@ -190,15 +192,18 @@
                                             </ul>
                                         </el-popover>
                                         <span id="emojiBtn">
-                                            <svg class="icon" aria-hidden="true" v-on:click="openEmoji" @@click.stop="">
-                                                <use xlink:href="#icon-smile"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="表情" placement="top">
+                                                <svg class="icon" aria-hidden="true" v-on:click="openEmoji" @@click.stop="">
+                                                    <use xlink:href="#icon-smile"></use>
+                                                </svg>
+                                            </el-tooltip>
+
                                         </span>
                                         @*<span id="emojiBtn2" v-on:click="openEmoji" @@click.stop="">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use xlink:href="#icon-smile"></use>
-                                            </svg>
-                                        </span>*@
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-smile"></use>
+            </svg>
+        </span>*@
                                         <!---->
                                         <el-upload class="upload-demo" style="display: none;" ref="upload"
                                                    action="/imwebapi/Home/Upload"
@@ -211,37 +216,55 @@
                                             <el-button size="small" type="primary" id="vueuploadBtn">点击上传</el-button>
                                         </el-upload>
                                         <span v-on:click="triggerFile">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use xlink:href="#icon-file2"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="发送文件" placement="top">
+                                                <svg class="icon" aria-hidden="true">
+                                                    <use xlink:href="#icon-file2"></use>
+                                                </svg>
+                                            </el-tooltip>
                                         </span>
                                         <form id="imgForm" style="display: none;">
                                             <input id="uploadimgname" type="file" name="uploadimgname" accept="image/jpg, image/png, image/jpeg, image/gif, image/bmp, image/tif" />
                                         </form>
                                         <span v-on:click="triggerImage">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use xlink:href="#icon-img"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="发送图片" placement="top">
+                                                <svg class="icon" aria-hidden="true">
+                                                    <use xlink:href="#icon-img"></use>
+                                                </svg>
+                                            </el-tooltip>
+
                                         </span>
                                         <span id="videoBtn">
-                                            <svg class="icon" aria-hidden="true" v-on:click="videoChat">
-                                                <use xlink:href="#icon-video2"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="视频会议" placement="top">
+                                                <svg class="icon" aria-hidden="true" v-on:click="videoChat">
+                                                    <use xlink:href="#icon-video2"></use>
+                                                </svg>
+                                            </el-tooltip>
+
                                         </span>
                                         <span>
-                                            <svg class="icon" aria-hidden="true" v-on:click="openCreationDialog">
-                                                <use xlink:href="#icon-creation"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="协同创作" placement="top">
+                                                <svg class="icon" aria-hidden="true" v-on:click="openCreationDialog">
+                                                    <use xlink:href="#icon-creation"></use>
+                                                </svg>
+                                            </el-tooltip>
+
                                         </span>
                                         <span>
-                                            <svg class="icon" aria-hidden="true" v-on:click="openDiscussDialog">
-                                                <use xlink:href="#icon-chat"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="协同研讨" placement="top">
+                                                <svg class="icon" aria-hidden="true" v-on:click="openDiscussDialog">
+                                                    <use xlink:href="#icon-chat"></use>
+                                                </svg>
+                                            </el-tooltip>
+                                           
                                         </span>
+                                       
                                         <span id="subjectBtn" v-on:click="openSubject">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use xlink:href="#icon-tag"></use>
-                                            </svg>
+                                            <el-tooltip class="item" effect="dark" content="新建讨论主题" placement="top">
+                                                <svg class="icon" aria-hidden="true">
+                                                    <use xlink:href="#icon-tag"></use>
+                                                </svg>
+                                            </el-tooltip>
+                                            
                                         </span>
                                     </div>
                                     <!--历史记录-->
@@ -358,22 +381,53 @@
                                                 </p>
                                             </el-col>
                                         </div>
-                                        <!-- 3在线样式 -->
+                                        <!-- 2.1自己-->
+                                        <div v-if="isAdmin==0">
+                                            <el-col v-bind:span="24">
+                                                <p class="chatcb_mem_item clearfix">
+                                                    <span class="chat_fl">
+                                                        <img v-bind:src="getHeadPhoto(uid)" class="head_img" />
+                                                        <span class="mem_width" v-cloak>{{realName}}</span>
+                                                    </span>
+                                                    <span class="chatcb_memi_icon2 chat_fr">
+                                                        <svg class="icon chat_fl" aria-hidden="true">
+                                                            <use xlink:href="#icon-dot"></use>
+                                                        </svg>
+                                                    </span>
+                                                </p>
+                                            </el-col>
+                                        </div>
+                                        <!-- 3在线成员样式 -->
                                         <!--chatcb_memi_icon2 在线-->
                                         <!--chatcb_memi_icon3 离线-->
-                                        <div v-for="(item, index) in memberList" v-bind:key="'m3'+index">
+                                        <div v-for="(item, index) in onlineMemberList" v-bind:key="'m3'+index">
                                             <el-col :span="24">
                                                 <p class="chatcb_mem_item clearfix">
                                                     <span class="chat_fl">
                                                         <img v-bind:src="item.Logo" class="head_img" />
                                                         <span class="mem_width" v-cloak>{{item.RealName}}</span>
                                                     </span>
-                                                    <span class="chatcb_memi_icon2 chat_fr" v-bind:class="{'chatcb_memi_icon2':item.online,'chatcb_memi_icon3':!item.online,}">
+                                                    <span class="chatcb_memi_icon2 chat_fr">
                                                         <svg class="icon chat_fl" aria-hidden="true">
                                                             <use xlink:href="#icon-dot"></use>
                                                         </svg>
                                                     </span>
-
+                                                </p>
+                                            </el-col>
+                                        </div>
+                                        <!-- 4离线成员样式 -->
+                                        <div v-for="(item, index) in offlineMemberList" v-bind:key="'m4'+index">
+                                            <el-col :span="24">
+                                                <p class="chatcb_mem_item clearfix">
+                                                    <span class="chat_fl">
+                                                        <img v-bind:src="item.Logo" class="head_img" />
+                                                        <span class="mem_width" v-cloak>{{item.RealName}}</span>
+                                                    </span>
+                                                    <span class="chatcb_memi_icon3 chat_fr">
+                                                        <svg class="icon chat_fl" aria-hidden="true">
+                                                            <use xlink:href="#icon-dot"></use>
+                                                        </svg>
+                                                    </span>
                                                 </p>
                                             </el-col>
                                         </div>
@@ -391,7 +445,7 @@
         <el-dialog class="dialog1" title="新建协同文档" width="750px" v-bind:visible.sync="dialog1">
             <el-form label-width="80px" :label-position="labelPosition">
                 <el-form-item label="名称：" required>
-                    <el-input placeholder="10个字以内" v-model="c_title" maxlength="10"></el-input>
+                    <el-input placeholder="10个字以内" v-model="c_title" :maxlength=10></el-input>
                 </el-form-item>
                 <el-form-item label="负责人：" required>
                     <span><img v-bind:src="getHeadPhoto(uid)" class="head_img1 chat_mr10" />{{realName}}</span>
@@ -437,7 +491,7 @@
         <el-dialog class="dialog1" title="新建协同研讨" width="750px" v-bind:visible.sync="dialog2">
             <el-form label-width="100px" :label-position="labelPosition">
                 <el-form-item label="名称：" required>
-                    <el-input placeholder="10个字以内" v-model='d_title' maxlength="10"></el-input>
+                    <el-input placeholder="10个字以内" v-model='d_title' :maxlength=10></el-input>
                 </el-form-item>
                 <el-form-item label="起止时间：">
                     <el-col :span="11">
@@ -490,7 +544,7 @@
         </el-dialog>
         <!-- 创建主题聊天 -->
         <el-dialog class="dialog1" title="新建讨论主题" width="500px" v-bind:visible.sync="dialog3">
-            <el-input placeholder="10个字以内" v-model="subjectTitle" maxlength="10"></el-input>
+            <el-input placeholder="10个字以内" v-model="subjectTitle" :maxlength=10></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" v-on:click="createSubject">确 定</el-button>
                 <el-button v-on:click="dialog3=false;subjectTitle='';">取 消</el-button>
@@ -541,7 +595,7 @@
 <!--引用cookie-->
 <script src="~/Scripts/jquery.cookie.js"></script>
 <!--IM中初始化的一些js-->
-<script src="~/Scripts/im_init.js"></script>
+<script src="~/Scripts/im_init.js?v=1.1"></script>
 
 
 <!--Layer模块-->
@@ -551,7 +605,7 @@
 
 
 <script type="text/javascript">
-    $(function () {
+    
         //定义一个全局过滤器  [$PICTURE$] 是需要被替换的内容
         Vue.filter('imageAndTextMessage', function (msg) {
             return msg.replace(/\[.*\]/g, '');//去掉[ ]及内容
@@ -561,6 +615,8 @@
             el: '#app',
             data: function () {
                 return {
+                    subjectIdList: [],//这里面存放了对应的主题的id,根据主题的id取到index ,然后分别是chat1\chat2\chat3\chat4
+
                     quoteId: 0,//引用的消息的id
                     quoteItem: "",//引用的消息的具体Model字符串
                     tempQuoteString: "",//用来替换的
@@ -619,7 +675,7 @@
                 var self = this;
                 window.InitImEmoji();
 
-                window.InitHistory(self.uid, self.groupId);
+                window.InitHistory(self.uid, self.groupId, self.openCreationDocument, self.downloadCreationDocument, self.openDiscuss);
 
 
                 //监听图片上传
@@ -737,15 +793,15 @@
                     //设置样式
                     self.$set(model, 'count', 0);
                     //类样式
-                    if (self.subjectList.length == 1) {
-                        self.$set(model, 'class', 'chatcb_tab_c88');
-                    } else if (self.subjectList.length == 2) {
-                        self.$set(model, 'class', 'chatcb_tab_c6c');
-                    } else if (self.subjectList.length == 3) {
-                        self.$set(model, 'class', 'chatcb_tab_ce3');
-                    } else if (self.subjectList.length == 4) {
-                        self.$set(model, 'class', 'chatcb_tab_cd9');
-                    }
+                    //if (self.subjectList.length == 1) {
+                    //    self.$set(model, 'class', 'chatcb_tab_c88');
+                    //} else if (self.subjectList.length == 2) {
+                    //    self.$set(model, 'class', 'chatcb_tab_c6c');
+                    //} else if (self.subjectList.length == 3) {
+                    //    self.$set(model, 'class', 'chatcb_tab_ce3');
+                    //} else if (self.subjectList.length == 4) {
+                    //    self.$set(model, 'class', 'chatcb_tab_cd9');
+                    //}
 
                     self.subjectList.push(model);
                     self.setCurrentSubjectId(model);
@@ -841,6 +897,9 @@
 
                     self.scrollToBottom();
                 }
+
+               
+
 
 
                 self.getGroupMembers();
@@ -1075,15 +1134,15 @@
                                 //设置样式
                                 self.$set(result.Content, 'count', 0);
                                 //类样式
-                                if (self.subjectList.length == 1) {
-                                    self.$set(result.Content, 'class', 'chatcb_tab_c88');
-                                } else if (self.subjectList.length == 2) {
-                                    self.$set(result.Content, 'class', 'chatcb_tab_c6c');
-                                } else if (self.subjectList.length == 3) {
-                                    self.$set(result.Content, 'class', 'chatcb_tab_ce3');
-                                } else if (self.subjectList.length == 4) {
-                                    self.$set(result.Content, 'class', 'chatcb_tab_cd9');
-                                }
+                                //if (self.subjectList.length == 1) {
+                                //    self.$set(result.Content, 'class', 'chatcb_tab_c88');
+                                //} else if (self.subjectList.length == 2) {
+                                //    self.$set(result.Content, 'class', 'chatcb_tab_c6c');
+                                //} else if (self.subjectList.length == 3) {
+                                //    self.$set(result.Content, 'class', 'chatcb_tab_ce3');
+                                //} else if (self.subjectList.length == 4) {
+                                //    self.$set(result.Content, 'class', 'chatcb_tab_cd9');
+                                //}
                                 self.subjectList.push(result.Content);
 
                                 var ele = window.parent.parent.document.getElementById("okcsim");
@@ -1243,16 +1302,8 @@
                     this.quoteItem = JSON.stringify(model);
                     this.tempQuoteString = '#' + model.msg + '#';
                     $("#msgTextarea").focus();
-                    $("#msgTextarea").html(this.tempQuoteString);
-
-
-
-
-
-
-
-
-
+                    $("#msgTextarea").html(this.tempQuoteString + '<br> <br> ');
+                    set_focus();
                 },
                 //复制
                 copyMessage: function (message) {
@@ -1365,22 +1416,17 @@
                 },
 
                 //查看列表中的用户是否在线
-                getOnlineStatus: function (value,index) {
+                getOnlineStatus: function (value) {
                     var self = this;
-                    console.log("getOnlineStatus:", value.UserID);
 
                     if (value.UserID == self.uid) {
                         self.$set(value, 'online', true);
                         self.onlineCount++;
-                        console.log(value.RealName,index,"置顶")
-                        while (index > 0) {
-                            self.upTr(index);
-                            index--;
-                        }
                         return;
                     }
-
-
+                    // 1是创建者 2是管理员 0是普通成员，
+                    
+                    //其他用户
                     $.ajax({
                         url: '/imwebapi/api/MainWebApi/GetOnlineStatus',
                         type: 'Get',
@@ -1392,59 +1438,63 @@
                             if (data.Success) {
                                 self.$set(value, 'online', data.Content);
                                 if (data.Content) {
-                                    console.log(value.RealName, index, "置顶")
                                     self.onlineCount++;
-                                    while (index > 0) {
-                                        self.upTr(index);
-                                        index--;
-                                    }
                                 }
+                                if (value.isAdmin == 0) {
+                                    if (data.Content) {
+                                        self.onlineMemberList.unshift(value);
+                                    } else {
+                                        self.offlineMemberList.push(value);
+                                    }
+                                }                                
                             } else {
-                                self.$set(value, 'online', false);
+                                if (value.isAdmin == 0) {
+                                    self.offlineMemberList.push(value);
+                                }
                             }
-                        },
-                        error: function (err) {
-                            return false;
-                        },
+                        }
                     });
 
                 },
 
                 //设置用户在线状态为离线/在线  false/true
                 updateUserStatus: function (uid, b) {
+                    //这里只更新普通成员的状态，管理员的状态没有区分，所以不更新
+                    //只校验除了自己以外的普通成员
                     var self = this;
-                    var user = self.memberList.filter(item => {
-                        if (uid == item.UserID) {
-                            return true;
-                        }
-                    });
-                    if (user.length > 0) {
+                    if (b) {
                         //上线
-                        if (b) {
-                            if (!user[0].online) {
-                                //Vue.set(self.memberList, 0, user[0]);
-                                var index = self.memberList.indexOf(user[0]);
-                                while (index > 0) {
-                                    this.upTr(index);
-                                    index--
-                                }
-                                self.onlineCount++;
+                        var users1 = self.offlineMemberList.filter(item => {
+                            if (uid == item.UserID) {
+                                return true;
                             }
-                        } else {
-                            //离线
-                            if (user[0].online) {
-                                //Vue.set(self.memberList, self.memberList.length-1, user[0]);
-                                var index = self.memberList.indexOf(user[0]);
-                                while (index < self.memberList.length) {
-                                    self.downTr(index); 
-                                    index++
-                                }
+                        });
 
-                                self.onlineCount--;
-                            }
+                        if (users1.length > 0) {
+                            var user = users1[0]; 
+                            user.online = true;
+                            self.onlineCount++;
+                            var index = self.offlineMemberList.indexOf(user)
+                            self.offlineMemberList.splice(index,1);
+                            self.onlineMemberList.unshift(user);
                         }
-                        user[0].online = b;
 
+                    } else {
+                        //离线
+                        var users2 = self.onlineMemberList.filter(item => {
+                            if (uid == item.UserID) {
+                                return true;
+                            }
+                        });
+
+                        if (users2.length > 0) {
+                            var user = users2[0];
+                            user.online = false;
+                            self.onlineCount--;
+                            var index = self.onlineMemberList.indexOf(user)
+                            self.onlineMemberList.splice(index, 1);
+                            self.offlineMemberList.push(user);
+                        }
                     }
                 },
 
@@ -1601,19 +1651,6 @@
                                 $.each(self.subjectList, function (index, value) {
                                     //右上角消息个数
                                     self.$set(value, 'count', 0);
-                                    
-                                    if (index == 0) {
-                                        //类样式
-                                        self.$set(value, 'class', 'chatcb_tab_c1f');
-                                    } else if (index == 1) {
-                                        self.$set(value, 'class', 'chatcb_tab_c88');
-                                    } else if (index == 2) {
-                                        self.$set(value, 'class', 'chatcb_tab_c6c');
-                                    } else if (index == 3) {
-                                        self.$set(value, 'class', 'chatcb_tab_ce3');
-                                    } else if (index == 4) {
-                                        self.$set(value, 'class', 'chatcb_tab_cd9');
-                                    }
                                 });
 
                             } else {
@@ -1641,7 +1678,6 @@
                                 self.groupName = data.Content.Name;
                                 if (self.uid == data.Content.Leader.UserID) {
                                     self.isAdmin = 1;
-                                    self.onlineCount++;
                                 } else {
                                     self.d_memberIdList.push(data.Content.Leader.UserID);
                                     self.d_memberList.push(data.Content.Leader)
@@ -1663,15 +1699,23 @@
                                     }
                                 });
 
+                                //1.创建者
+                                self.getOnlineStatus(data.Content.Leader);
+
+                                //2.管理员
+                                $.each(self.adminMember, function (index, value) {
+                                    self.getOnlineStatus(value);
+                                });
+
+                                //3.普通成员
                                 //更新在线状态，将在线的成员放到onlineMemberList中，离线的成员放到offlineMemberList中
                                 $.each(self.memberList, function (index, value) {
-                                    console.log(value.RealName, value.UserID);
-                                    self.getOnlineStatus(value, index);
+                                    self.getOnlineStatus(value);
                                 });
 
 
                                 if (self.isAdmin != 1) {
-                                    self.getOnlineStatus(data.Content.Leader,0);
+                                    
                                 }
 
 
@@ -1829,7 +1873,7 @@
                     model["quoteContent"] = this.quoteItem;
 
                     if (this.quoteId != 0 && this.quoteItem != "") {
-                        var reg = new RegExp(this.tempQuoteString, 'g')//g代表全部
+                        var reg = new RegExp(this.tempQuoteString + '<br> ', 'g')//g代表全部
                         model.msg = model.msg.replace(reg, '');                        
                     }
                     if (model.msg == "") {
@@ -1945,6 +1989,19 @@
                 },
 
 
+                getSubjectClass: function (id) {
+                    if (this.currentSubjectId == '0') {
+                        var index = this.subjectIdList.indexOf(id);
+                        if (index >= 0) {
+                            return 'chat' + index
+                        }
+                        return '';
+                    }
+                    
+                    return '';
+                },
+
+
                 upTr(index) { // 上移
                     if (index === 0) {
                         return;
@@ -1961,6 +2018,28 @@
             },
 
             watch: {
+
+                //监听主题列表，更新主题对应的颜色
+                subjectList: function () {
+                    var self = this;
+                    self.subjectIdList = [];//清空
+                    $.each(this.subjectList, function (index, value) {
+                        self.subjectIdList.push(value.id.toString());
+                        //更新后面的自定义主题的样式
+                        if (index == 0) {
+                            self.$set(value, 'class', 'chatcb_tab_c1f');
+                        } else if(index == 1) {
+                            self.$set(value, 'class', 'chatcb_tab_c88');
+                        } else if (index == 2) {
+                            self.$set(value, 'class', 'chatcb_tab_c6c');
+                        } else if (index == 3) {
+                            self.$set(value, 'class', 'chatcb_tab_ce3');
+                        } else if (index == 4) {
+                            self.$set(value, 'class', 'chatcb_tab_cd9');
+                        }
+                    });
+                },
+
                 //渲染完查询的聊天记录后，再去执行下载
                 exportChatList: function() {
                     this.$nextTick(() => {
@@ -1999,7 +2078,6 @@
                 },
             },
         });
-    });
 
 
 </script>

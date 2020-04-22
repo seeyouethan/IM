@@ -1710,6 +1710,7 @@ namespace Edu.Web.Controllers
                 FromUserTrueName = imMsg.fromusername,
                 ToUserTrueName = imMsg.tousername,
                 MsgType = imMsg.Type,
+                Ext = imMsg.FileUrl,//创作的id/研讨的id
             };
             if (imMsg.Type == "1")
             {

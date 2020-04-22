@@ -299,8 +299,10 @@ window.copyToClip=function(content, cb) {
     }
 }
 
-window.InitHistory = function (uid, groupid) {
+window.InitHistory = function (uid, groupid, openCreationDocument, downloadCreationDocument, openDiscuss) {
 
+
+    
 
     var pageCount = 0;
     var pageNumber = 0;
@@ -521,26 +523,7 @@ window.InitHistory = function (uid, groupid) {
     });
 
 
-    /*查询人与人之间聊天记录的图片*/
-    window.GetPersonalHistoryChatImg = function (pageNo) {
-        var load = layer.load();
-        $.post("/im/chat/GetImageMessage", { fromuid: uid, touid: groupid, isgroup: false, pageNo: pageNo }, function (result) {
-            layer.close(load);
-            if (result.Success && result.Content.length > 0) {
-                DoResultImg(result);
-            } else {
-                if (pageNo === 1) {
-                    var elestr = "<div class=\"nodata-tip isHidden\"><i class=\"iconfont icon-none\"></i><span class=\"text-none\">暂无内容</span></div>";
-                    $("#historychatPanelPic").empty();
-                    $("#historychatPanelPic").append(elestr);
-                } else {
-                    layer.msg("没有更多数据了", {
-                        time: 1000
-                    });
-                }
-            }
-        });
-    }
+    
 
     /*查询群组内聊天记录的图片*/
     window.GetGroupHistoryChatImg = function (pageNo) {
@@ -562,26 +545,7 @@ window.InitHistory = function (uid, groupid) {
             }
         });
     }
-    /*查询人与人聊天记录的文件*/
-    window.GetPersonalHistoryChatFile = function (pageNo) {
-        var load = layer.load();
-        $.post("/im/chat/GetFileMessage", { fromuid: uid, touid: groupid, isgroup: false, pageNo: pageNo }, function (result) {
-            layer.close(load);
-            if (result.Success && result.Content.length > 0) {
-                DoResultFile(result);
-            } else {
-                if (pageNo === 1) {
-                    var elestr = "<div class=\"nodata-tip isHidden\"><i class=\"iconfont icon-none\"></i><span class=\"text-none\">暂无内容</span></div>";
-                    $("#historychatPanelFile ul").empty();
-                    $("#historychatPanelFile").prepend(elestr);
-                } else {
-                    layer.msg("没有更多数据了", {
-                        time: 1000
-                    });
-                }
-            }
-        });
-    }
+    
 
     /*查询群组内聊天记录的文件*/
     window.GetGroupHistoryChatFile = function (pageNo) {
@@ -653,8 +617,15 @@ window.InitHistory = function (uid, groupid) {
                 } else if (item.MsgType === "5") {
                     /*地图签到类消息*/
                     elestr += "<div class=\"clp-item\"><p class=\"color-23 font-s12\"><span class=\"uname\">" + item.FromUserTrueName + "</span><span>" + item.CreateDate + "</span></p>" + item.Msg + "</div>";
-                } else {
-                    elestr += "<div class=\"clp-item\"><p class=\"color-23 font-s12\"><span class=\"uname\">" + item.FromUserTrueName + "</span><span>" + item.CreateDate + "</span></p><p class=\"msg\">" + item.Msg + "</p><i class=\"iconfont icon-collection user-fav-history\" title=\"收藏\" data-msgid='" + item.ID + "'></i></div>";
+                } else if (item.MsgType === "9") {
+                    elestr += "<div class=\"clp-item\"><p class=\"color-23 font-s12\"><span class=\"uname\">" + item.FromUserTrueName + "</span><span>" + item.CreateDate + "</span></p><p class=\"msg\">" + "<div class='chatlr-txt1'><p class='chatlrt-t open_creation'  data-msgid='" + item.Ext + "'><svg aria-hidden='true' class='icon icon-sl'><use xlink:href='#icon-word-s'></use></svg><span>" + item.Msg + ".docx</span></p> <p class='chatlrt-b clearfix'><span class='chat_fl'>协同创作</span> <span class='chat_fr'><svg data-msgid='" + item.ID + "' aria-hidden='true' class='icon linkc9 chat_mr10 set_fav'><use xlink:href='#icon-star1'></use></svg> <svg data-msgid='" + item.Ext + "' aria-hidden='true' class='icon linkc9 download_creation'><use xlink:href='#icon-download'></use></svg></span></p></div>" + "</p></div>";
+
+                } else if (item.MsgType === "10") {
+                    elestr += "<div class=\"clp-item\"><p class=\"color-23 font-s12\"><span class=\"uname\">" + item.FromUserTrueName + "</span><span>" + item.CreateDate + "</span></p><p class=\"msg\">" + "<div class='chatlr-txt1'><p class='chatlrt-t open_discuss'  data-msgid='" + item.Ext + "'><svg aria-hidden='true' class='icon icon-sl'><use xlink:href='#icon-word-s'></use></svg><span>" + item.Msg + ".docx</span></p> <p class='chatlrt-b clearfix'><span class='chat_fl'>协同研讨</span> <span class='chat_fr'><svg data-msgid='" + item.ID + "' aria-hidden='true' class='icon linkc9 chat_mr10 set_fav'><use xlink:href='#icon-star1'></use></svg></span></p></div>" + "</p></div>";
+
+                }
+                else {
+                    elestr += "<div class=\"clp-item\"><p class=\"color-23 font-s12\"><span class=\"uname\">" + item.FromUserTrueName + "</span><span>" + item.CreateDate + "</span></p><p class=\"msg\">" + item.Msg + "</p><i class=\"iconfont icon-collection user-fav-history set_fav\" title=\"收藏\" data-msgid='" + item.ID + "'></i></div>";
                 }
             }
             $("#historychatPanel").empty();
@@ -776,7 +747,7 @@ window.InitHistory = function (uid, groupid) {
 
 
     //右侧历史记录中的收藏click
-    $(document).on('click', '.user-fav-history', function () {
+    $(document).on('click', '.set_fav', function () {
         var msgid = $(this).attr("data-msgid");
         $.ajax({
             url: '/imwebapi/api/MainApi/AddUserFavorites',
@@ -804,6 +775,28 @@ window.InitHistory = function (uid, groupid) {
             }
         })
     });
+
+
+    //右侧打开创作click
+    $(document).on('click', '.open_creation', function () {
+        var msgid = $(this).attr("data-msgid");
+        openCreationDocument(msgid);
+    });
+
+    //右侧下载创作click
+    $(document).on('click', '.download_creation', function () {
+        var msgid = $(this).attr("data-msgid");
+        downloadCreationDocument(msgid);
+    });
+
+    //右侧打开研讨click
+    $(document).on('click', '.open_discuss', function () {
+        var msgid = $(this).attr("data-msgid");
+        openDiscuss(msgid);
+    });
+
+
+
 
     
 

@@ -21,13 +21,16 @@
 .chatcb_toggle{
     z-index:999;
 }
-.font_large .chatlr-txt {
+.font_large .chatlr-txt,
+.font_large .chatlrt-t span {
     font-size: 18px !important;
 }
-.font_normal .chatlr-txt{
-    font-size:16px !important;
+.font_normal .chatlr-txt,
+.font_normal .chatlrt-t span {
+    font-size: 16px !important;
 }
-.font_small .chatlr-txt {
+.font_small .chatlr-txt,
+.font_small .chatlrt-t span {
     font-size: 14px !important;
 }
 .select-ul li.hover{

@@ -1,6 +1,6 @@
 ﻿@using Edu.Tools
 <link href="~/Tookit/layui2.1.5/css/layui.css" rel="stylesheet" />
-<link type="text/css" href="~/Content/Web/css/k-style.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/Web/css/k-style.css?v=1.1" rel="stylesheet" />
 <div id="app">
     <!-- 即时聊天界面 -->
     <div class="chat-wrap">
@@ -43,9 +43,9 @@
                                     @Html.Action("WorkChatGroupView", "Main", new { })
                                 </ul>
                                 @*<h6 class="tab-h6" onclick="Collaspse(this)">自建群 <i class="iconfont icon-up"></i></h6>
-                                <ul id="ulGroupList">
-                                    @Html.Action("SelfChatGroup", "Main", new { })
-                                </ul>*@
+                                    <ul id="ulGroupList">
+                                        @Html.Action("SelfChatGroup", "Main", new { })
+                                    </ul>*@
                                 <!-- 添加群组按钮 -->
                                 <a href="javascript:CreatChatGroup();" class="add-group"><i class="iconfont icon-add" title="新建群组"></i></a>
                             </div>
@@ -57,7 +57,7 @@
                 <div class="tab-pane tab-pane-fav" v-loading="userfavoriteloading" element-loading-text="拼命加载中">
                     <div class="tab-con k-height100p">
                         <el-scrollbar class="k-height100p" ref="favoritesPanel">
-                            <div class="k-height100p">                                
+                            <div class="k-height100p">
                                 <ul>
                                     <div>
                                         <div class="nodata-tip text-center" v-if="userFavorites.length==0" style="top:200px"><i class="iconfont icon-none"></i> <span>暂无内容</span></div>
@@ -97,6 +97,25 @@
 
                                                 </p>
                                             </div>
+
+                                            <!--协同创作类消息-->
+                                            <div v-if="msg.msgtype == 9" v-on:click="openCreationDocument(msg.filename)">
+                                                <p class="chatlrt-t clearfix fav-p">
+                                                    <svg aria-hidden="true" class="icon icon-sl fav-doc">
+                                                        <use xlink:href="#icon-word-s"></use>
+                                                    </svg>
+                                                    <span class="fav-doc-title">{{msg.msg+'.docx'}}</span>
+                                                </p>
+                                            </div>
+                                            <!--协同研讨类消息-->
+                                            <div v-if="msg.msgtype == 10">
+                                                <p class="chatlrt-t clearfix fav-p" v-on:click="openDiscuss(msg.filename)">
+                                                    <svg aria-hidden="true" class="icon icon-sl fav-doc">
+                                                        <use xlink:href="#icon-word-s"></use>
+                                                    </svg>
+                                                    <span class="fav-doc-title">{{msg.msg+'.docx'}}</span>
+                                                </p>
+                                            </div>
                                         </div>
                                         <i class="iconfont icon-delte fav-delete" v-on:click="DeleteUserFavorite(item)"></i>
                                     </li>
@@ -115,6 +134,8 @@
     </div>
 </div>
 @section Js{
+    <script src="~/Content/Web/fonts/iconfont.js"></script>
+    <script src="~/Scripts/iconfont.js"></script>
     <script src="~/Content/VideoConfenence/js/vue-infinite-loading.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
     <script src="~/Scripts/jquery.cookie.js"></script>
@@ -165,6 +186,9 @@
                 el: '#app',
                 data: function () {
                     return {
+                        creationVisitRoot: '@ConfigHelper.GetConfigString("CreationVisitRoot")',
+                        creationDownLoadRoot: '@ConfigHelper.GetConfigString("CreationDownloadRoot")',
+                        discussVisitRoot: '@ConfigHelper.GetConfigString("DiscussVisitRoot")',
                         visible: false,
                         grouploading: true,
                         userfavoriteloading:true,
@@ -174,6 +198,20 @@
                     }
                 },
                 methods: {
+                    //打开协同创作链接
+                    openCreationDocument: function (id) {
+                        window.open(this.creationVisitRoot + id);
+                    },
+                    //下载协同创作
+                    downloadCreationDocument: function (id) {
+                        window.open(this.creationDownLoadRoot + id);
+                    },
+                    //打开协同研讨链接
+                    openDiscuss: function (id) {
+                        window.open(this.discussVisitRoot + id + '&from=pmc');
+                    },
+
+
                     //切换面板
                     tabClick: function (tab, event) {
                         var self = this;
@@ -363,7 +401,7 @@
                         groupIndexElement.contentWindow.updateUserStatus && groupIndexElement.contentWindow.updateUserStatus(uid, true);
                     }
                 }
-                
+
 
 
 
@@ -378,7 +416,7 @@
                     eleStatus = eleR.children("div").eq(0).children().eq(1).children().eq(2);
                     if (!eleStatus.hasClass("tab-status-no")) {
                         eleStatus.addClass("tab-status-no");
-                        
+
                     }
                     //var lastli = $("#divUserListRecent li:last");
                     //eleR.insertAfter(lastli);
@@ -402,7 +440,7 @@
                     }
                 }
 
-                
+
             }
             @*
                 客户端的这个addMessage方法 应该写在这个页面中 写在弹出的聊天窗口的Index中并不会响应到

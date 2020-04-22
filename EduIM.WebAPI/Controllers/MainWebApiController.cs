@@ -506,7 +506,7 @@ namespace EduIM.WebAPI.Controllers
                         Total = 0
                     });
                 }
-                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId && p.isend != 1).OrderByDescending(p => p.id); ;
+                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId).OrderByDescending(p => p.id); ;
                 if(query!=null && query.Any())
                 {
                     result = query.ToList();

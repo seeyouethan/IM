@@ -20,3 +20,15 @@
     height: 100% !important;
     position: relative !important;
 }
+.fav-p{
+    cursor:pointer;
+}
+.fav-doc {
+    width: 24px;
+    height: 24px;
+    float: left;
+}
+.fav-doc-title{
+    line-height:24px;
+    float:left;
+}

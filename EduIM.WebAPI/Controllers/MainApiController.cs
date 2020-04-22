@@ -6211,12 +6211,13 @@ namespace EduIM.WebAPI.Controllers
                         Success = false,
                         Content = "",
                         Error = "",
-                        Message = "未查询到对应的主题",
+                        Message = "未查询到对应的主题(创建者为查询到对应的主题)",
                         Count = 0,
                         Total = 0
                     });
                 }
                 query.isdel = 1;
+                query.endtime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 _unitOfWork.DGroupSubject.Update(query);
                 var result = _unitOfWork.Save();
                 if (result.ResultType == OperationResultType.Success)
@@ -6259,7 +6260,7 @@ namespace EduIM.WebAPI.Controllers
         }
 
         /// <summary>
-        /// 结束群组主题
+        /// 结束群组主题(该接口已经弃用）
         /// </summary>       
         /// <returns></returns>
         [HttpPost]
@@ -6352,7 +6353,7 @@ namespace EduIM.WebAPI.Controllers
         }
 
         /// <summary>
-        /// 查询所有群组主题（已经结束的、未结束的）
+        /// 查询所有群组主题（包括已经删除的）
         /// </summary>       
         /// <returns></returns>
         [HttpGet]
@@ -6372,7 +6373,7 @@ namespace EduIM.WebAPI.Controllers
                         Total = 0
                     });
                 }
-                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId).OrderByDescending(p => p.id); ;
+                var query = _unitOfWork.DGroupSubject.Get(p =>  p.groupid == goupId).OrderByDescending(p => p.id); ;
                 if (query != null && query.Any())
                 {
                     if (pageNo == 0 && pageSize == 0)
@@ -6434,15 +6435,15 @@ namespace EduIM.WebAPI.Controllers
 
 
         /// <summary>
-        /// 查询群组主题（未结束的，有效的主题）
+        /// 查询群组主题（未删除的，有效的主题）
         /// </summary>       
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult GetGroupSubject(string goupId,int pageNo,int pageSize)
         {
+            var list = new List<GroupSubject>() { };
             try
             {
-                var list = new List<GroupSubject>() {  };
                 if (string.IsNullOrEmpty(goupId))
                 {
                     return Json(new
@@ -6455,7 +6456,7 @@ namespace EduIM.WebAPI.Controllers
                         Total = 0
                     });
                 }
-                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId && p.isend !=1).OrderByDescending(p => p.id); ;
+                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId ).OrderByDescending(p => p.id); ;
                 if (query != null && query.Any())
                 {
                     if(pageNo==0 && pageSize == 0)
@@ -6505,7 +6506,7 @@ namespace EduIM.WebAPI.Controllers
                     new
                     {
                         Success = false,
-                        Content = "",
+                        Content = list,
                         Error = ex.ToString(),
                         Message = "操作失败",
                         Count = 0,
@@ -6515,16 +6516,16 @@ namespace EduIM.WebAPI.Controllers
         }
 
         /// <summary>
-        /// 查询已经结束的群组主题
-        /// </summary>       
+        /// 查询已经删除的群组主题
+        /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetEndGroupSubject(string goupId, int pageNo, int pageSize)
+        public IHttpActionResult GetDeletedGroupSubject(string groupId, int pageNo, int pageSize)
         {
+            var list = new List<GroupSubject>() { };
             try
             {
-                var list = new List<GroupSubject>() { };
-                if (string.IsNullOrEmpty(goupId))
+                if (string.IsNullOrEmpty(groupId))
                 {
                     return Json(new
                     {
@@ -6536,7 +6537,7 @@ namespace EduIM.WebAPI.Controllers
                         Total = 0
                     });
                 }
-                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 0 && p.groupid == goupId && p.isend == 1).OrderByDescending(p => p.id); ;
+                var query = _unitOfWork.DGroupSubject.Get(p => p.isdel == 1 && p.groupid == groupId).OrderByDescending(p => p.id); ;
                 if (query != null && query.Any())
                 {
                     if (pageNo == 0 && pageSize == 0)
@@ -6586,7 +6587,7 @@ namespace EduIM.WebAPI.Controllers
                     new
                     {
                         Success = false,
-                        Content = "",
+                        Content = list,
                         Error = ex.ToString(),
                         Message = "操作失败",
                         Count = 0,
@@ -6601,19 +6602,19 @@ namespace EduIM.WebAPI.Controllers
         /// 根据时间查询主题下的消息
         /// 若时间字符串为空，则表示查询全部，否则，是查询小于该时间的pageSize条消息
         /// </summary>
-        /// <param name="goupId"></param>
+        /// <param name="groupId"></param>
         /// <param name="subjectId"></param>
         /// <param name="pageNo"></param>
         /// <param name="pageSize"></param>
         /// <param name="dateTime"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult GetGroupSubjectMessage(string goupId, string subjectId, int pageNo, int pageSize, string dateTime)
+        public IHttpActionResult GetGroupSubjectMessage(string groupId, string subjectId, int pageNo, int pageSize, string dateTime)
         {
             try
             {
                 var list = new List<Msg>();//返回的结果
-                if (string.IsNullOrEmpty(goupId))
+                if (string.IsNullOrEmpty(groupId))
                 {
                     return Json(new
                     {
@@ -6692,7 +6693,7 @@ namespace EduIM.WebAPI.Controllers
                 }
 
                 var dt = Convert.ToDateTime(dateTime);
-                var query = _unitOfWork.DIMMsg.Get(p => p.IsDel == 0 && p.isgroup == 1 && p.TouID == goupId && p.SubjectId == subjectId && p.CreateDate<dt).OrderByDescending(p => p.ID);
+                var query = _unitOfWork.DIMMsg.Get(p => p.IsDel == 0 && p.isgroup == 1 && p.TouID == groupId && p.SubjectId == subjectId && p.CreateDate<dt).OrderByDescending(p => p.ID);
                 if (query != null && query.Any())
                 {
 

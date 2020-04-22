@@ -2,7 +2,7 @@
 
 <link href="~/Tookit/jQuery-emoji/lib/css/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="~/Tookit/jQuery-emoji/css/jquery.emoji.css" rel="stylesheet" />
-<link href="~/Content/Web/css/chat.css?v=2.0" rel="stylesheet" />
+<link href="~/Content/Web/css/chat.css" rel="stylesheet" />
 <link href="~/Tookit/layer/skin/layer.css" rel="stylesheet" />
 <script src="~/Tookit/jQuery-emoji/lib/script/jquery.mousewheel-3.0.6.min.js"></script>
 <script src="~/Tookit/jQuery-emoji/js/jquery.emoji.min.js"></script>
@@ -20,82 +20,28 @@
 <script src="~/Content/RtcMultiConnection/socket.io.js"></script>
 <script src="~/Content/RtcMultiConnection/adapter.js"></script>
 <script src="~/Content/RtcMultiConnection/getHTMLMediaElement.js"></script>
-<div id="app" class="chat-panel" v-loading="loading" element-loading-text="拼命加载中" v-cloak>
+<div class="chat-panel">
     <!-- 聊天窗口 -->
     <div class="chat-panel-body clearfix" id="div0">
         <span class="cphead-name" style="display: none">@ViewBag.tousername</span>
-        <div class="div-subject" v-if="subjectList.length > 0">
+        <div class="div-subject" style="display: none">
             <span class="span-subject hover">所有主题</span>
-            <span v-for="(item, index) in subjectList" class="span-subject" v-bind:data-id="item.id" v-cloak>{{item.name}}</span>
+            <span class="span-subject">主题1</span><span class="span-subject">主题1</span>
+            <span class="span-subject">主题2</span><span class="span-subject">主题2</span>
         </div>
         <!-- 中间聊天内容 -->
         <div class="col-12 float-l tab-content">
             <div class="tab-con-top">
-                <el-scrollbar class="chat-div" ref="chatPanel">
-                    <infinite-loading direction="top" @@infinite="infiniteHandler" spinner="spiral">
-                        <div slot="no-more"></div>
-                        <div slot="no-results"></div>
-                    </infinite-loading>
-                    <ul class="chatlp-top" id="ulChat">
-                        <li v-for="(item, index) in chatListAll" v-bind:id="item.id1" v-bind:data-msgid="item.id0">
-                            <div class="chat-time">
-                                <span v-cloak>{{item.msgtime}}</span>
-                            </div>
-                            <div v-bind:class="{ 'out': item.fromuid==uid,'in': item.fromuid!=uid }">
-                                <div class="media clearfix">
-                                    <div class="inline-block">
-                                        <img class="head-ssimg" v-bind:src="getHeadPhoto(item.fromuid)" />
-                                    </div>
-                                    <div class="media-body">
-                                        <p class="color-9" v-bind:title="item.fromrealname" v-cloak>{{item.fromrealname}}</p>
-                                        <!--文本类消息-->
-                                        <p v-if="item.msgtype == 0" class="mb-txt" v-html="item.msg"></p>
-                                        <!--图片类消息-->
-                                        <p v-if="item.msgtype == 1" class="mb-txt mb-filetxt">
-                                            <img class="imgA" v-bind:src="item.msg" v-on:click="ShowImage(item.msg)">
-                                        </p>
-                                        <!--文件类消息-->
-                                        <p v-if="item.msgtype == 2" class="mb-txt mb-filetxt">
-                                            <a class="layui-layim-file" v-bind:href="item.msg" target="_blank" v-bind:title="item.filename">
-                                                <i class="layui-icon"></i>
-                                                <cite v-cloak>{{item.filename}}</cite>
-                                            </a>
-                                        </p>
-                                        <!--图文混合类消息-->
-                                        <p v-if="item.msgtype == 3" class="mb-txt">
-                                            <span>{{item.msg | imageAndTextMessage}}</span>
-                                            <img v-for="(image, indexImage) in item.imglist" class="imgA" v-bind:src="image" v-on:click="ShowImage(image)"/>
-                                        </p>
-                                        <!--语音类消息-->
-                                        <div v-if="item.msgtype == 4" v-bind:id="id0" class="yuyin fl" v-bind:style="getAudioLength(item.duration)" v-bind:audioSize="item.duration">
-                                            <span v-bind:class="{ 'yuyin_txt yy_txt_r': item.fromuid==uid,'yuyin_txt yy_txt_l': item.fromuid!=uid }" v-cloak>{{getAudioLength(item.duration)}}''</span>
-                                            <audio class="myaudio" preload="auto" hidden="true">
-                                                <source v-bind:src="item.msg" type="audio/mpeg">
-                                            </audio>
-                                            <span v-bind:class="{ 'yuyin_img yuyin_img_r': item.fromuid==uid,'yuyin_img yuyin_img_l': item.fromuid!=uid }"></span>
-                                        </div>
-                                        <!--地图类消息-->
-                                        <div v-if="item.msgtype == 5" class="map-item">
-                                            <div class="mapi-top" v-bind:map-data="item.filename" v-bind:id="'map'+item.id0">
-                                            </div>
-                                            <p class="mapi-mid">位置</p>
-                                            <p class="mapi-bot" v-bint:title="item.msg" v-cloak>{{item.msg}}</p>
-                                        </div>
-                                        <!--xxx加入群组视频聊天 通知类消息-->
-                                        <p v-if="item.msgtype == 6" class="mb-txt" v-html="item.msg"></p>
-                                        <!--移动端小视频类消息-->
-                                        <p v-if="item.msgtype == 7" class="mb-txt">
-                                            <video controls='controls' style='width:100%;' v-bind:src='item.msg'></video>
-                                        </p>
-                                        <!--移动端需要确认的回执类消息-->
-                                        <p v-if="item.msgtype == 8" class="mb-txt" v-html="item.msg"></p>
-                                    </div>
-                                    <i class="iconfont icon-collection user-fav" title="收藏" v-on:click="AddUserFavorites(item.id0)"></i>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </el-scrollbar>
+                <ul class="chatlp-top" id="ulChat">
+                    @if (ViewBag.isGroup == 1)
+                    {
+                        @Html.Action("RecentlyChat", "GroupChat", new { area = "", groupid = ViewBag.touid })
+                    }
+                    else
+                    {
+                        @Html.Action("RecentlyChat", "Chat", new { area = "", touid = ViewBag.touid })
+                    }
+                </ul>
                 <div class="conference-notify hide">
                     <p class="conference-notify-p">当前群组正在进行视频会议</p>
                 </div>
@@ -107,10 +53,10 @@
                         <i class="iconfont icon-chatsmile" id="emojiBtn" title="选择表情"></i>
                         <i class="iconfont icon-chatimg" id="imgBtn" title="选择图片"></i>
                         <i class="iconfont icon-chatfile" id="fileBtn" title="传送文件"></i>
-                        <i class="iconfont icon-chatvideo" id="videoBtn" title="视频电话" v-on:click="VideoChat()"></i>
-                        <i v-if="isAdmin" class="iconfont icon-Newtheme" id="subjectBtn" title="新建主题" v-on:click="OpenCreateSubjectPrompt"></i>
+                        <i class="iconfont icon-chatvideo" id="videoBtn" title="视频电话"></i>
+                        <i class="iconfont icon-Newtheme nodisplay" id="subjectBtn" title="新建主题"></i>
                     </p>
-                    <div style="height:0px !important;">
+                    <div id="app" style="height:0px !important;">
                         <el-upload class="upload-demo" style="display: none;" ref="upload"
                                    action="/imwebapi/Home/Upload"
                                    :auto-upload="false"
@@ -154,9 +100,9 @@
                         <input id="uploadimgname" type="file" name="uploadimgname" style="display: none;" accept="image/jpg, image/png, image/jpeg, image/gif, image/bmp, image/tif" />
                     </form>
                 </div>
-                <div id="msgTextarea" contenteditable="true" v-on:keyup="SendMessageKeyUp($event)"></div>
+                <div id="msgTextarea" contenteditable="true"></div>
                 <p class="btn-group text-right">
-                    <a v-on:click="SendMessage()">发送</a>
+                    <a href="javascript:sendMsg();">发送</a>
                 </p>
             </div>
         </div>
@@ -165,6 +111,8 @@
 
         </div>
         <!-- 右侧聊天记录 -->
+
+
         <div class="col-2 float-l chatlist-content posr" id="historychatDiv">
             <p class="vc-top color-9">
                 <span>消息记录</span>
@@ -222,10 +170,6 @@
 <script src="https://webapi.amap.com/maps?v=1.4.14&key=114c060f18052ae4003d4a003e62a4b9"></script>
 <script src="~/Content/Jquery2Doc/js/FileSaver.js"></script>
 <script src="~/Content/Jquery2Doc/js/jquery.wordexport.js"></script>
-<!-- 引入vue-infinite-loading组件库 (向上滚动加载) -->
-<script src="~/Content/VideoConfenence/js/vue-infinite-loading.js"></script>
-<!-- 引入 Vue API接口请求 -->
-<script src="~/Content/VideoConfenence/js/vue-resource.js"></script>
 <script>
     /*判断是否有群组视频会议房间*/
     @*if ("@ViewBag.isGroup" === "1"){
@@ -236,12 +180,23 @@
             }
         });
     }*@
-    //var maps = $(".mapi-top");
-    //$.each(maps, function (n, item) {
-    //    var itemid = $(item).attr('id');
-    //    var latitude = $(item).attr('map-data').split(',');
-    //    GaoDeMap(itemid,latitude);
-    //});
+
+
+
+    /*构造地图，构造聊页面中聊天记录中的地图*/
+    window.GaoDeMap=function(itemid,latitude) {
+        new AMap.Map(itemid, {
+            resizeEnable: true,
+            zoom: 11,
+            center: [latitude[1],latitude[0]]
+        });
+    }
+    var maps = $(".mapi-top");
+    $.each(maps, function (n, item) {
+        var itemid = $(item).attr('id');
+        var latitude = $(item).attr('map-data').split(',');
+        GaoDeMap(itemid,latitude);
+    });
 
 
     layui.use('laydate', function () {
@@ -260,40 +215,20 @@
             laydate.render({ elem: '#searchDatetime', value: dt });
         }
     });
-
-    //定义一个全局过滤器  [$PICTURE$] 是需要被替换的内容
-    Vue.filter('imageAndTextMessage', function (msg) {
-        return msg.replace(/\[.*\]/g, '');//去掉[ ]及内容
-    });
-
-
-    var vm = new Vue({
+    new Vue({
         el: '#app',
         data: function () {
             return {
-                loading: true,
-                isgroup:@ViewBag.isgroup,//是否是群组，1表示是，0表示否
-                uid: '@LoginUserService.ssoUserID',
-                touid: '@ViewBag.touid',
-                fromusername:'@ViewBag.fromusername',
-                tousername: '@ViewBag.tousername',
-                isAdmin:false,//如果是群组，该字段表示是否是 管理员，管理员拥有创建主题的权限
-                chatListAll: [],//当前页面上的聊天记录
-                subjectList: [],//如果是群组界面，主题
-                subjectPageSize: 5,//主题列表，每页大小
-                subjectPageNo:1,//主题列表，页码
-                chatList: [],//聊天历史记录,导出聊天历史记录的时候使用
-
+                chatList: [],//聊天历史记录,暂时没用到
                 };
         },
 
-        watch: {
-            //渲染完查询的聊天记录后，再去执行下载
+        watch:{
             chatList: function() {
                 this.$nextTick(() => {
-                    if(this.chatList.length>0){
+                    if(this.chatList.length>0){         
                         var docName="聊天记录";
-                        if("@ViewBag.isGroup"==="1"){
+                        if("@ViewBag.isGroup"==="1"){                            
                             docName="@ViewBag.tousername"+"群组的聊天记录("+(new Date(this.chatList[0].msgtime)).format('yyyy年MM月dd日')+")";
                         }else{
                             docName="我与"+"@ViewBag.tousername"+"的聊天记录("+(new Date(this.chatList[0].msgtime)).format('yyyy年MM月dd日')+")";
@@ -306,152 +241,42 @@
                         $("#chatcontent").wordExport(docName);
                     }
                 });
-            },
-            //渲染完查询的聊天后，再去格式化表情、高德地图
-            chatListAll: function () {
-                console.log("chatListAll--changed");
-                this.$nextTick(() => {
-                    var maps = $(".mapi-top");
-                    $.each(maps, function (n, item) {
-                        var itemid = $(item).attr('id');
-                        var latitude = $(item).attr('map-data').split(',');
-                        GaoDeMap(itemid,latitude);
-                    });
-                    var emojies = $(".mb-txt");
-                    $.each(emojies, function (n, item) {
-                        EmojiParse($(item));
-                    });                    
-                });
-            }, 
-        },
-        mounted: function () {
-            //渲染完html后  添加emoji初始化            
-            $("#emojiBtn").click(function () {
-                $("#emojiBtn").unbind();
-                $("#msgTextarea").emoji({
-                    button: "#emojiBtn",
-                    showTab: false,
-                    animation: 'slide',
-                    icons: [
-                        {
-                            name: "表情",
-                            path: "http://" + window.location.host + "/im/Tookit/jQuery-emoji/img/emoji/",
-                            maxNum: 84,
-                            file: ".png",
-                            placeholder: "#{alias}#",
-                            alias: {
-                                1: "呵呵",
-                                2: "色",
-                                3: "失望",
-                                4: "惊讶",
-                                5: "嘻嘻",
-                                6: "亲亲",
-                                7: "调皮",
-                                8: "皱眉",
-                                9: "失望",
-                                10: "尴尬",
-                                11: "大哭",
-                                12: "吐舌",
-                                13: "恼火",
-                                14: "不开心",
-                                15: "轻蔑",
-                                16: "哈哈",
-                                17: "生病",
-                                18: "脸红",
-                                19: "流汗",
-                                20: "笑哭",
-                                21: "微笑",
-                                22: "鼻涕",
-                                23: "鬼脸",
-                                24: "惊恐",
-                                25: "抱歉",
-                                26: "眩晕",
-                                27: "自信笑",
-                                28: "惊吓",
-                                29: "叹气",
-                                30: "委屈",
-                                31: "可以",
-                                32: "小鬼",
-                                33: "妖怪",
-                                34: "圣诞",
-                                35: "小狗",
-                                36: "小猪",
-                                37: "小猫",
-                                38: "大拇指",
-                                39: "大拇指下",
-                                40: "拳头",
-                                41: "拳头上",
-                                42: "耶",
-                                43: "肌肉",
-                                44: "鼓掌",
-                                45: "向左",
-                                46: "向上",
-                                47: "向右",
-                                48: "向下",
-                                49: "OK",
-                                50: "爱心",
-                                51: "心碎",
-                                52: "太阳",
-                                53: "月亮",
-                                54: "醒醒",
-                                55: "雷电",
-                                56: "乌云",
-                                57: "红唇",
-                                58: "玫瑰",
-                                59: "咖啡",
-                                60: "蛋糕",
-                                61: "闹钟",
-                                62: "啤酒",
-                                63: "查询",
-                                64: "手机",
-                                65: "房屋",
-                                66: "汽车",
-                                67: "礼物",
-                                68: "足球",
-                                69: "炸弹",
-                                70: "钻石",
-                                71: "外星人",
-                                72: "满分",
-                                73: "现金",
-                                74: "游戏",
-                                75: "大便",
-                                76: "SOS",
-                                77: "睡觉",
-                                78: "唱歌",
-                                79: "雨伞",
-                                80: "书本",
-                                81: "祈祷",
-                                82: "火箭",
-                                83: "粥",
-                                84: "西瓜"
-                            }
-                        }
-                    ]
-                });
-            });
-
-
+            }
         },
         created : function() {
             var self = this;
 
-            /*构造地图，构造聊页面中聊天记录中的地图*/
-            window.GaoDeMap = function (itemid, latitude) {
-                new AMap.Map(itemid, {
-                    resizeEnable: true,
-                    zoom: 11,
-                    center: [latitude[1], latitude[0]],
+            //打开创建主题提示窗口
+            window.OpenCreateSubjectPrompt = function () {
+                self.$prompt('请输入主题名称', '创建主题', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    //inputPattern:'',
+                    //inputErrorMessage: '邮箱格式不正确'
+                }).then(({ value }) => {
+                    if (value == "" || value == undefined) { }
+                    else {
+                        //发送创建请求
+                    }
+                       
+                    
+                }).catch(() => {
+                    
                 });
             };
 
+
+
+
             window.GetChatHistory = function (dt0,dt1){
+
                 $.ajax({
                     type: "Get",
                     headers: {
                         'ignore-identity': true
                     },
                     url: "/imwebapi/api/MainApi/GetChatHistory",
-                    data: {uid:self.uid,touid:self.touid,dt0:dt0,dt1:dt1},
+                    data: {uid:"@LoginUserService.ssoUserID",touid:"@ViewBag.touid",dt0:dt0,dt1:dt1},
                     dataType: "json",
                     success:  function(data) {
                         if (data.Success) {
@@ -503,124 +328,19 @@
                     iframeele.contentWindow.sendMessageNew(obj, SendMessageSuccess, SendMessageFail);
                 }
             };
+			
+			//发送成功的回调函数  设置id，id0为数据库中的id, id1为客户端发送时的id
+			window.SendMessageSuccess = function(id0,id1) {
+				console.log("发送消息成功")
+				$("#"+id1).attr("data-msgid", id0);
+			}
 
-            //消息发送失败的回调
-            window.SendMessageFail = function (id) {
-                self.chatListAll = self.chatListAll.filter(item => {
-                    if (id !== item.id1) {
-                        return true;
-                    }
-                });
-            }
-
-            //发送成功的回调函数  设置id，id0为数据库中的id, id1为客户端发送时的id
-            window.SendMessageSuccess=function(id0, id1) {
-                var msg =self.chatListAll.filter(function (n) {
-                    return n.id1 == id1;
-                });
-                msg.id0 = id0;
-            }
-
-            //生成随机字符串
-            window._getRandomString = function (len) {
-                len = len || 32;
-                var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; // 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
-                var maxPos = $chars.length;
-                var pwd = '';
-                for (i = 0; i < len; i++) {
-                    pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            };
-            /*
-            发送消息后 将消息内容更新到聊天面板中 在自己的页面添加一条图片消息 这里添加的是文字、表情、图片消息
-            添加判断，如果和上一条消息的时间差在120s之内，则隐藏时间显示
-            */
-            window.AppendSelfMsg = function (msg) {
-                self.chatListAll.push(msg);
-                if (msg.msgtype == 0 || msg.msgtype == 3) {
-                    EmojiParse($("#ulChat li:last-child"));
-                }
-            
-            }
-
-            /*
-            添加自己从别人那里收到的聊天消息
-            包括从移动端同步过来的自己的消息
-            添加判断，如果和上一条消息的时间差在120s之内，则隐藏时间显示
-            */
-            window.AppendOtherUserMsg = function (msg) {
-                if (msg.id0 && $("li[data-msgid='" + msg.id0 + "']").length != 0) { return; }
-                self.chatListAll.push(msg);
-                //格式化表情
-                if (msg.msgtype === 0 || msg.msgtype === 3) {                    
-                    EmojiParse($("#ulChat li:last-child"));
-                }
-                //格式化地图
-                else if (msg.msgtype === 5) {
-                    //地图消息
-                    var mapid="map" + msg.id0;                    
-                    //构造地图
-                    var latitude = msg.filename.split(',');
-                    GaoDeMap(mapid,latitude);
-                }
-                self.ScrollToBottom();
-            }
-
-            /*收到视频聊天请求*/
-            window.GetVideoChatRequest = function (rommid) {
-                $("#div0").addClass('show-video');
-                $("#videoBtn").addClass("cur");
-                $("#videoChatDiv").load("@Url.Action("VideoChatWindow", "Chat", new {area = ""})", { roomid: rommid, touid: "@ViewBag.touid" }, function (data) { });
-            }
-            /*发送的视频邀请被拒绝*/
-            window.GetVideoChatRefused = function () {
-                parent.layer.msg("对方拒绝了你的视频邀请");
-                CloseChatVideo();
-            }
-
-            //初始化聊天记录
-            //this.InitChatList();
-            //如果是群组界面，则还要加载主题聊天
-            if(this.isgroup == 1) {
-                this.InitSubjectList();
-                //判断是否是群组管理员(工作群)
-                if (this.touid.length === 36) {
-                //获取群组成员(最后一个成员为管理员)
-                    $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: self.touid }, function (data) {
-                        if (data.Data && data.Data.length > 0) {
-                            if (data.Data[data.Data.length - 1].id == self.uid) {
-                                //是管理员
-                                self.isAdmin=true;
-                            }
-                        }
-                    });
-                }
-            }
+			window.SendMessageFail = function(id1) {
+				console.log("发送消息失败")
+				$("#"+id1).remove();
+			}
         },
         methods: {
-            //获取音频长度
-            getAudioLength: function (width) {
-                return {
-                        width: width+"px"
-                    }
-            },
-            //点击查看大图
-            ShowImage: function (url) {
-                var re = new RegExp("&amp;", "g"); //定义正则表达式
-                var imgulrResult = url.replace(re, "&");
-                var resultJson = { "status": 1, "msg": "", "title": "", "id": 1, "start": 0, "data": [{ "alt": "", "pid": "", "src": imgulrResult, "thumb": "" }] };
-                if (parent.parent.ShowPhotos) {
-                    parent.parent.ShowPhotos(resultJson);
-                } else {
-                    parent.parent.layerPhotosNew(resultJson);
-                }
-            },
-            //获取用户头像
-            getHeadPhoto: function (uid) {
-                return '@ConfigHelper.GetConfigString("sso_host_name")' + "pic/" + uid;
-            },
-            //获取文件后缀名
             getFileName: function (fullname) {
                 var pos = fullname.lastIndexOf('.');
                 if (pos < 0) {
@@ -629,370 +349,6 @@
                 else {
                     return fullname.substring(0,pos + 1);
                 }
-            },
-            //打开创建主题提示窗口
-            OpenCreateSubjectPrompt: function () {
-                var self = this;
-                self.$prompt('请输入主题名称', '创建主题', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
-                    inputErrorMessage: '请输入合法的主题名称',
-                    callback: function (action, instance) {
-                         if(action === 'confirm') {
-                             self.AddGroupSubject(instance.inputValue);
-                         }else {                            
-                         }
-                     },
-                });
-            },
-
-            //添加主题
-            AddGroupSubject: function (value) {
-                var self = this;
-                $.ajax({
-                    url:'/imwebapi/api/MainApi/AddGroupSubject',
-                    type: 'Post',
-                    headers: {
-                        'ignore-identity': "true"
-                    },
-                    data: { userId: self.uid, groupId: self.touid, subjectName: value, },
-                    success: function (data) {
-                        if (data.Success) {
-                            self.$message('创建主题成功');
-                        } else {
-                            self.$message.error('创建主题出错');
-                        }
-                    },
-                    error: function (err) {
-                        self.$message.error('创建主题出错');
-                    },
-                });
-            },
-
-            //第一次初始化聊天数据
-            InitChatList: function (cb1,cb2) {
-                var self = this;
-                $.ajax({
-                    url:'/imwebapi/api/MainWebApi/RecentlyChat',
-                    type: 'Get',
-                    headers: {
-                        'ignore-identity': "true"
-                    },
-                    data: { uid: self.uid, touid: self.touid, isgroup: self.isgroup },
-                    success: function (data) {
-                        if (data.Success) {
-                            self.loading = false;
-                            self.chatListAll = data.Content;
-                            if (self.chatListAll.length > 0) {
-                                cb1();
-                                //格式化表情，并滚动到底部
-                                self.$nextTick(() => {
-                                    
-                                    self.ScrollToBottom();
-                                });
-
-                            } else {
-                                cb2();
-                            }
-
-                        } else {
-                            self.$message.error('获取聊天数据出错');
-                        }
-                    },
-                    error: function (err) {
-                    },
-                });
-                
-                this.$nextTick(() => {     
-                    this.ScrollToBottom();
-                });
-            },
-            //第一次初始化群组主题数据,翻页查询也用这个
-            InitSubjectList: function () {
-                var self = this;
-                $.ajax({
-                    url:'/imwebapi/api/MainApi/GetGroupSubject',
-                    type: 'Get',
-                    headers: {
-                        'ignore-identity': "true"
-                    },
-                    data: { goupId: self.touid, pageNo: self.subjectPageNo, pageSize:self.subjectPageSize },
-                    success: function (data) {
-                        if (data.Success) {
-                            //self.loading = false;
-                            self.subjectList = data.Content;
-                            self.subjectPageNo++;
-                        } else {
-                            self.$message.error('获取主题数据出错');
-                        }
-                    },
-                    error: function (err) {
-                    },
-                });
-            },
-            //向上滚动，刷新聊天数据
-            infiniteHandler($state) {
-                var self = this;
-                if (self.chatListAll.length <= 0) {
-                    self.InitChatList(function () {
-                        //有数据的回调
-                        $state.loaded();
-                    }, function () {
-                        //无数据的回调
-                        $state.complete();
-                    });
-                    return;
-                }
-                var lastMsgId = self.chatListAll[0].id0;
-                //var content;
-                $.ajax({
-                    url:'/imwebapi/api/MainWebApi/GetChatHistory',
-                    type: 'Get',
-                    headers: {
-                        'ignore-identity': "true"
-                    },
-                    data: { uid: self.uid, touid: self.touid, pageSize: 10, keywords:'', lastid:lastMsgId, },
-                    success: function (data) {
-                        if (data.Success) {
-                            if (data.Content.length > 0) {
-                                content = data.Content;
-                                data.Content.forEach(function (item) {
-                                    self.chatListAll.unshift(item);
-                                });
-                                $state.loaded();
-                                self.$nextTick(() => {
-                                    var result = data.Content.filter(item => {
-                                        return (item.msgtype == 0 || item.msgtype == 3) ;
-                                    });
-                                    result.forEach(function (item, index) {
-                                        EmojiParse($('#'+item.id1));
-                                    });
-                                });
-                            } else {
-                                $state.complete();
-                            }
-                        } else {self.$message.error('获取聊天数据出错');}
-                    },
-                    error: function (err) {self.$message.error('获取聊天数据出错');
-                    },
-                });
-
-                
-            },
-
-            //聊天panel滚动到最下方
-            ScrollToBottom:function() {
-                //------滚动条，滚动到最后------
-                var div = this.$refs['chatPanel'].$refs['wrap'];
-                this.$nextTick(() => {
-                    div.scrollTop = div.scrollHeight;
-                });
-            },
-
-            //收藏click
-            AddUserFavorites: function (id) {
-                if (id == '' || id == undefined){ return;}
-                var self = this;
-                $.ajax({
-                    url: '/imwebapi/api/MainApi/AddUserFavorites',
-                    type: 'POST',
-                    headers: {
-                        'ignore-identity': "true"
-                    },
-                    data: {
-                        userId: self.uid,
-                        type: 1,
-                        content: '',
-                        cid: id,
-                    },
-                    dataType: 'json',
-                    success: function (result) {
-                        if (result.Success) {
-                            layer.msg('收藏成功');
-                        } else {
-                            layer.msg('收藏失败');
-                        }
-
-                    },
-                    error: function (xhr, textStatus) {
-
-                    }
-                });
-            },
-
-            //转换图文消息 已弃用
-            ConvertImageText: function (msg) {
-                var indexK = 0;
-                while (msg.msg.indexOf("[$PICTURE$]") >= 0) {
-                    msg.msg = msg.msg.replace("[$PICTURE$]", "<img class=\"imgA\" src=\"" + msg.imglist[indexK] + "\">");
-                    indexK++;
-                }
-                return msg.msg;
-            },
-
-            //发送聊天消息
-            SendMessage: function () {
-                var self = this;
-                var sendText = document.getElementById('msgTextarea').innerText;//只能获取出文本内容
-                var msg = $.trim($("#msgTextarea").html());
-                if (msg === "") {
-                    layer.msg("发送内容不能为空");
-                    return;
-                }
-                if ($.trim(sendText).length > 2000) {
-                    layer.msg("发送文本长度不得大于2000");
-                    console.log("------发送内容长度大于2000------", msg.length);
-                    return;
-                }
-                var msgid1 = (new Date()).valueOf();
-                var msgObject = {
-                        "fromuid": this.uid,
-                        "touid": this.touid,
-                        "isgroup": this.isgroup,
-                        "fromrealname": this.fromusername,
-                        "torealname": this.tousername,               
-                        "id0":"",
-                        "id1": msgid1,
-                        "msgtime":(new Date()).format('yyyy/MM/dd hh:mm:ss'),
-                        "msgtype": 0,     
-                        "msg": msg,
-                        "filename":"",
-                        "duration": 0,
-                        "imglist":[],
-                        "terminal": "@ConfigHelper.GetConfigString("ImTerminal")",
-                        "subjectId":"",
-                        "subjectTitle":"",
-                    };
-                self.chatListAll.push(msgObject);
-                /*清空当前对话框 并显示到聊天面板中*/
-                $("#msgTextarea").html("").focus();
-                var ele = window.parent.parent.document.getElementById("okcsim");
-                if (ele != null) {
-                    var iframeele = ele.children[0];
-                    //这里有发送文本，发送图片，发送图文混排三种情况，需要从后台判断  返回的type分别是 0 1 3
-                    msg = msg.replace(/&nbsp;/g, " ");
-
-                    $.ajax({
-                        url: '/imwebapi/api/MainWebApi/GetMessageType',
-                        type: 'Get',
-                        headers: {
-                            'ignore-identity': "true"
-                        },
-                        data: {
-                            message: msg
-                        },
-                        dataType: 'json',
-                        success: function (result) {
-                            if (result.Success) {
-                                msgObject.msgtype = result.Content.type;
-                                msgObject.msg = result.Content.msg;
-                                msgObject.imglist = result.Content.imgList;
-                                
-
-                                iframeele.contentWindow.sendMessageNew(msgObject, SendMessageSuccess, SendMessageFail);
-                            } else {
-                                self.$message.error('消息类型转换失败');
-                                layer.msg("消息发送失败（错误代码01）");
-                                setTimeout(function () {
-                                    SendMessageFail(msgid1);
-                                }, 1200);
-                                console.log("GetMessageType访问失败...");
-                            }
-                        },
-                        error: function (xhr, textStatus) {
-                            self.$message.error('API调用失败');
-                            setTimeout(function () {
-                                SendMessageFail(msgid1);
-                            }, 1200);
-                            console.log("GetMessageType访问失败...");
-                        }
-                    })
-                };
-                this.$nextTick(() => {
-                    if (msgObject.msgtype == 0 || msgObject.msgtype == 3) {
-                        //格式化表情
-                        EmojiParse( $("#"+msgObject.id1));
-                    }                     
-                    self.ScrollToBottom();
-                });
-            },
-
-            //聊天输入框的keyup事件
-            SendMessageKeyUp: function (event) {
-                if (event.keyCode === 13 && !(event.ctrlKey)) {
-
-                    $("#msgTextarea").html($("#msgTextarea").html().replace("<div><br></div>", ""));
-                    this.SendMessage()
-                    event.preventDefault();
-                    return false;
-                }
-                if (event.ctrlKey && event.keyCode === 13) {
-                    $("#msgTextarea").html($("#msgTextarea").html() + '<br>');
-                    woohecc.placeCaretAtEnd(inputTxt.get(0));
-                    return false;
-                }
-            },
-
-            //视频聊天
-            VideoChat: function () {            
-                if (this.isgroup === 1) {
-                    //新打开一个窗口
-                    window.open(encodeURI('https://oaokcs.cnki.net/im/Chat/JanusMeeting?groupid='+'@ViewBag.touid'+'&groupname='+'@ViewBag.tousername'));
-                    var msgid1=(new Date()).valueOf();
-                    //发送一条消息(type=6的加入群组聊天消息)
-                    var msgObject = {
-                        "fromuid": this.uid,
-                        "touid": this.touid,
-                        "isgroup": this.isgroup,
-                        "fromrealname": this.fromusername,
-                        "torealname": this.tousername,               
-                        "id0":"",
-                        "id1": msgid1,
-                        "msgtime":(new Date()).format('yyyy/MM/dd hh:mm:ss'),
-                        "msgtype": 6,     
-                        "msg": this.fromusername + "加入了群组视频会议",
-                        "filename":"",
-                        "duration": 0,
-                        "imglist":[],
-                        "terminal": "@ConfigHelper.GetConfigString("ImTerminal")",
-                        "subjectId":"",
-                        "subjectTitle":"",
-                    };
-                    this.chatListAll.push(msgObject);
-                    //调用okcsim中的发送消息方法
-                    var iframeele = window.parent.parent.document.getElementById("okcsim").children[0];
-                    iframeele.contentWindow.sendMessageNew(msgObject, SendMessageSuccess, SendMessageFail);
-                    return;
-                }
-                try{
-                    //如果是一对一视频聊天，需要判断当前是不是https环境、判断是否有摄像头
-                    navigator.getUserMedia({
-                        video: true,
-                        audio: true
-                    }, function(stream) {
-                        if ($("#historyBtn").hasClass("cur")) { return; }
-                        var touid = "@ViewBag.touid";
-                        if (!$("#div0").hasClass("show-video")) {
-                            $("#div0").addClass('show-video');
-                            $("#videoBtn").addClass("cur");
-                            var ele = window.parent.parent.document.getElementById("okcsim");
-                            var room = _getRandomString(10);
-                            if (ele != null) {
-                                var iframeele = ele.children[0];
-                                iframeele.contentWindow.videoChat("@LoginUserService.ssoUserID", "@ViewBag.fromusername", touid, room);
-                            }
-                            $("#videoChatDiv").load("@Url.Action("VideoChatWindow", "Chat", new {area = ""})", { roomid: room, touid: touid }, function (data) { });
-                        }
-                    }, function(error) {
-                        layer.msg("没有可用的摄像头，无法发起一对一视频聊天.");
-                        return;
-                    });
-                }catch(error){
-                    layer.msg("当前网站不是https环境，无法发起一对一视频聊天.");
-                    return;
-                }
-
             },
 
             handleChange: function (file, fileList) {
@@ -1063,7 +419,7 @@
                                     self.$refs.upload.submit();
                                 }
                             }).error(function (xhr, status, info) {
-                                console.log("上传文件出错...")    　　
+                                console.log("上传文件出错...")    　　                            
                             });
                         } else {
                             var msgid1=(new Date()).valueOf();
@@ -1167,13 +523,13 @@
     });
 
     $(function () {
-
         if ("@ViewBag.roomid" !== "") {
             $("#div0").addClass('show-video');
             $("#videoBtn").addClass("cur");
             $("#videoChatDiv").load("@Url.Action("VideoChatWindow", "Chat", new {area = ""})", { roomid: "@ViewBag.roomid", touid: "@ViewBag.touid" }, function (data) { });
         }
-
+        var touids0 = 0;
+        var touidslist;
         //监听右键粘贴图片
         document.getElementById("msgTextarea").addEventListener('paste', function (e) {
             listenPasteImage(e, "@ViewBag.touid", function (result) {
@@ -1186,6 +542,31 @@
             });
         });
 
+        var elecount = $("#ulChat").children().length;
+        $('#ulChat').animate({ scrollTop: elecount * 200 }, 500);
+        if ("@ViewBag.isGroup" === "1") {            
+            var toid = "@ViewBag.touid";
+            if (toid.length === 36) {
+                //获取群组成员(最后一个成员为管理员)
+                $.post("@ConfigHelper.GetConfigString("GetMyGroupMembers")", { groupID: toid }, function (data) {
+                    touids0 = 1;
+                    touidslist = new Array();
+                    $.each(data.Data, function (n, value) {
+                        if (value.id !== "@LoginUserService.ssoUserID" && value.realName !=null ) {
+                            touidslist[n] = value.id;
+                        } else {
+                            touidslist[n] = "";
+                        }
+                        @*if (n == data.Data.length-1 && value.id == "@LoginUserService.ssoUserID") {
+                            //是管理员
+                            $("#subjectBtn").removeClass('nodisplay');
+                        }*@
+                    });
+                });
+            }
+        }
+
+        
 
 
         /*点击用户 直接进行私聊*/
@@ -1228,26 +609,88 @@
                 }
             }
         });
-
-        //$(document).on('click', '.imgA', function () {
-        //    ShowImg($(this));
-        //});
-
-
-        //$('.myaudio').on('play', function () {
-        //    $(this).next().css('animation-play-state', 'running');
-        //});
-        //$('.myaudio').on('ended', function () {
-        //    $(this).next().css('animation-play-state', 'paused');
-        //});
-        //$('.myaudio').on('pause', function () {
-        //    $(this).next().css('animation-play-state', 'paused');
-        //});
+        $(document).on('click', '.imgA', function () {
+            ShowImg($(this));
+        });
 
 
-        
+        $('.myaudio').on('play', function () {
+            $(this).next().css('animation-play-state', 'running');
+        });
+        $('.myaudio').on('ended', function () {
+            $(this).next().css('animation-play-state', 'paused');
+        });
+        $('.myaudio').on('pause', function () {
+            $(this).next().css('animation-play-state', 'paused');
+        });
 
-        
+
+        function _getRandomString(len) {
+            len = len || 32;
+            var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; // 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
+            var maxPos = $chars.length;
+            var pwd = '';
+            for (i = 0; i < len; i++) {
+                pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        };
+
+        /*发送视频申请*/
+        $('#videoBtn').click(function () {
+            if ("@ViewBag.isGroup" === "1") {
+                //新打开一个窗口
+                window.open(encodeURI('https://oaokcs.cnki.net/im/Chat/JanusMeeting?groupid='+'@ViewBag.touid'+'&groupname='+'@ViewBag.tousername'));
+
+                
+                var msgid1=(new Date()).valueOf();
+                //发送一条消息
+                var msgObject = {
+                    "fromuid": "@LoginUserService.ssoUserID",
+                    "touid": "@ViewBag.touid",
+                    "isgroup": @ViewBag.isGroup,
+                    "fromrealname": "@ViewBag.fromusername",
+                    "torealname": "@ViewBag.tousername",
+                    "msg": "@ViewBag.fromusername"+"加入了群组视频会议",
+                    "msgtype": 6,
+                    "terminal": "@ConfigHelper.GetConfigString("ImTerminal")",
+                    "id1":msgid1,
+                };
+                var iframeele = window.parent.parent.document.getElementById("okcsim").children[0];
+                iframeele.contentWindow.sendMessageNew(msgObject, SendMessageSuccess, SendMessageFail);
+                AppendSelfGroupMeetingMsg((new Date()).format('yyyy/MM/dd hh:mm:ss'), "@ViewBag.fromusername" + "加入了群组视频会议",msgid1);
+                return;
+            }
+            try{
+                //判断是否有摄像头
+                navigator.getUserMedia({
+                    video: true,
+                    audio: true
+                }, function(stream) {
+
+                    if ($("#historyBtn").hasClass("cur")) { return; }
+                    var touid = "@ViewBag.touid";
+                    if (!$("#div0").hasClass("show-video")) {
+                        $("#div0").addClass('show-video');
+                        $("#videoBtn").addClass("cur");
+                        var ele = window.parent.parent.document.getElementById("okcsim");
+                        var room = _getRandomString(10);
+                        if (ele != null) {
+                            var iframeele = ele.children[0];
+                            iframeele.contentWindow.videoChat("@LoginUserService.ssoUserID", "@ViewBag.fromusername", touid, room);
+                        }
+                        $("#videoChatDiv").load("@Url.Action("VideoChatWindow", "Chat", new {area = ""})", { roomid: room, touid: touid }, function (data) { });
+                    }
+                }, function(error) {
+                    layer.msg("没有可用的摄像头，无法发起视频聊天.");
+                    return;
+                });
+            }catch(error){
+                layer.msg("当前网站不是https环境，无法发起视频聊天.");
+                return;
+            }
+
+        });
         /*查看历史聊天记录*/
         $('#historyBtn').click(function () {
             if ($("#videoBtn").hasClass("cur")) { return; }
@@ -1309,10 +752,85 @@
             $("#searchDiv").slideToggle(100);
         });
 
+        var ele0 = window.parent.parent.document.getElementById("okcsim");
+        var iframeele = ele0.children[0];
+        iframeele.contentWindow.RemoveNewCircle();
+        $("#msgTextarea").keydown(function ($event) {
+            var keycode = window.event ? $event.keyCode : $event.which;
+            var evt = $event || window.event;
+            var inputTxt = $(this);
+            // 回车-->发送消息
+            if (keycode === 13 && !(evt.ctrlKey)) {
+                sendMsg();
+                $event.preventDefault();
+                return false;
+            }
+            // ctrl+回车-->换行
+            if (evt.ctrlKey && evt.keyCode === 13) {
+                inputTxt.html(inputTxt.html() + '<br>');
+                woohecc.placeCaretAtEnd(inputTxt.get(0));
+                return false;
+            }
+        });
 
+        $('#sendmessageBtn').click(function () {
+            sendMsg();
+        });
 
+        /*
+            发送消息
+            发送消息的时候 这里采用的方法是先将静态内容添加到聊天列表中 然后再将其使用post写入到数据库中 若保存失败 则通过jquery修改前端页面
+        */
+        window.sendMsg = function () {
+            var touid = "@ViewBag.touid";
+            var sendText = document.getElementById('msgTextarea').innerText;//只能获取出文本内容
+            var msg = $.trim($("#msgTextarea").html());
+            if (msg === "") {
+                layer.msg("发送内容不能为空");
+                return;
+            }
+            if ($.trim(sendText).length > 2000) {
+                layer.msg("发送文本长度不得大于2000");
+                console.log("------发送内容长度大于2000------", msg.length);
+                return;
+            }
+            var msgid1=(new Date()).valueOf();
+            AppendSelfMsg((new Date()).format('yyyy/MM/dd hh:mm:ss'), msg, "@ViewBag.photo", "@ViewBag.fromusername",msgid1);
+            /*清空当前对话框 并显示到聊天面板中*/
+            $("#msgTextarea").html("").focus();
+            var tousername = $('.cphead-name').text();
+            var ele = window.parent.parent.document.getElementById("okcsim");
+            if (ele != null) {
+                var iframeele = ele.children[0];
+                //这里有发送文本，发送图片，发送图文混排三种情况，需要从后台判断  返回的type分别是 0 1 3
+                msg=msg.replace(/&nbsp;/g, " ");
+                $.post("@Url.Action("GetMessageType","Chat")",{message:msg},function(data) {
+                    if (data.Success) {
+                        var msgObject = {
+                            "fromuid": "@LoginUserService.ssoUserID",
+                            "touid": touid,
+                            "isgroup": @ViewBag.isGroup,
+                            "fromrealname": "@ViewBag.fromusername",
+                            "torealname": tousername,
+                            "msg": data.Content,
+                            "msgtype": data.msgType,
+                            "imglist":data.imgList,
+                            "terminal":"@ConfigHelper.GetConfigString("ImTerminal")",
+                            "id1":msgid1,
+                        };
+                        iframeele.contentWindow.sendMessageNew(msgObject, SendMessageSuccess, SendMessageFail);
+                    } else {
+                        console.log(data.Content);
+                    }
+                }).error(function (xhr, status, info) {
+                    layer.msg("消息发送失败（错误代码01）");
+                    setTimeout(function () { 
+                    SendMessageFail(msgid1);},1200)
+                        console.log("GetMessageType访问失败...")    　　                            
+                    });;
 
-        
+            }
+        }
         /*上传图片*/
         $("#imgBtn").click(function () {
             $('#uploadimgname').trigger('click');
@@ -1346,14 +864,14 @@
                 success: function (result) {
                     document.getElementById('uploadimgname').value = null;
                     if (result.Content === null) {
-                        layer.msg("图片上传失败！");
+                        layer.msg("服务出现异常，图片发送失败！");
                         layer.msg(result);
                         return;
                     }
                     var url = "@ConfigHelper.GetConfigString("HfsUrl")" + result.Content;
                     CreateImgElement(url);
                     if ("@ViewBag.isGroup" !== "1") { return; }
-                    if ("@ViewBag.touid".length !== 36) { return; }
+                    if (touids0 === 0) { return; }
                     //**********发送到工作群中 新需求：图片上传到群组的共享资料中************
                     var file = file0;
                     var fileformat = "." + file0.name.replace(/.+\./, "").toLowerCase();
@@ -1404,6 +922,7 @@
                             }
                         }
                     });
+                    //}
                 }
             });
         });
@@ -1452,15 +971,158 @@
                 }
             }
         }
-        
-        
+        /*
+            发送消息后 将消息内容更新到聊天面板中 在自己的页面添加一条消息
+        */
+        window.AppendSelfGroupMeetingMsg = function (msgtime, msgcontent,id) {
+            var eleChat = $("#ulChat");
+            var elestr = "<li id='"+id+"' data-msgid=''><div class=\"chat-time\"><span>" + msgtime + "</span></div><div><p class=\"color-9 text-mid\">"+msgcontent+"</p></div></li>";
+            eleChat.append(elestr);
+            var elecount = eleChat.children().length;
+            eleChat.animate({ scrollTop: elecount * 200 }, 500);
+        }
+        /*
+            发送消息后 将消息内容更新到聊天面板中 在自己的页面添加一条图片消息 这里添加的是文字、表情、图片消息
+            添加判断，如果和上一条消息的时间差在120s之内，则隐藏时间显示
+        */
+        window.AppendSelfMsg = function (msgtime, msgcontent, photo, name, id) {
+            var chatClass = "chat-time";
+            var lastLi = $("#ulChat li:last-child");
+            if (lastLi) {
+                var lastLiDiv = $(lastLi).children("div").eq(0);
+                if (lastLiDiv) {
+                    var timeSpan = $(lastLiDiv).children("span").eq(0);
+                    if (timeSpan) {
+                        var kTime = $(timeSpan).html();
+                        var minusTime=Math.floor(((new Date(msgtime)).getTime()-(new Date(kTime)).getTime())/1000);
+                        if (minusTime < 120) {
+                            chatClass = "chat-time nodisplay";
+                        }
+                    }
+                }
+            }
+            var eleChat = $("#ulChat");
+            var elestr = "<li id='"+id+"' data-msgid=''><div class=\""+chatClass+"\"><span>" + msgtime + "</span></div><div class=\"out\"><div class=\"media clearfix\"><div class=\"inline-block\"><img class=\"head-ssimg\" src=\"" + photo + "\"></div><div class=\"media-body\"><p class=\"color-9\">" + name + "</p><p class=\"mb-txt\">" + msgcontent + "</p></div><i class=\"iconfont icon-collection user-fav\" title=\"收藏\"></i></div></div></li>";
+            eleChat.append(elestr);
+            EmojiParse($("#ulChat li:last-child"));
+            var elecount = eleChat.children().length;
+            eleChat.animate({ scrollTop: elecount * 200 }, 500);
+        }
 
-        
+        /*
+            添加自己从别人那里收到的聊天消息
+            包括从移动端同步过来的自己的消息
+            添加判断，如果和上一条消息的时间差在120s之内，则隐藏时间显示
+        */
+        window.AppendOtherUserMsg = function (model) {
+            if (model.id0 && $("li[data-msgid='" + model.id0 + "']").length != 0) { return;}
+
+            //聊天列表
+            var chatClass = "chat-time";
+            var lastLi = $("#ulChat li:last-child");
+            if (lastLi) {
+                var lastLiDiv = $(lastLi).children("div").eq(0);
+                if (lastLiDiv) {
+                    var timeSpan = $(lastLiDiv).children("span").eq(0);
+                    if (timeSpan) {
+                        var kTime = $(timeSpan).html();
+                        var minusTime=Math.floor(((new Date(model.msgtime)).getTime()-(new Date(kTime)).getTime())/1000);
+                        if (minusTime < 120) {
+                            chatClass = "chat-time nodisplay";
+                        }
+                    }
+                }
+            }
+
+            var eleChat = $("#ulChat");
+            var photo = "@(ConfigHelper.GetConfigString("sso_host_name") + "pic/" )" + model.fromuid;
+            var elestr = "";
+            var class0 = "in";//默认是其他用户的
+            if (model.fromuid === "@LoginUserService.ssoUserID") {
+                class0 = "out";//自己的发言
+            }
+            var listart = "<li id='"+model.id1+"' data-msgid='"+model.id0+"'><div class=\""+chatClass+"\"><span>" + model.msgtime + "</span></div><div class=\"" + class0 + "\"><div class=\"media clearfix\"><div class=\"inline-block\"><img class=\"head-ssimg\" src=\"" + photo + "\"></div><div class=\"media-body\"><p class=\"color-9\">" + model.fromrealname + "</p>";
+            var liend = "</div><i class=\"iconfont icon-collection user-fav\" title=\"收藏\"></i></div></div></li>";
+
+            //这个model是Msg  通知类消息，这边也暂时作为普通文本消息处理
+            if (model.msgtype === 0 || model.msgtype === 8) {
+                elestr = listart+"<p class=\"mb-txt\">" + model.msg + "</p>"+liend;
+                eleChat.append(elestr);
+                EmojiParse($("#ulChat li:last-child"));
+            } else if (model.msgtype === 1) {
+                elestr = listart+"<p class=\"mb-txt mb-filetxt\"><img class=\"imgA\" src=\"" + model.msg + "\"></p>"+liend;
+                eleChat.append(elestr);
+            }
+            else if (model.msgtype === 2) {
+                elestr = listart+"<p class=\"mb-txt mb-filetxt\"><a class=\"layui-layim-file\" href=\"" + model.msg + "\" ><i class=\"layui-icon\"></i><cite>" + model.filename + "</cite></a></p>"+liend;
+                eleChat.append(elestr);
+            } else if (model.msgtype === 3) {
+                //替换图片占位符
+                var indexK = 0;
+                while (model.msg.indexOf("[$PICTURE$]") >= 0) {
+                    model.msg = model.msg.replace("[$PICTURE$]", "<img class=\"imgA\" src=\"" + model.imglist[indexK] + "\">");
+                    indexK++;
+                }
+                elestr = listart+"<p class=\"mb-txt mb-filetxt\">" + model.msg + "</p>"+liend;
+                eleChat.append(elestr);
+                EmojiParse($("#ulChat li:last-child"));
+            }
+            else if (model.msgtype === 4) {
+                var e = "<div id=\"" + model.id0 + "\" class=\"yuyin fl\" style=\"width:" + model.duration + "px\" audioSize=\"" + model.duration + "\"><span class=\"yuyin_txt yy_txt_l\">" + model.duration + "''</span><audio class=\"myaudio\" preload=\"auto\" hidden=\"true\"><source src=\"" + model.msg + "\" type=\"audio/mpeg\"></audio><span class=\"yuyin_img yuyin_img_l\"></span></div>";
+                elestr = listart + e + liend;
+                eleChat.append(elestr);
+                $(".myaudio").off("play");
+                $(".myaudio").off("ended");
+                $(".myaudio").off("pause");
+                $('.myaudio').on('play', function () {
+                    $(this).next().css('animation-play-state', 'running');
+                });
+                $('.myaudio').on('ended', function () {
+                    $(this).next().css('animation-play-state', 'paused');
+                });
+                $('.myaudio').on('pause', function () {
+                    $(this).next().css('animation-play-state', 'paused');
+                });
+            } else if (model.msgtype === 5) {
+                //地图消息
+                var mapid="map" + model.id0;
+                elestr = listart+"<div class=\"map-item\"><div class=\"mapi-top\" map-data=\""+model.filename+"\" id=\""+mapid+"\"></div><p class=\"mapi-mid\">位置</p><p class=\"mapi-bot\" title=\""+model.msg+"\">"+model.msg+"</p></div>"+liend;
+                eleChat.append(elestr);
+                //构造地图
+                var latitude = model.filename.split(',');
+                GaoDeMap(mapid,latitude);
+            }
+            else if (model.msgtype === 6) {
+                //加入视频会议消息
+                elestr = "<li class=\"chat-time\"><span>"+model.msgtime+"</span></li><li><p class=\"color-9 text-mid\">"+model.msg+"<a class=\"ml10 link link01\" href='"+encodeURI('https://oaokcs.cnki.net/im/Chat/JanusMeeting?groupid='+'@ViewBag.touid'+'&groupname='+'@ViewBag.tousername')+"' target=\"_blank\">点击加入</a></p></li>";
+                eleChat.append(elestr);
+                $(".conference-notify").removeClass('hide');
+            }else if(model.msgtype === 7){
+                //移动端发送过来的小视频
+                elestr = listart +"<p class=\"mb-txt\"><video controls='controls' style='width:100%;' src='"+model.msg+"'></video></p>"+liend;
+            }
+            var elecount = eleChat.children().length;
+            eleChat.animate({ scrollTop: elecount * 200 }, 500);
+        }
 
 
-        
+        /*收到视频聊天请求*/
+        window.GetVideoChatRequest = function (rommid) {
+            $("#div0").addClass('show-video');
+            $("#videoBtn").addClass("cur");
+            $("#videoChatDiv").load("@Url.Action("VideoChatWindow", "Chat", new {area = ""})", { roomid: rommid, touid: "@ViewBag.touid" }, function (data) { });
+        }
+        /*发送的视频邀请被拒绝*/
+        window.GetVideoChatRefused = function () {
+            //parent.layer.msg("对方拒绝了你的视频邀请");
+            CloseChatVideo();
+        }
 
-
+        window.ScrollToBottom = function () {
+            var eleChat = $("#ulChat");
+            var elecount = eleChat.children().length;
+            eleChat.animate({ scrollTop: elecount * 200 }, 500);
+        }
         var pageCount = 0;
         var pageNumber = 0;
         var msgSearch = "";
@@ -1808,12 +1470,19 @@
 
         }
 
+        //发送成功的回调函数  设置id，id0为数据库中的id, id1为客户端发送时的id
+        function SendMessageSuccess(id0,id1) {
+            console.log("发送消息成功")
+            $("#"+id1).attr("data-msgid", id0);
+        }
+
+        function SendMessageFail(id1) {
+            console.log("发送消息失败")
+            $("#"+id1).remove();
+        }
 
 
 
-
-
-        //导出按钮
         $(".chat-export").click(function(event) {
 
             GetChatHistory(dateTime+' 00:00:00',dateTime + ' 23:59:59');
@@ -1832,15 +1501,20 @@
                  $("#ulChat").removeClass("ul-font-small").removeClass("ul-font-normal").addClass("ul-font-big");
              }
          })
-        $(".icon-collection").hover(function(){
+        //$(".icon-collection").hover(function(){
+          //  $(this).addClass("icon-collectionS");
+        //},function(){
+          //  $(this).removeClass("icon-collectionS");
+        //});
+
+ $(document).on('mouseenter', '.icon-collection', function(){
             $(this).addClass("icon-collectionS");
-        },function(){
+        });
+		 $(document).on('mouseleave', '.icon-collection', function(){
             $(this).removeClass("icon-collectionS");
         });
+      
 
-
-
-        //右侧历史记录中的收藏click
          $(document).on('click', '.user-fav-history', function () {
             var msgid = $(this).attr("data-msgid");
             $.ajax({
@@ -1855,7 +1529,7 @@
                     content: '',
                     cid:msgid,
                 },
-                dataType:'json',
+                dataType:'json',                
                 success: function (result) {
                     if (result.Success) {
                         layer.msg('收藏成功');
@@ -1865,13 +1539,45 @@
 
                 },
                 error:function(xhr,textStatus){
-
+                    
                 }
-            })
+            })  
+        });
+		
+		$(document).on('click', '.user-fav', function () {
+            var msgid = $(this).parents("div").parents("div").parents("li").attr("data-msgid");
+            $.ajax({
+                url:'/imwebapi/api/MainApi/AddUserFavorites',
+                type: 'POST',
+                headers: {
+                    'ignore-identity': "true"
+                },
+                data:{
+                    userId:'@LoginUserService.ssoUserID',
+                    type: 1,
+                    content: '',
+                    cid:msgid,
+                },
+                dataType:'json',                
+                success: function (result) {
+                    if (result.Success) {
+                        layer.msg('收藏成功');
+                    } else {
+                        layer.msg('收藏失败');
+                    }
+
+                },
+                error:function(xhr,textStatus){
+                    
+                }
+            }) 
         });
 
 
-
+        //$(".user-fav").click(function(event){
+          //   
+         //})
+        
 
     });
 </script>
