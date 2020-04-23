@@ -7,7 +7,7 @@ namespace Edu.Entity
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// 记录个推日志的数据库
+    /// 
     /// </summary>
     [Table("UserFavorites")]
     public partial class UserFavorites
