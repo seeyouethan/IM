@@ -71,7 +71,7 @@ namespace Edu.Models.Models.Msg
         /// </summary>
         public string msg { get; set; }
         /// <summary>
-        /// 当且仅当msgtype=1,即为图片消息的时候，该字段存放的是生成的缩略图的地址;
+        /// 当且仅当msgtype=1,即为图片消息的时候，该字段存放的是生成的缩略图的地址;修改为图片文件的名字2020年4月27日15:37:30
         /// 当且仅当msgtype=2，即为文件消息的时候，该字段存放完整的文件名，比如abc.docx
         /// 
         /// 

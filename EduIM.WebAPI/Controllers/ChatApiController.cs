@@ -71,7 +71,6 @@ namespace EduIM.WebAPI.Controllers
                 return Json(new { Success = false, Content = "", Error = "文件读取失败", Message = "操作失败", Count = 0, Total = 0 });
             }
             var file = new HttpPostedFileWrapper(fileList[0]) as HttpPostedFileBase;
-            var uid = userId;
             string strPostfix = file.FileName.Substring(file.FileName.LastIndexOf(".") + 1);
             if (strPostfix.ToLower() != "gif" && strPostfix.ToLower() != "jpg" && strPostfix.ToLower() != "pic" && strPostfix.ToLower() != "bmp" && strPostfix.ToLower() != "jpeg" && strPostfix.ToLower() != "png")
             {
@@ -80,7 +79,9 @@ namespace EduIM.WebAPI.Controllers
             var result = FileService.Upload(file, "ZK-700");
             if (result.Success)
             {
-                return Json(new { Success = true, Content = ConfigHelper.GetConfigString("OkcsServer") + "/imwebapi/Home/GetHfsImage?filecode=" + result.Content, Error = "", Message = "操作成功", Count = 0, Total = 0 });
+                //修改返回的接口
+                //return Json(new { Success = true, Content = ConfigHelper.GetConfigString("OkcsServer") + "/imwebapi/Home/GetHfsImage?filecode=" + result.Content, Error = "", Message = "操作成功", Count = 0, Total = 0 });
+                return Json(new { Success = true, Content = ConfigHelper.GetConfigString("OkcsServer") + "/imwebapi/Home/Download?title"+file.FileName+"&filecode=" + result.Content, Error = "", Message = "操作成功", Count = 0, Total = 0 });
             }
             return Json(new { Success = false, Content = "", Error = result.Error, Message = "操作失败", Count = 0, Total = 0 });
         }

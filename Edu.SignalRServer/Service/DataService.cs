@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Edu.Entity;
@@ -73,7 +74,10 @@ namespace Edu.SignalRServer.Service
                 if (msg.msgtype == 0)
                 {
                     //纯文本消息
-                    immsg.Msg = msg.msg;
+                    //去掉html标签
+                    
+                    immsg.Msg = RemoveHTML(msg.msg);
+
                 }
                 else if (msg.msgtype == 1)
                 {
@@ -128,11 +132,15 @@ namespace Edu.SignalRServer.Service
                 immsg.SubjectId = "0";//默认为0
                 if (!string.IsNullOrEmpty(msg.subjectId))
                 {
-                    immsg.SubjectId = msg.subjectId;
+                    if (msg.subjectId == "null")
+                    {
+                        immsg.SubjectId = "0";
+                    }
+                    else
+                    {
+                        immsg.SubjectId = msg.subjectId;
+                    }
                 }
-
-
-
                 msg.msgtime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 unitOfWork.DIMMsg.Insert(immsg);
                 var result = unitOfWork.Save();
@@ -176,6 +184,40 @@ namespace Edu.SignalRServer.Service
                 return 0;
             }
             
+        }
+
+        private string RemoveHTML(string Htmlstring)
+        {
+            if (Htmlstring == null)
+            {
+                return "";
+            }
+            //删除脚本  
+            Htmlstring = Regex.Replace(Htmlstring, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
+            //删除HTML  
+            Htmlstring = Regex.Replace(Htmlstring, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"-->", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"<!--.*", "", RegexOptions.IgnoreCase);
+
+            Htmlstring = Regex.Replace(Htmlstring, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(nbsp|#160);", "   ", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&#(\d+);", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"\\s+", "", RegexOptions.IgnoreCase);
+
+            Htmlstring.Replace("<", "");
+            Htmlstring.Replace(">", "");
+            Htmlstring.Replace("\r\n", "");
+            //Htmlstring = HttpContext.Current.Server.HtmlEncode(Htmlstring).Trim();
+
+            return Htmlstring;
         }
 
 

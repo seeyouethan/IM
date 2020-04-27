@@ -385,6 +385,7 @@ body {
 .btn-group .el-button {width: 78px; padding: 9px 0 !important} 
 .im-panel{border-radius:0;}
 .createGroup{border-radius:10px!important;}
+.is-required .el-form-item__label{margin-left:-10px}
 /*弹窗-选择成员*/
 .talk-wrap{width:560px;margin-bottom:25px;}
 .talk-box .search-sm{margin:0;border:none;border-bottom: 1px solid #d4d5d5;}

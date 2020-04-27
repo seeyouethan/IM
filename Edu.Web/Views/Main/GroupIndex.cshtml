@@ -681,6 +681,7 @@
                 //监听图片上传
                 $('#uploadimgname').on('change', function () {
                     var file0 = $("#uploadimgname")[0].files[0];
+                    var imgName = file0.name;
                     if (file0 == null) {
                         return;
                     }
@@ -706,8 +707,8 @@
                             if (result.Content === null) {
                                 self.$message.error("图片上传失败！");
                             } else {
-                                var url = "@ConfigHelper.GetConfigString("HfsUrl")" + result.Content;
-
+                                //var url = "@ConfigHelper.GetConfigString("HfsUrl")" + result.Content;
+                                var url = "@ConfigHelper.GetConfigString("HfsDownLoadUrl")" + "title=" + imgName + "&fileCode=" + result.Content;
                                 var msgObject = {
                                     "msgtype": 1,
                                     "msg": url,
@@ -897,11 +898,6 @@
 
                     self.scrollToBottom();
                 }
-
-               
-
-
-
                 self.getGroupMembers();
                 self.InitSubjectList();
             },

@@ -52,7 +52,7 @@ namespace Edu.Entity
         /// </summary>
         public string Type { get; set; }
         /// <summary>
-        /// 这个字段暂时用来存放文件的下载URL 2018年12月20日修改
+        /// 
         /// </summary>
         public string FileType { get; set; }
         /// <summary>

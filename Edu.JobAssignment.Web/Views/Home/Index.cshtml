@@ -175,7 +175,7 @@
                 var self = this;
                 $("#todolistul").empty();
                 this.loading = true;
-                $.post("@Url.Action("GetListByGroupid","Home")", { gid: "@ViewBag.groupid", dt0: data0.toLocaleDateString(), dt1: data1.toLocaleDateString() }, function(data) {
+                $.post("@Url.Action("GetListByGroupid","Home")", { gid: "@ViewBag.groupid", dt0: data0.toLocaleDateString(), dt1: data1.toLocaleDateString(), pageSize:15 }, function (data) {
                     self.loading = false;
                     //console.log(data.list);
                     if (data.list == null || data.list.length == 0) {
@@ -183,9 +183,9 @@
                         return;
                     }
                     $(".nodata-tip").addClass('isHidden');
-                    if (data.list.length === 1 && data.list[0].SubSchedules.length >= 6) {
+                    if (data.list.length === 1 && data.list[0].SubSchedules.length >= 5) {
                         $(".more-p").html("加载更多");
-                    } else if (data.list.length >= 7) {
+                    } else if (data.list.length >= 15) {
                         $(".more-p").html("加载更多");
                     }
 
@@ -403,15 +403,15 @@
         $(".more-p").empty();
         pageNo = 1;
         $("#todolistul").empty();
-        $.post("@Url.Action("GetListByGroupid", "Home")", { gid: "@ViewBag.groupid", dt0: timeFormat(today), dt1: timeFormat(today) }, function (data) {
+        $.post("@Url.Action("GetListByGroupid", "Home")", { gid: "@ViewBag.groupid", dt0: timeFormat(today), dt1: timeFormat(today), pageSize:15 }, function (data) {
             if (data.list == null || data.list.length == 0) {
                 $(".nodata-tip").removeClass('isHidden');
                 return;
             }
             $(".nodata-tip").addClass('isHidden');
-            if (data.list.length === 1 && data.list[0].SubSchedules.length >= 6) {
+            if (data.list.length === 1 && data.list[0].SubSchedules.length >= 5) {
                 $(".more-p").html("加载更多");
-            } else if (data.list.length >= 7) {
+            } else if (data.list.length >= 15) {
                 $(".more-p").html("加载更多");
             }
             $.each(data.list, function(n, value) {
@@ -429,7 +429,7 @@
     /*9.查询更多的任务*/
     var searchmorework = function(ele) {
         if ($(ele).html() === "没有更多内容了") return;
-        $.post("@Url.Action("GetListByGroupid", "Home")", { gid: "@ViewBag.groupid", dt0: timeFormat(today), dt1: timeFormat(today), pageNo: pageNo }, function (data) {
+        $.post("@Url.Action("GetListByGroupid", "Home")", { gid: "@ViewBag.groupid", dt0: timeFormat(today), dt1: timeFormat(today), pageNo: pageNo, pageSize:15 }, function (data) {
             console.log(data.list);
             if (data.list == null || data.list.length == 0) {
                 pageNo = pageNo - 1;
@@ -646,7 +646,7 @@
                             closeBtn: 1,
                             shade: 0.3,
                             shadeClose: true,
-                            area: ['750px', '700px'],
+                            area: ['750px', '600px'],
                             offset: 'auto',
                             content: ["/JobAssignment/Home/Create?gid=" + '@ViewBag.groupid', 'no'],
                             success: function(layero, index) {
@@ -676,7 +676,7 @@
                     closeBtn: 1,
                     shade: 0.3,
                     shadeClose: true,
-                    area: ['750px', '700px'],
+                    area: ['750px', '600px'],
                     offset: 'auto',
                     content: ["/JobAssignment/Home/Create?gid=" + '@ViewBag.groupid' + "&fatherId=" + fatherid, 'no'],
                     success: function(layero, index) {
@@ -760,7 +760,7 @@
                     skin: 'okcsclass',
                     shade: 0.3,
                     shadeClose: true,
-                    area: ['750px', '700px'],
+                    area: ['750px', '600px'],
                     offset: 'auto',
                     content: ["/JobAssignment/Home/Edit?uid=" + uid, 'no'],
                     success: function(layero, index) {
@@ -785,7 +785,7 @@
             skin: 'okcsclass',
             shade: 0.3,
             shadeClose: true,
-            area: ['750px', '700px'],
+            area: ['750px', '600px'],
             offset: 'auto',
             content: ["/JobAssignment/Home/Detail?uid=" + uid, 'no'],
             success: function(layero, index) {

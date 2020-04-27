@@ -4,7 +4,7 @@
 <div id="app" v-loading="loading" element-loading-text="拼命加载中" style="height: 94%;margin-top: 10px;">
     <!-- 新建任务 -->
     <el-scrollbar class="group-dialog" style="height: 100%">
-            <el-form label-width="100px" v-bind:model="formData" v-bind:rules="rules" ref="form"  class="paddingright10 paddingleft20" :label-position="labelPostition">
+            <el-form label-width="95px" v-bind:model="formData" v-bind:rules="rules" ref="form"  class="paddingright10 paddingleft20" :label-position="labelPostition">
                 <el-form-item label="任务名称：" prop="Title">
                     <el-input v-model.trim="formData.Title"></el-input>
                 </el-form-item>
