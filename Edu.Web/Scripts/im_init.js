@@ -738,7 +738,7 @@ window.InitHistory = function (uid, groupid, openCreationDocument, downloadCreat
 
 
     //导出按钮
-    $(".chat-export").click(function (event) {
+    $(".chat-export-btn").click(function (event) {
 
         GetChatHistory(dateTime + ' 00:00:00', dateTime + ' 23:59:59');
 

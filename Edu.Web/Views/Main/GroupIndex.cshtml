@@ -284,10 +284,21 @@
                         <!-- 聊天记录 -->
                         <div class="chatcb_tc_trends el-col el-col-6">
                             <div class="float-l chatlist-content posr" id="historychatDiv">
-                                <p class="vc-top color-9">
+                                @*<p class="vc-top color-9">
                                     <span>消息记录</span>
                                     <span class="chat-export">导出</span>
-                                </p>
+                                </p>*@
+                                <div class="trends_top clearfix">
+                                    <span class="chat_fl">聊天记录</span>
+                                    <span class="chat_fr">
+                                        <svg aria-hidden="true" class="icon linkc9 mr10 chat-export-btn">
+                                            <use xlink:href="#icon-export"></use>
+                                        </svg>
+                                        <svg aria-hidden="true" class="icon linkc9" v-on:click="showChatHistory">
+                                            <use xlink:href="#icon-error2"></use>
+                                        </svg>
+                                    </span>
+                                </div>
                                 <!-- 顶部聊天切换 -->
                                 <p class="chatlist-tab">
                                     <a href="javascript:void(0);" class="cur" onclick="SearchHistoryChatByType(this, 0)">全部</a>
@@ -577,6 +588,7 @@
 
 <!--字体文件-->
 <script src="~/Content/Web/fonts/iconfont.js"></script>
+<!--本次最新字体文件js-->
 <script src="~/Scripts/iconfont.js"></script>
 <script src="~/Scripts/jquery.form.js"></script>
 <script src="~/Scripts/data.js"></script>
@@ -605,7 +617,7 @@
 
 
 <script type="text/javascript">
-    
+
         //定义一个全局过滤器  [$PICTURE$] 是需要被替换的内容
         Vue.filter('imageAndTextMessage', function (msg) {
             return msg.replace(/\[.*\]/g, '');//去掉[ ]及内容
@@ -714,7 +726,7 @@
                                     "msg": url,
                                 };
                                 self.sendMessage(msgObject);
-
+                                sendToGroupShareFile(1,file0)
                             }
                         }
                     });
@@ -835,6 +847,66 @@
                     });
                 };
 
+                window.sendToGroupShareFile = function (type,file) {
+                    //**********发送到工作群中 新需求：文件上传到群组的共享资料中************
+                    var fileformat = "." + file.name.replace(/.+\./, "");
+                    var formData = new FormData(); //FormData构造器接收的是一个form的DOM对象
+
+                    if (type == 1) {
+                        formData.append('file', file);
+                    } else if (type == 2) {
+                        formData.append('file', file.raw);
+                    }
+                    
+                    $.ajax({
+                        url: "/PMC/File/Upload",
+                        type: "POST",
+                        data: formData,
+                        async: true,
+                        processData: false,
+                        contentType: false,
+                        error: function (xhr, status, error) {
+                            layer.msg("上传文件到共享资料请求出错!");
+                            console.log(error);
+                        },
+                        success: function (uploadresult) {
+                            if (uploadresult.Code === 200) {
+                                var groupKnoView = {
+                                    ConvertTaskId: uploadresult.Data.ConvertTaskId,
+                                    FileCode: uploadresult.Data.FileCode,
+                                    Creator: self.realName,
+                                    Format: fileformat,
+                                    ResourceID: self.groupId,
+                                    SourceType: 1,
+                                    Title: file.name,
+                                    Type: 10,
+                                    UnitID: "",
+                                    userId: self.uid,
+                                    groupId: self.groupId,
+                                    realName: self.realName
+                                }
+                                $.ajax({
+                                    type: "Post",
+                                    headers: {
+                                        'ignore-identity':'true',
+                                    },
+                                    url: "/pmcwebapi/api/GroupKnowledge/Add",
+                                    data: groupKnoView,
+                                    dataType: "json",
+                                    success: function (addresult) {
+                                        if (addresult.Success) {
+                                            window.parent.parent.updateShareList && window.parent.parent.updateShareList();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                    //**********发送到工作群中 新需求：文件上传到群组的共享资料中*******end*****
+                }
+
+
+
 
 
                 //发送成功的回调(只能放在这里，否则不会作为回调传过去)
@@ -846,6 +918,13 @@
                         return n.id1 == id1;
                     });
                     //msg.id0 = id0;
+
+                    //发送成功够，如果是图片、文件类型则需要上传到群组共享资料中
+                    if (msg.type == 1) {
+
+                    }
+
+
                 },
 
                 //发送失败的回调
@@ -1421,7 +1500,7 @@
                         return;
                     }
                     // 1是创建者 2是管理员 0是普通成员，
-                    
+
                     //其他用户
                     $.ajax({
                         url: '/imwebapi/api/MainWebApi/GetOnlineStatus',
@@ -1442,7 +1521,7 @@
                                     } else {
                                         self.offlineMemberList.push(value);
                                     }
-                                }                                
+                                }
                             } else {
                                 if (value.isAdmin == 0) {
                                     self.offlineMemberList.push(value);
@@ -1467,7 +1546,7 @@
                         });
 
                         if (users1.length > 0) {
-                            var user = users1[0]; 
+                            var user = users1[0];
                             user.online = true;
                             self.onlineCount++;
                             var index = self.offlineMemberList.indexOf(user)
@@ -1513,7 +1592,7 @@
                                 self.chatListAll = data.Content.reverse();
                                 self.showChatList = self.chatListAll;
                                 if (self.chatListAll.length > 0) {
-                                    cb1();                                    
+                                    cb1();
                                 } else {
                                     cb2();
                                 }
@@ -1551,7 +1630,7 @@
 
                                     });
                                     self.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
-                                    
+
                                 } else {
                                     self.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
                                 }
@@ -1711,7 +1790,7 @@
 
 
                                 if (self.isAdmin != 1) {
-                                    
+
                                 }
 
 
@@ -1838,6 +1917,7 @@
                         "duration": file.size,
                     };
                     self.sendMessage(msgObject);
+                    sendToGroupShareFile(2,file);
                 },
                 //文件上传时的钩子
                 uploadProgress: function (event, file, fileList) {
@@ -1848,7 +1928,7 @@
                     this.$message.error("文件发送失败！"+err);
                 },
 
-                
+
 
 
                 //调用im/main 的发送消息
@@ -1865,12 +1945,12 @@
                     model["msgtime"] = (new Date()).format('yyyy/MM/dd hh:mm:ss');
 
                     model["quoteId"] = this.quoteId;
-                    
+
                     model["quoteContent"] = this.quoteItem;
 
                     if (this.quoteId != 0 && this.quoteItem != "") {
                         var reg = new RegExp(this.tempQuoteString + '<br> ', 'g')//g代表全部
-                        model.msg = model.msg.replace(reg, '');                        
+                        model.msg = model.msg.replace(reg, '');
                     }
                     if (model.msg == "") {
                         this.$message("发送内容不能为空");
@@ -1898,7 +1978,7 @@
                 //根据文件名全称获取后缀及样式
                 getFileClass: function (fullname) {
                     fullname = fullname.toLowerCase();
-                    var result = 'icon-other-s';                    
+                    var result = 'icon-other-s';
                     var index1 = fullname.lastIndexOf(".");
 
                     if (index1 < 0) {
@@ -1993,7 +2073,7 @@
                         }
                         return '';
                     }
-                    
+
                     return '';
                 },
 
@@ -2050,7 +2130,7 @@
                         }
                     });
                 },
-               
+
 
                 //渲染完查询的聊天后，再去格式化表情、高德地图
                 showChatList: function (val, oldVal) {
@@ -2059,7 +2139,7 @@
 
                         self.showChatList.forEach(function (item, index) {
                             if (item.msgtype == 0 || item.msgtype == 3) {
-                                //EmojiParse($('#' + item.id0 + ' .chatlr-txt')); 
+                                //EmojiParse($('#' + item.id0 + ' .chatlr-txt'));
                                 EmojiParse($("div[data-msgid='"+item.id0+"'] .chatlr-txt"));
                             }
                             if (item.msgtype == 5) {

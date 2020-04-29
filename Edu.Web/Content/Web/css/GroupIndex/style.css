@@ -55,6 +55,8 @@ input::-webkit-input-placeholder{
 .linkc9{color:#999;cursor: pointer;}
 .linkc6{color:#666;cursor: pointer;}
 .linkc9:hover,.linkc6:hover{color: #2389d8}
+.mr10{margin-right: 10px}
+.pl20{margin-left: 20px}
 .bg-cfe{background-color:#fee896;}
 .fs12{font-size: 12px}
 .chat_posr{position: relative;}
@@ -261,15 +263,19 @@ body{color:#333; font:14px Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "Microsof
 /*消息记录*/
 .chatcb_tc_trends{border-left: 1px solid #ddd;height: calc(100% + 47px);position: relative;z-index: 1;display: none;margin-top:-47px;}
 .chatcb_tc_trends>div{height: 100%}
-.trends_top{background-color: #fcfcfc;padding-left: 20px;height:35px;line-height: 35px;border-bottom: 1px solid #ddd;color:#999;}
+.trends_top{background-color: #fcfcfc;padding:0 20px;height:35px;line-height: 35px;border-bottom: 1px solid #ddd;color:#999;}
 .trends_tab{margin:10px 15px;}
 .trends_tab a{display: inline-block;padding:4px 13px;margin-right: 10px;border-radius:4px;transition: .3s;}
 .trends_tab a.cur,.trends_tab a:hover{background-color: #e9f3fb;color:#333;}
 .trends_count{background-color:#e9f3fb;padding:5px 20px;}
 
+.chat_posr .el-tabs__content{height: calc(100vh - 215px)}
+.trends_theme{position: absolute;right: 0;top:0;width: 320px;margin-right: -320px;background-color: #fff;transition: all 0.5s ease}
+.trends_theme.r0{margin-right: 0}
 .trendsp_time{color: #666;text-align: center;font-size: 12px}
-.trends_panel{height:calc(100vh - 388px);}
-.trends_panel>.el-scrollbar{height: 100%}
+.trends_panel{height:calc(100vh - 215px);}
+.trends_panel2{height:calc(100vh - 240px);margin-top: 10px}
+.trends_panel>.el-scrollbar,.trends_panel2>.el-scrollbar{height: 100%}
 .trends-bot{position: absolute;left:0;right:0;bottom:0;padding:7px 20px;border-top:1px solid #ddd;}
 .trends-bot .icon-search{color:#999;font-size: 20px;vertical-align: middle;float:left;}
 .trends-bot .icon-search:hover{color: #2389d8}
@@ -301,8 +307,9 @@ body{color:#333; font:14px Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "Microsof
 .chatcb_tc_trends .el-tabs--border-card{border:0;box-shadow: none}
 .chatcb_tc_trends .el-tabs--border-card>.el-tabs__content{padding: 0}
 .chatcb_tc_trends .el-tabs--border-card>.el-tabs__header{border:0;background-color: transparent;margin: 10px 15px}
-.chatcb_tc_trends .el-tabs--border-card>.el-tabs__header .el-tabs__item{border:0;line-height: normal;height: auto;padding: 4px 13px;margin-right: 10px;}
-.chatcb_tc_trends .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{color:#333;background-color: #e9f3fb}
+.chatcb_tc_trends .el-tabs--border-card>.el-tabs__header .el-tabs__item:hover{background-color: #f5f5f5;color:#333;}
+.chatcb_tc_trends .el-tabs--border-card>.el-tabs__header .el-tabs__item{border:0;line-height: normal;height: auto;border-radius: 4px;margin-top: 0;padding: 4px 13px;margin-right: 10px;}
+.chatcb_tc_trends .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active{color:#fff;background-color: #41a0e9}
 
 .chatcb_tc_l{width:100%;}
 .chat_mem_show .chatcb_tc_l{width: calc(100% - 327px)}
@@ -328,6 +335,10 @@ body{color:#333; font:14px Arial,"\5FAE\8F6F\96C5\9ED1"; *font-family: "Microsof
 .mem_con_item .mem_width{width: 6em}
 .icon_tb{position: absolute;bottom: 8px;right: 0;cursor: pointer;}
 
+.chat_tehe_list li{margin-bottom: 20px;padding: 0 20px}
+.chat_te{line-height: 30px;height: 30px;display: inline-block;padding: 0 20px;border-radius: 4px;border:1px solid #ddd;cursor: pointer;overflow: hidden; white-space: nowrap;text-overflow: ellipsis;max-width: calc(100% - 70px);}
+.chat_te.cur{color:#fff;background-color: #41a0e9;border-color: #41a0e9}
+.chat_tr{margin-top: 7px}
 /*聊天类型*/
 .chatlr-txt2{position: relative;display: inline-block;padding-right: 26px}
 .chat_right .chatlr-txt2{padding: 0 0 0 26px}
